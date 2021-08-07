@@ -1,19 +1,65 @@
 /**index.wxss**/
-.userinfo {
+page {
+  background-color: rgb(242, 243, 245);
+}
+
+.top-banner-container{
+  width: 100%;
+  height: 200px;
+  background-color: #fff;
+  position: relative;
+  background-image: url('https://seopic.699pic.com/photo/50068/7103.jpg_wh1200.jpg');
+}
+
+.book-card-container{
+  width: 94%;
+  height: 120px;
+  border-radius:10px;
+  background-color: #fff;
+  position: relative;
+  margin-top: -20px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  color: #aaa;
+  justify-content: space-around;
 }
 
-.userinfo-avatar {
-  overflow: hidden;
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
+.book-card-item{
+  width: 40%;
+  height: 80px;
+  display: flex;
+  align-items: center;
 }
 
-.usermotto {
-  margin-top: 200px;
+.flex-column{
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.flex-row{
+  flex-direction: row;
+  justify-content: center;
+}
+
+.book-card-divider{
+  width: 3rpx;
+  height: 60px;
+  background-color: rgb(242, 243, 245);
+}
+
+.advertise-banner-container{
+  width: 100%;
+  height: 100%;
+  margin-top: 10px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+}
+.advertise-banner-item{
+  width: 45%;
+  height: 42%;
+  border-radius: 10px;
 }

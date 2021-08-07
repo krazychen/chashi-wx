@@ -6,7 +6,7 @@
   "window":{
     "backgroundTextStyle":"light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "Weixin",
+    "navigationBarTitleText": "荣景茶叶合作联社",
     "navigationBarTextStyle":"black"
   },
   "tabBar": {
@@ -22,14 +22,6 @@
       {
         "pagePath": "pages/index/index",
         "text": "预定茶室"
-      },
-      {
-        "pagePath": "pages/index/index",
-        "text": "商家详情"
-      },
-      {
-        "pagePath": "pages/index/index",
-        "text": "预约"
       },
       {
         "pagePath": "pages/index/index",

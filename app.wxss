@@ -5,6 +5,12 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 200rpx 0;
   box-sizing: border-box;
 } 
+.font-12{
+  font-size: 12px;
+}
+
+.font-14{
+  font-size: 14px;
+}

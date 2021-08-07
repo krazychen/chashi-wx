@@ -1,23 +1,37 @@
 <!--index.wxml-->
 <view class="container">
-  <view class="userinfo">
-    <block wx:if="{{canIUseOpenData}}">
-      <view class="userinfo-avatar" bindtap="bindViewTap">
-        <open-data type="userAvatarUrl"></open-data>
-      </view>
-      <open-data type="userNickName"></open-data>
-    </block>
-    <block wx:elif="{{!hasUserInfo}}">
-      <button wx:if="{{canIUseGetUserProfile}}" bindtap="getUserProfile"> 获取头像昵称 </button>
-      <button wx:elif="{{canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
-      <view wx:else> 请使用1.4.4及以上版本基础库 </view>
+  <view class="top-banner-container" style="background-size: 100% 100%; background-repeat:no-repeat;">
+    <!-- background-image:url({{paramConfigObj.SEARCH_STATIC_HOMEPAGE_BANNER}}); -->
+  </view>
+  <view class="book-card-container">
+    <view class="book-card-item flex-column">
+      <view class="font-14">您未预订房间</view>
+      <van-icon name="cart-circle" size="30px"  />
+    </view>
+    <view class="book-card-divider"></view>
+    <view class="book-card-item flex-row">
+        <van-icon name="shop" size="30px"  />
+        <span class="font-14">去预订</span>
+    </view>
+  </view>
+  <view class="advertise-banner-container" style="height: {{scrollHeight}}px;">
+    <image
+      wx:for="{{advertiseBannerList}}"  
+      wx:for-item="item" 
+      wx:key="id"
+      src="{{item.picUrl}}"
+      class="advertise-banner-item" 
+    >
+    </image>
+  </view>
+
+  <!-- <view class="userinfo">
+    <block wx:if="{{!hasUserInfo}}">
+      <button bindtap="getUserProfile"> 获取头像昵称 </button>
     </block>
     <block wx:else>
       <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
       <text class="userinfo-nickname">{{userInfo.nickName}}</text>
     </block>
-  </view>
-  <view class="usermotto">
-    <text class="user-motto">{{motto}}</text>
-  </view>
+  </view> -->
 </view>

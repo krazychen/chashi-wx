@@ -17,18 +17,6 @@ Component({
     },
     {
       "url": "/pages/index/index",
-      "icon": "/static/image/wenzhang_icon.png",
-      "iconSelected": "/static/image/wenzhang_yes_icon.png",
-      "text": "商家详情"
-    },
-    {
-      "url": "/pages/index/index",
-      "icon": "/static/image/wenzhang_icon.png",
-      "iconSelected": "/static/image/wenzhang_yes_icon.png",
-      "text": "预约"
-    },
-    {
-      "url": "/pages/index/index",
       "icon": "/static/image/wode_icon.png",
       "iconSelected": "/static/image/wode_yes_icon.png",
       "text": "个人中心"
