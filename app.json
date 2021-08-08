@@ -1,6 +1,7 @@
 {
   "pages":[
     "pages/index/index",
+    "pages/merchant/index",
     "pages/logs/logs"
   ],
   "window":{
@@ -20,7 +21,7 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/index/index",
+        "pagePath": "pages/merchant/index",
         "text": "预定茶室"
       },
       {
@@ -30,5 +31,8 @@
     ]
   },  
   "style": "v2",
+  "usingComponents": {
+    "van-empty": "@vant/weapp/empty/index"
+  },
   "sitemapLocation": "sitemap.json"
 }

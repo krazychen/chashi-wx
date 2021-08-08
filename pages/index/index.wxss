@@ -1,6 +1,6 @@
 /**index.wxss**/
 page {
-  background-color: rgb(242, 243, 245);
+  background-color: rgb(241, 241, 241);
 }
 
 .top-banner-container{

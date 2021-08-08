@@ -10,7 +10,7 @@ Component({
       "text": "首页"
     },
     {
-      "url": "/pages/index/index",
+      "url": "/pages/merchant/index",
       "icon": "/static/image/jiangjie_icon.png",
       "iconSelected": "/static/image/jiangjie_yes_icon.png",
       "text": "预定茶室"

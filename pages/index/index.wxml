@@ -3,7 +3,7 @@
   <view class="top-banner-container" style="background-size: 100% 100%; background-repeat:no-repeat;">
     <!-- background-image:url({{paramConfigObj.SEARCH_STATIC_HOMEPAGE_BANNER}}); -->
   </view>
-  <view class="book-card-container">
+  <view class="book-card-container" bindtap="getUserProfile">
     <view class="book-card-item flex-column">
       <view class="font-14">您未预订房间</view>
       <van-icon name="cart-circle" size="30px"  />
@@ -14,6 +14,7 @@
         <span class="font-14">去预订</span>
     </view>
   </view>
+  
   <view class="advertise-banner-container" style="height: {{scrollHeight}}px;">
     <image
       wx:for="{{advertiseBannerList}}"  
