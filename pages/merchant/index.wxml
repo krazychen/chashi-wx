@@ -37,43 +37,43 @@
                 </view>
               </view>
               <view class="merchant-card-more">
-                <span data-id="{{item.id}}" class="font-16" style="color:rgb(72,165,132);float: right;padding-right: 40px;" bindtap="getRoomList">预约茶室</span>
+                <view data-id="{{item.id}}" class="merchant-card-more-book font-16" bindtap="getRoomList">
+                  预约茶室
+                </view>
                 <block wx:if="{{selectMerchantId && selectMerchantId==item.id}}">
-                  <span>dad </span>
+                  <view class="merchant-room-card-container">
+                      <view class="merchant-room-card-logo"
+                        style="background-size: 100% 100%;background-repeat:no-repeat;">
+                      </view>
+                      <view class="merchant-room-card-label-container">
+                        <view class="merchant-room-card-label font-18" style="margin-top: 4px;">茶室房间1</view>
+                        <view class="merchant-room-card-label font-12 font-green">推荐人数：适合3-5人</view>
+                        <view class="merchant-room-card-label font-12" style="width:100%;text-align:left">160已售</view>
+                      </view>
+                      <view class="merchant-room-card-label-container">
+                        <view class="merchant-room-card-label" style="margin-top: 4px;"></view>
+                        <view class="merchant-room-card-label font-12 font-red">会员<span class="font-14">￥60.22</span><span>/小时</span></view>
+                        <view class="merchant-room-card-label font-12 font-gray" style="text-decoration:line-through;">非会员78/小时</view>
+                      </view>
+                  </view>
+                  <view class="van-hairline--bottom"></view>
+                  <view class="merchant-room-card-container">
+                      <view class="merchant-room-card-logo"
+                        style="background-size: 100% 100%;background-repeat:no-repeat;">
+                      </view>
+                      <view class="merchant-room-card-label-container">
+                        <view class="merchant-room-card-label font-18" style="margin-top: 4px;">茶室房间1</view>
+                        <view class="merchant-room-card-label font-12 font-green">推荐人数：适合3-5人</view>
+                        <view class="merchant-room-card-label font-12" style="width:100%;text-align:left">160已售</view>
+                      </view>
+                      <view class="merchant-room-card-label-container">
+                        <view class="merchant-room-card-label" style="margin-top: 4px;"></view>
+                        <view class="merchant-room-card-label font-12 font-red">会员<span class="font-14">￥60.22</span><span>/小时</span></view>
+                        <view class="merchant-room-card-label font-12 font-gray" style="text-decoration:line-through;">非会员78/小时</view>
+                      </view>
+                  </view>
+                  <view class="van-hairline--bottom"></view>
                 </block>
-
-                <!-- <van-cell-group border="{{false}}">
-                      <van-cell 
-                          wx:for="{{articleList}}"  
-                          wx:for-item="item" 
-                          wx:key="id" 
-                          custom-class="cell-wrap"
-                          data-id="{{item.id}}"
-                          use-label-slot="{{true}}"
-                          bind:click="openArticleDetail"
-                      >
-                            <view slot="title" class="cell-title">
-                              {{item.articleName}}
-                            </view>
-                            <view>
-                                <image src="{{item.articleCoverUrl}}" style="width:200rpx;height:140rpx;border-radius: 6rpx;"></image>
-                            </view>
-                            <view slot="label" class="cell-label">
-                              <view>
-                                {{item.articleAuthor?'作者：'+item.articleAuthor:''}}
-                                </view>
-                                <view wx:if="{{item.articlePv > paramConfigObj.SEARCH_STATIC_PV_HOTNUM}}" 
-                                  style="display:flex;justify-content:space-between;align-items:center;flex-direction:row;color:#FF5E6C;">
-                                    <image src="{{paramConfigObj.SEARCH_STATIC_HOT_ICON}}"
-                                      style="padding-right:12rpx;width:18rpx;height:24rpx"></image>
-                                      <view style="display:inline-block">浏览量 {{item.articlePv}}</view>
-                                  </view>
-                                  <view wx:else>
-                                      浏览量 {{item.articlePv}}
-                                  </view>
-                            </view>
-                      </van-cell>
-                  </van-cell-group> -->
               </view>
           </view>
         </block>

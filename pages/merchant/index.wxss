@@ -20,10 +20,10 @@ Page{
 }
 
 .merchant-card-container{
-  width: 90%;
+  width: 94%;
   border-radius: 20px;
   background-color: #fff;
-  margin: 15px 5%;
+  margin: 15px 3%;
   overflow: hidden;
 }
 
@@ -51,7 +51,47 @@ Page{
 
 .merchant-card-more{
   width: 100%;
-  height: 40px;
   background-color: #fff;
   line-height: 40px;
+  overflow: hidden;
+}
+
+.merchant-card-more-book{
+  height: 40px;
+  color:rgb(72,165,132);
+  padding-right: 40px;
+  text-align: right;
+}
+
+.merchant-room-card-container{
+  width: 100%;
+  height: 120px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0px 6px;
+}
+
+.merchant-room-card-logo{
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  background-image:url('https://seopic.699pic.com/photo/50068/7103.jpg_wh1200.jpg');
+}
+
+.merchant-room-card-label-container{
+  height: 100px;
+  line-height: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 10px;
+  overflow: hidden;
+}
+
+.merchant-room-card-label{
+  width: 100%;
+  height: 32px;
+  text-align: left;
+  line-height: 32px;
 }

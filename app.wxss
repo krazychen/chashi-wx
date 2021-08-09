@@ -1,4 +1,6 @@
 /**app.wxss**/
+@import '/miniprogram_npm/@vant/weapp/common/index.wxss';
+
 .container {
   height: 100%;
   display: flex;
@@ -16,7 +18,7 @@
 }
 
 .font-16{
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .font-18{
@@ -30,6 +32,15 @@
 .font-green{
   color: rgb(136, 185, 31)
 }
+
+.font-red{
+  color: rgb(255, 8, 47)
+}
+
+.font-gray{
+  color: rgb(153, 153, 153)
+}
+
 
 .btn-container{
   width: 100% !important;
