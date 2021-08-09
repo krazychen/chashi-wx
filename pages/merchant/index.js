@@ -38,8 +38,23 @@ Page({
     })
   },
   getRoomList:function(e){
+    const selectMerchantId = e.target.dataset.id
+    request.post('/csTearoom/getRoomListForWx/'+selectMerchantId,null).then((res)=>{
+      const dataList = res.data.data.records||[]
+      if(dataList && dataList.length>0){
+        this.setData({
+          roomList:dataList
+        })
+      }
+      this.setData({
+        selectMerchantId:e.target.dataset.id
+      })
+    })
+  },
+  cleanRoomList:function(e){
     this.setData({
-      selectMerchantId:e.target.dataset.id
+      selectMerchantId:null,
+      roomList:[]
     })
   }
 })

@@ -27,7 +27,10 @@
                   </view>
                   <view>
                     <span class="font-12">
-                      营业时间：00:00-24:00
+                      营业时间：
+                      <span wx:if="{{item.startTime}}">{{item.startTime}}</span>
+                      <span wx:if="{{item.endTime}}">-{{item.endTime}}</span>
+                      <span wx:if="{{!item.startTime && !item.endTime}}">00:00-23:59</span>
                     </span>
                     <span class="font-12 font-green" style="padding-left: 5px;">营业中</span>
                   </view>     
@@ -37,42 +40,48 @@
                 </view>
               </view>
               <view class="merchant-card-more">
-                <view data-id="{{item.id}}" class="merchant-card-more-book font-16" bindtap="getRoomList">
-                  预约茶室
+                <view wx:if="{{!selectMerchantId || selectMerchantId!=item.id}}" data-id="{{item.id}}" class="merchant-card-more-book font-16" bindtap="getRoomList">
+                  预约茶室<van-icon name="arrow-down" color="rgb(72,165,132)" />
                 </view>
-                <block wx:if="{{selectMerchantId && selectMerchantId==item.id}}">
-                  <view class="merchant-room-card-container">
+                <view wx:if="{{selectMerchantId && selectMerchantId==item.id}}" class="merchant-card-more-book font-16" bindtap="cleanRoomList">
+                  收起茶室<van-icon name="arrow-up" color="rgb(72,165,132)"/>
+                </view>
+                <block wx:if="{{selectMerchantId && selectMerchantId==item.id && roomList && roomList.length>0}}">
+                  <view class="merchant-room-card-container"
+                        wx:for="{{roomList}}"  
+                        wx:for-item="roomItem" 
+                        wx:key="id">
                       <view class="merchant-room-card-logo"
-                        style="background-size: 100% 100%;background-repeat:no-repeat;">
+                        style="background-image:url({{roomItem.roomLogoUrl}});background-size: 100% 100%;background-repeat:no-repeat;">
                       </view>
                       <view class="merchant-room-card-label-container">
-                        <view class="merchant-room-card-label font-18" style="margin-top: 4px;">茶室房间1</view>
-                        <view class="merchant-room-card-label font-12 font-green">推荐人数：适合3-5人</view>
+                        <view class="merchant-room-card-label font-16" style="margin-top: 4px;">
+                          {{roomItem.roomName}}
+                        </view>
+                        <view class="merchant-room-card-label font-12 font-green">
+                          推荐人数：适合
+                          <span wx:if="{{roomItem.recomNumUsers}}">{{roomItem.recomNumUsers}}</span>
+                          <span wx:else>1</span>人</view>
                         <view class="merchant-room-card-label font-12" style="width:100%;text-align:left">160已售</view>
                       </view>
                       <view class="merchant-room-card-label-container">
                         <view class="merchant-room-card-label" style="margin-top: 4px;"></view>
-                        <view class="merchant-room-card-label font-12 font-red">会员<span class="font-14">￥60.22</span><span>/小时</span></view>
-                        <view class="merchant-room-card-label font-12 font-gray" style="text-decoration:line-through;">非会员78/小时</view>
+                        <view class="merchant-room-card-label font-12 font-red">
+                          <span wx:if="{{roomItem.menberAmount && roomItem.menberAmount >0}}">
+                            会员<span class="font-14">￥{{roomItem.menberAmount}}</span>/小时
+                          </span>
+                        </view>
+                        <view class="merchant-room-card-label font-12 font-gray" style="text-decoration:line-through;">
+                          <span wx:if="{{roomItem.hoursAmount && roomItem.hoursAmount >0}}">
+                            非会员{{roomItem.hoursAmount}}/小时
+                          </span>
+                       </view>
+                      </view>
+                      <view wx:if="{{roomList.length>1 && index != (roomList.length-1)}}"
+                        class="van-hairline--top-bottom"
+                        >
                       </view>
                   </view>
-                  <view class="van-hairline--bottom"></view>
-                  <view class="merchant-room-card-container">
-                      <view class="merchant-room-card-logo"
-                        style="background-size: 100% 100%;background-repeat:no-repeat;">
-                      </view>
-                      <view class="merchant-room-card-label-container">
-                        <view class="merchant-room-card-label font-18" style="margin-top: 4px;">茶室房间1</view>
-                        <view class="merchant-room-card-label font-12 font-green">推荐人数：适合3-5人</view>
-                        <view class="merchant-room-card-label font-12" style="width:100%;text-align:left">160已售</view>
-                      </view>
-                      <view class="merchant-room-card-label-container">
-                        <view class="merchant-room-card-label" style="margin-top: 4px;"></view>
-                        <view class="merchant-room-card-label font-12 font-red">会员<span class="font-14">￥60.22</span><span>/小时</span></view>
-                        <view class="merchant-room-card-label font-12 font-gray" style="text-decoration:line-through;">非会员78/小时</view>
-                      </view>
-                  </view>
-                  <view class="van-hairline--bottom"></view>
                 </block>
               </view>
           </view>
