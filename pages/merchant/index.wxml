@@ -1,7 +1,6 @@
 <view class="container">
    <view class="search-wrap">
-        <van-search value="{{ keyWord }}" 
-            field-class="search-input-wrap"  
+        <van-search field-class="search-input-wrap"  
             shape="round"
             placeholder="搜索商家" 
             bind:search="onSearch" />
@@ -15,6 +14,10 @@
             class="merchant-card-container"
             style="background-image:url({{item.logoUrlValue}});background-size: 100% 160px; background-repeat:no-repeat;"
             >
+            <view class="merchant-card-booktime">
+              <view>1小时</view>
+              <view>起订</view>
+            </view>
             <view class="merchant-card-info">
                 <view class="font-white" style="padding-left:10px;">
                   <view>
@@ -22,7 +25,7 @@
                     {{item.merchantName}}
                     </span>
                     <span class="font-12" style="padding-left: 5px;">
-                      211.23km
+                      {{item.merchantDistance}}km
                     </span>
                   </view>
                   <view>
@@ -32,7 +35,7 @@
                       <span wx:if="{{item.endTime}}">-{{item.endTime}}</span>
                       <span wx:if="{{!item.startTime && !item.endTime}}">00:00-23:59</span>
                     </span>
-                    <span class="font-12 font-green" style="padding-left: 5px;">营业中</span>
+                    <span class="font-12 font-green" style="padding-left: 5px;">{{item.businessState}}</span>
                   </view>     
                 </view>
                 <view class="merchant-card-info-call-icon">
@@ -53,6 +56,9 @@
                         wx:key="id">
                       <view class="merchant-room-card-logo"
                         style="background-image:url({{roomItem.roomLogoUrl}});background-size: 100% 100%;background-repeat:no-repeat;">
+                        <view class="merchant-room-card-logo-corner">
+                          {{roomItem.startTime}}小时起订
+                        </view>
                       </view>
                       <view class="merchant-room-card-label-container">
                         <view class="merchant-room-card-label font-16" style="margin-top: 4px;">
@@ -62,7 +68,10 @@
                           推荐人数：适合
                           <span wx:if="{{roomItem.recomNumUsers}}">{{roomItem.recomNumUsers}}</span>
                           <span wx:else>1</span>人</view>
-                        <view class="merchant-room-card-label font-12" style="width:100%;text-align:left">160已售</view>
+                        <view class="merchant-room-card-label font-12" style="width:100%;text-align:left">
+                          <van-rate size="{{12}}" gutter="2" value="{{roomItem.rate}}" color="#ffd21e" readonly />
+                          {{roomItem.buyRecord>0?roomItem.buyRecord:0}}已售
+                        </view>
                       </view>
                       <view class="merchant-room-card-label-container">
                         <view class="merchant-room-card-label" style="margin-top: 4px;"></view>
@@ -71,7 +80,7 @@
                             会员<span class="font-14">￥{{roomItem.menberAmount}}</span>/小时
                           </span>
                         </view>
-                        <view class="merchant-room-card-label font-12 font-gray" style="text-decoration:line-through;">
+                        <view class="merchant-room-card-label font-12 font-gray" style="{{roomItem.menberAmount && roomItem.menberAmount >0?text-decoration:line-through}}">
                           <span wx:if="{{roomItem.hoursAmount && roomItem.hoursAmount >0}}">
                             非会员{{roomItem.hoursAmount}}/小时
                           </span>
