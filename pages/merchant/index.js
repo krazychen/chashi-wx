@@ -113,13 +113,14 @@ Page({
           }
         })
       }
+      console.log(dataList)
       this.setData({
         merchantList:dataList
       })
     })
   },
   getRoomList:function(e){
-    const selectMerchantId = e.target.dataset.id
+    const selectMerchantId = e.currentTarget.dataset.id
     request.post('/csTearoom/getRoomListForWx/'+selectMerchantId,null).then((res)=>{
       const dataList = res.data.data.records||[]
       if(dataList && dataList.length>0){
@@ -128,7 +129,7 @@ Page({
         })
       }
       this.setData({
-        selectMerchantId:e.target.dataset.id
+        selectMerchantId:e.currentTarget.dataset.id
       })
     })
   },
@@ -207,5 +208,13 @@ Page({
     },()=>{
       _this.getMerchantListForWx()
     })
+  },
+  makePhoneCall:function(e){
+    const phoneNo = e.currentTarget.dataset.phoneNo
+    if(phoneNo){
+      wx.makePhoneCall({
+        phoneNumber: '13666038053'
+      })
+    }
   }
 })
