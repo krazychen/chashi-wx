@@ -84,7 +84,7 @@
                           <span wx:if="{{roomItem.recomNumUsers}}">{{roomItem.recomNumUsers}}</span>
                           <span wx:else>1</span>人</view>
                         <view class="merchant-room-card-label font-12" style="width:100%;text-align:left">
-                          <van-rate size="{{12}}" gutter="2" value="{{roomItem.rate}}" color="#ffd21e" readonly />
+                          <van-rate size="{{10}}" gutter="1" value="{{roomItem.rate}}" color="#ffd21e" readonly />
                           {{roomItem.buyRecord>0?roomItem.buyRecord:0}}已售
                         </view>
                       </view>
