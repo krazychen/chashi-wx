@@ -7,7 +7,7 @@
     </view>
     <view class="city-card-item">
       <van-icon name="location" color="rgb(72,165,132)" style="margin: 0 6px 0 10px"/>
-      <view class="font-14" style="color:rgb(72,165,132)">厦门市</view>
+      <view class="font-14" style="color:rgb(72,165,132)">{{currentCityName}}</view>
     </view>
   </view>
 

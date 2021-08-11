@@ -30,7 +30,8 @@ Page({
     selectMerchantId:null,
     nowDateTime:'00:00',
     userLng:null,
-    userLat:null
+    userLat:null,
+    currentCityName:''
   },
   onLoad() {
     const that = this
@@ -77,7 +78,8 @@ Page({
               cityCode:null
             },
             userLng:longitude,
-            userLat:latitude
+            userLat:latitude,
+            currentCityName: adInfo.city
           },()=>{
             _this.getMerchantListForWx()
           })
@@ -157,6 +159,10 @@ Page({
     const _this = this;
     wx.navigateTo({
       url: '/pages/city/index',
+      success: function(res) {
+        // 通过eventChannel向被打开页面传送数据
+        res.eventChannel.emit('sendCurrentCityName', _this.data.currentCityName)
+      },
       events: {
         changeCity: function(data) {
           _this.changeCitySearch(data)
