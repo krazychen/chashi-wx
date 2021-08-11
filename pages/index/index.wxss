@@ -55,11 +55,10 @@ page {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-around;
 }
 .advertise-banner-item{
   width: 45%;
   height: 42%;
   border-radius: 10px;
+  margin: 2% 2.5% 0 2.5%;
 }

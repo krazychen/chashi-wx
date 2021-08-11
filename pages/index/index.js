@@ -22,7 +22,7 @@ Page({
   },
   getAdvertiseBannerListForWx:function(){
     request.post('/csAdvertise/getBannerListForWx',{}).then((res)=>{
-      const dataList = res.data.data||[]
+      let dataList = res.data.data||[]
       this.setData({
         advertiseBannerList:dataList
       })
