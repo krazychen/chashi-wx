@@ -2,12 +2,12 @@
    <view class="search-container">
       <view class="search-city-container" bindtap="openCity">
         <van-icon name="location" />
-        <view class="font-14">{{searchCityName}}</view>
+        <view class="font-14">{{searchParam.searchCityName}}</view>
         <van-icon name="arrow-down" />
       </view>
       <view class="search-wrap">
         <van-search 
-            value="{{searchMerchantName}}"
+            value="{{searchParam.merchantName}}"
             field-class="search-input-wrap"  
             shape="round"
             placeholder="搜索商家" 

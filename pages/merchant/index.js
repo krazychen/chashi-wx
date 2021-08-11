@@ -12,14 +12,13 @@ Page({
       merchantName:null,
       userLng:null,
       userLat:null,
+      searchCityName:null,
+      cityCode:null,
       current:1,
       size:10
     },
     merchantList: [],
     roomList:[],
-    searchCityName:null,
-    searchCityCode:null,
-    searchMerchantName:null,
     selectMerchantId:null,
     nowDateTime:'00:00',
     userLng:null,
@@ -32,26 +31,42 @@ Page({
       scrollHeight:sysRes.windowHeight - app.globalData.tabBarHeight - 40 // 搜索框高度 及 上下pading
     })
     wx.getLocation({
-      type: 'wgs84',
+      type: 'gcj02',
       success (res) {
-        that.setData({
-          searchParam:{
-            merchantName:null,
-            userLng:res.longitude,
-            userLat:res.latitude,
-            current:1,
-            size:10
-          },
-          userLng:res.longitude,
-          userLat:res.latitude
-        },()=>{
-          that.getMerchantListForWx()
-        })
+        // 获取当前城市名称
+        that.getCurrentCity(res.longitude,res.latitude)
       }
      })
   },
   onShow: function () {
     this.getTabBar().init()
+  },
+  getCurrentCity:function(longitude,latitude){
+    const _this = this;
+    wx.request({
+      url: "https://apis.map.qq.com/ws/geocoder/v1/?location="+latitude+","+longitude+"&key="+app.globalData.mapKey,
+      method: 'GET',
+      success: (res => {
+        if (res.data.status === 0) {
+          const adInfo = res.data.result.ad_info;
+          _this.setData({
+            searchParam:{
+              merchantName:null,
+              userLng:longitude,
+              userLat:latitude,
+              current:1,
+              size:10,
+              searchCityName:adInfo.city,
+              cityCode:null
+            },
+            userLng:longitude,
+            userLat:latitude
+          },()=>{
+            that.getMerchantListForWx()
+          })
+        } 
+      })
+    })
   },
   getMerchantListForWx:function(){
     request.post('/csMerchant/getPageListForWx',this.data.searchParam).then((res)=>{
@@ -106,16 +121,17 @@ Page({
   },
   onSearch:function(e) {
     const that = this;
+    const searchParam = this.data.searchParam
     this.setData({
       searchParam:{
         merchantName:e.detail,
-        userLng:that.data.userLng,
-        userLat:that.data.userLat,
-        cityCode:that.data.searchCityCode,
+        userLng:searchParam.userLng,
+        userLat:searchParam.userLat,
+        cityCode:searchParam.cityCode,
+        searchCityName:searchParam.searchCityName,
         current:1,
         size:10
-      },
-      searchMerchantName:e.detail
+      }
     },()=>{
       that.getMerchantListForWx()
     })
@@ -133,18 +149,17 @@ Page({
   },
   changeCitySearch:function(city){
       const that = this;
+      const searchParam = this.data.searchParam
       this.setData({
         searchParam:{
           merchantName:null,
-          userLng:that.data.userLng,
-          userLat:that.data.userLat,
+          userLng:searchParam.userLng,
+          userLat:searchParam.userLat,
           cityCode:city.areaCode,
+          searchCityName:city.areaName,
           current:1,
           size:10
-        },
-        searchMerchantName:null,
-        searchCityName:city.areaName,
-        searchCityCode:city.areaCode
+        }
       },()=>{
         that.getMerchantListForWx()
       })

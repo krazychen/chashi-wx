@@ -15,6 +15,7 @@ App({
   },
   globalData: {
     userInfo: null,
-    tabBarHeight: 50
+    tabBarHeight: 50,
+    mapKey:'FMXBZ-TXULW-2SVRL-RY734-IDFSF-2QFWF'
   }
 })
