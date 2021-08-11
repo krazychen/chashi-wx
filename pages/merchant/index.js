@@ -17,7 +17,9 @@ Page({
     },
     merchantList: [],
     roomList:[],
-    merchantName:null,
+    searchCityName:null,
+    searchCityCode:null,
+    searchMerchantName:null,
     selectMerchantId:null,
     nowDateTime:'00:00',
     userLng:null,
@@ -109,11 +111,42 @@ Page({
         merchantName:e.detail,
         userLng:that.data.userLng,
         userLat:that.data.userLat,
+        cityCode:that.data.searchCityCode,
         current:1,
         size:10
-      }
+      },
+      searchMerchantName:e.detail
     },()=>{
       that.getMerchantListForWx()
     })
+  },
+  openCity:function(){
+    const _this = this;
+    wx.navigateTo({
+      url: '/pages/city/index',
+      events: {
+        changeCity: function(data) {
+          _this.changeCitySearch(data)
+        }
+      }
+    })
+  },
+  changeCitySearch:function(city){
+      const that = this;
+      this.setData({
+        searchParam:{
+          merchantName:null,
+          userLng:that.data.userLng,
+          userLat:that.data.userLat,
+          cityCode:city.areaCode,
+          current:1,
+          size:10
+        },
+        searchMerchantName:null,
+        searchCityName:city.areaName,
+        searchCityCode:city.areaCode
+      },()=>{
+        that.getMerchantListForWx()
+      })
   }
 })

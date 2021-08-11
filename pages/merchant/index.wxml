@@ -1,9 +1,22 @@
 <view class="container">
-   <view class="search-wrap">
-        <van-search field-class="search-input-wrap"  
+   <view class="search-container">
+      <view class="search-city-container" bindtap="openCity">
+        <van-icon name="location" />
+        <view class="font-14">{{searchCityName}}</view>
+        <van-icon name="arrow-down" />
+      </view>
+      <view class="search-wrap">
+        <van-search 
+            value="{{searchMerchantName}}"
+            field-class="search-input-wrap"  
             shape="round"
             placeholder="搜索商家" 
             bind:search="onSearch" />
+      </view>
+        
+            <view class="search-sort-container">
+              <van-icon name="bars" />
+            </view>
     </view>
     <scroll-view class="merchant-scroll-view" scroll-y="true" style="height:{{scrollHeight}}px;">
         <block wx:if="{{merchantList && merchantList.length>0}}">
@@ -80,8 +93,11 @@
                             会员<span class="font-14">￥{{roomItem.menberAmount}}</span>/小时
                           </span>
                         </view>
-                        <view class="merchant-room-card-label font-12 font-gray" style="{{roomItem.menberAmount && roomItem.menberAmount >0?text-decoration:line-through}}">
-                          <span wx:if="{{roomItem.hoursAmount && roomItem.hoursAmount >0}}">
+                        <view class="merchant-room-card-label font-12 font-gray">
+                          <span wx:if="{{roomItem.menberAmount&&roomItem.menberAmount>0 && roomItem.hoursAmount && roomItem.hoursAmount >0}}" style="text-decoration:line-through">
+                            非会员{{roomItem.hoursAmount}}/小时
+                          </span>
+                          <span wx:if="{{!roomItem.menberAmount|| roomItem.menberAmount<=0 && roomItem.hoursAmount && roomItem.hoursAmount >0}}">
                             非会员{{roomItem.hoursAmount}}/小时
                           </span>
                        </view>

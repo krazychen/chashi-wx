@@ -1,0 +1,33 @@
+<!--pages/city/index.wxml-->
+<view class="container">
+  <view class="city-card-container">
+    <view class="city-card-item">
+      <view class="city-card-left-icon"></view>
+      <span class="font-14">当前定位城市</span>
+    </view>
+    <view class="city-card-item">
+      <van-icon name="location" color="rgb(72,165,132)" style="margin: 0 6px 0 10px"/>
+      <view class="font-14" style="color:rgb(72,165,132)">厦门市</view>
+    </view>
+  </view>
+
+  <view class="city-card-container">
+    <view class="city-card-item">
+      <view class="city-card-left-icon"></view>
+      <span class="font-14">已开通城市</span>
+    </view>
+    <view class="city-card-tag-item">
+      <van-tag 
+        wx:for="{{cityList}}"  
+        wx:for-item="cityItem" 
+        wx:key="id"
+        data-city="{{cityItem}}"
+        size="large"
+        color="rgb(241, 241, 241)"
+        text-color="rgb(120, 120, 120)"
+        style="margin:0 8px 8px 0px;font-size:14px;"
+        bindtap="changeCityName">{{cityItem.areaName}}</van-tag>
+    </view>
+  </view>
+</view>
+

@@ -4,11 +4,35 @@ page {
 }
 
 Page{
-  --search-padding:3px 12px;
+  --search-padding:3px 0px;
+}
+
+.search-container{
+  width: 100% !important;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #fff;
 }
 
 .search-wrap{
-  width: 100% !important;
+  width: 60% !important;
+}
+
+.search-city-container{
+  width: 22%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  margin: 0 2%;
+}
+
+.search-sort-container{
+  width: 8%;
+  height: 100%;
+  margin: 0 0 0 4%;
 }
 
 .search-input-wrap{
