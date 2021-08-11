@@ -15,8 +15,16 @@ Page({
       searchCityName:null,
       cityCode:null,
       current:1,
-      size:10
+      size:10,
+      sortType:1
     },
+    // 1：智能、按照距离、价格、时间，2：最近距离，默认5公里，3：按照价格从小到大，4：按照价格从大到小
+    sortTypeOption: [
+      { text: '智能', value: 1 },
+      { text: '最近距离', value: 2 },
+      { text: '价格从小到大', value: 3 },
+      { text: '价格从大到小', value: 4 }
+    ],
     merchantList: [],
     roomList:[],
     selectMerchantId:null,
@@ -49,6 +57,14 @@ Page({
       success: (res => {
         if (res.data.status === 0) {
           const adInfo = res.data.result.ad_info;
+          let currentCityCode = null;
+          if(adInfo && app.globalData.cityList && app.globalData.cityList.length > 0){
+            app.globalData.cityList.forEach(item=>{
+              if(item.areaName == adInfo.city){
+                currentCityCode = item.areaCode;
+              }
+            })
+          }
           _this.setData({
             searchParam:{
               merchantName:null,
@@ -56,13 +72,14 @@ Page({
               userLat:latitude,
               current:1,
               size:10,
+              cityCode:currentCityCode,
               searchCityName:adInfo.city,
               cityCode:null
             },
             userLng:longitude,
             userLat:latitude
           },()=>{
-            that.getMerchantListForWx()
+            _this.getMerchantListForWx()
           })
         } 
       })
@@ -163,5 +180,26 @@ Page({
       },()=>{
         that.getMerchantListForWx()
       })
+  },
+  toggleSortType:function(){
+    this.selectComponent('#sortDropDown').toggle();
+  },
+  changeSortType:function(e){
+    const searchParam = this.data.searchParam
+    const _this =this;
+    this.setData({
+      searchParam:{
+        merchantName:searchParam.merchantName,
+        userLng:searchParam.userLng,
+        userLat:searchParam.userLat,
+        cityCode:searchParam.cityCode,
+        searchCityName:searchParam.searchCityName,
+        sortType:e.detail,
+        current:1,
+        size:10
+      }
+    },()=>{
+      _this.getMerchantListForWx()
+    })
   }
 })

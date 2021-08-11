@@ -13,10 +13,12 @@
             placeholder="搜索商家" 
             bind:search="onSearch" />
       </view>
-        
-            <view class="search-sort-container">
-              <van-icon name="bars" />
-            </view>
+        <view class="search-sort-container">
+          <van-icon name="bars" bindtap="toggleSortType" />
+          <van-dropdown-menu style="position: absolute;top:-20px;right:-300px;">
+            <van-dropdown-item id="sortDropDown" options="{{ sortTypeOption }}" bind:change="changeSortType" />
+        </van-dropdown-menu>
+        </view>
     </view>
     <scroll-view class="merchant-scroll-view" scroll-y="true" style="height:{{scrollHeight}}px;">
         <block wx:if="{{merchantList && merchantList.length>0}}">

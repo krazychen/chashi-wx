@@ -1,21 +1,19 @@
 // app.js
+import request from './utils/request'
 App({
   onLaunch() {
-    // 展示本地存储能力
-    const logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
-
-    // 登录
-    wx.login({
-      success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
-      }
-    })
+    this.getReleaseCityWx()
   },
   globalData: {
     userInfo: null,
     tabBarHeight: 50,
+    cityList:[],
     mapKey:'FMXBZ-TXULW-2SVRL-RY734-IDFSF-2QFWF'
+  },
+  getReleaseCityWx:function(){
+    request.get('/sysArea/getReleaseCityWx',null).then((res)=>{
+      const dataList = res.data.data||[]
+      this.globalData.cityList = dataList
+    })
   }
 })

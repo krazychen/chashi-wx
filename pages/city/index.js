@@ -1,7 +1,6 @@
 
 
 const app = getApp()
-import request from '../../utils/request'
 import userBehavior from '../behavior/user-behavior'
 
 Page({
@@ -11,17 +10,13 @@ Page({
   },
 
   onLoad: function (options) {
-    this.getReleaseCityWx()
-  },
-  getReleaseCityWx:function(){
-    request.get('/sysArea/getReleaseCityWx',null).then((res)=>{
-      const dataList = res.data.data||[]
-      console.log(dataList)
+    if(app.globalData.cityList){
       this.setData({
-        cityList:dataList
+        cityList:app.globalData.cityList
       })
-    })
+    }
   },
+  
   changeCityName:function(e){
     const city = e.target.dataset.city
     wx.navigateBack({

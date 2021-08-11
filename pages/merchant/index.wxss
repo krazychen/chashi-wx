@@ -33,6 +33,7 @@ Page{
   width: 8%;
   height: 100%;
   margin: 0 0 0 4%;
+  position: relative;
 }
 
 .search-input-wrap{
