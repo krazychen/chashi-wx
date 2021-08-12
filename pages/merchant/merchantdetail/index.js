@@ -8,7 +8,7 @@ Page({
   behaviors: [userBehavior],
   data: {
     scrollHeight:null,
-    merchantId:null,
+    merchantTrans:null,
     merchantDetail:null,
     currentCourselIndex:1
   },
@@ -22,14 +22,14 @@ Page({
       })
     }).then((res) => {
       this.setData({
-        merchantId:res
+        merchantTrans:res
       },()=>{
         _this.getMerchantDetailById()
       })
     })
   },
   getMerchantDetailById:function(){
-    request.get('/csMerchant/infoForWx/'+this.data.merchantId,null).then((res)=>{
+    request.get('/csMerchant/infoForWx/'+this.data.merchantTrans.id,null).then((res)=>{
       const merchantDetail = res.data.data
       if(merchantDetail){
         if(merchantDetail.carouselUrlValue){
@@ -39,6 +39,7 @@ Page({
           merchantDetail.carouselUrlArray = [merchantDetail.logoUrlValue]
         }
       }
+      merchantDetail.merchantDistance = this.data.merchantTrans.merchantDistance
       this.setData({
         merchantDetail:merchantDetail
       })
@@ -48,5 +49,13 @@ Page({
     this.setData({
       currentCourselIndex:e.detail.current+1
     })
+  },
+  makePhoneCall:function(e){
+    const phoneNo = e.currentTarget.dataset.phoneno
+    if(phoneNo){
+      wx.makePhoneCall({
+        phoneNumber: phoneNo
+      })
+    }
   }
 })

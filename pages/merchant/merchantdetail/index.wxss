@@ -8,7 +8,7 @@ page {
   box-sizing: border-box;
   background-color: #ffffff;
   padding: 6px 10px;
-  margin: 8px 3%;
+  margin: 8px 3% 0 3%;
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -50,4 +50,29 @@ page {
   align-items: center;
   justify-content: space-between;
   margin: 0px 0 10px 0;
+}
+
+.merchant-detail-call-btn{
+  width: 90px;
+  height: 26px;
+  line-height:26px;
+  text-align: center;
+  border-radius: 20px;
+  box-shadow:0 0 4px rgb(153, 153, 153);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.merchant-detail-title{
+  width: 100%;
+  height: 20px;
+  font-size: 16px;
+  margin-top: 6px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }

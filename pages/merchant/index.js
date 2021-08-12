@@ -210,7 +210,7 @@ Page({
     })
   },
   makePhoneCall:function(e){
-    const phoneNo = e.currentTarget.dataset.phoneNo
+    const phoneNo = e.currentTarget.dataset.phoneno
     if(phoneNo){
       wx.makePhoneCall({
         phoneNumber: phoneNo
@@ -218,12 +218,15 @@ Page({
     }
   },
   openMerchantDetail:function(e){
-    const merchantId = e.currentTarget.dataset.id
-    console.log(merchantId);
+    const merchant = e.currentTarget.dataset.merchant
+    const merchantTrans = {
+      id:merchant.id,
+      merchantDistance:merchant.merchantDistance
+    }
     wx.navigateTo({
       url: '/pages/merchant/merchantdetail/index',
       success: function(res) {
-        res.eventChannel.emit('openMerchantDetail', merchantId)
+        res.eventChannel.emit('openMerchantDetail', merchantTrans)
       }
     })
   }

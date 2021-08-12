@@ -29,7 +29,7 @@
             class="merchant-card-container"
             style="background-image:url({{item.logoUrlValue}});background-size: 100% 160px; background-repeat:no-repeat;"
             >
-            <view class="merchant-card-info-container" data-id="{{item.id}}" bindtap="openMerchantDetail">
+            <view class="merchant-card-info-container" data-merchant="{{item}}" bindtap="openMerchantDetail">
               <view class="merchant-card-booktime">
                 <view>1小时</view>
                 <view>起订</view>

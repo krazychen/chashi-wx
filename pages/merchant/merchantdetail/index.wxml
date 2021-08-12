@@ -23,7 +23,6 @@
         {{currentCourselIndex}}/{{merchantDetail.carouselUrlArray.length}}
       </view>
     </view>
-
     <view class="merchant-detail-label-container">
       <view class="font-14">
         {{merchantDetail.merchantName}}
@@ -46,16 +45,19 @@
         距您{{merchantDetail.merchantDistance}}km
       </view>
     </view>
-
     <view class="merchant-detail-label-container">
       <view class="font-12 font-dark-gray">
         <van-icon name="clock-o" color="rgb(72,165,132)"/>
         营业时间{{merchantDetail.startTime}}-{{merchantDetail.endTime}}
       </view>
-      <view class="font-12 font-dark-gray">
-        联系商家
+      <view class="merchant-detail-call-btn font-12 font-dark-gray" data-phoneno="{{merchantDetail.contactPhonse}}" bindtap="makePhoneCall">
+        <van-icon name="phone-o" color="rgb(72,165,132)" size="16px" /><span style="margin-left:4px">联系商家</span>
       </view>
     </view>
-
+  </view>
+  <view class="merchant-detail-container">
+    <view class="merchant-detail-title">
+      <van-icon name="wap-home" color="rgb(72,165,132)" size="24px"/>茶室列表
+    </view>
   </view>
 </view>
