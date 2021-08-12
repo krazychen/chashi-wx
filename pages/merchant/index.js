@@ -213,8 +213,18 @@ Page({
     const phoneNo = e.currentTarget.dataset.phoneNo
     if(phoneNo){
       wx.makePhoneCall({
-        phoneNumber: '13666038053'
+        phoneNumber: phoneNo
       })
     }
+  },
+  openMerchantDetail:function(e){
+    const merchantId = e.currentTarget.dataset.id
+    console.log(merchantId);
+    wx.navigateTo({
+      url: '/pages/merchant/merchantdetail/index',
+      success: function(res) {
+        res.eventChannel.emit('openMerchantDetail', merchantId)
+      }
+    })
   }
 })

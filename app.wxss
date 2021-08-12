@@ -33,12 +33,20 @@
   color: rgb(136, 185, 31)
 }
 
+.font-dark-green{
+  color: rgb(72,165,132)
+}
+
 .font-red{
   color: rgb(255, 8, 47)
 }
 
 .font-gray{
   color: rgb(153, 153, 153)
+}
+
+.font-dark-gray{
+  color: rgb(102,102,102)
 }
 
 

@@ -29,11 +29,12 @@
             class="merchant-card-container"
             style="background-image:url({{item.logoUrlValue}});background-size: 100% 160px; background-repeat:no-repeat;"
             >
-            <view class="merchant-card-booktime">
-              <view>1小时</view>
-              <view>起订</view>
-            </view>
-            <view class="merchant-card-info">
+            <view class="merchant-card-info-container" data-id="{{item.id}}" bindtap="openMerchantDetail">
+              <view class="merchant-card-booktime">
+                <view>1小时</view>
+                <view>起订</view>
+              </view>
+              <view class="merchant-card-info" >
                 <view class="font-white" style="padding-left:10px;">
                   <view>
                     <span class="font-18">
@@ -57,6 +58,7 @@
                   <van-icon name="phone" size="20" color="#fff"/>
                 </view>
               </view>
+             </view>
               <view class="merchant-card-more">
                 <view wx:if="{{!selectMerchantId || selectMerchantId!=item.id}}" data-id="{{item.id}}" class="merchant-card-more-book font-16" bindtap="getRoomList">
                   预约茶室<van-icon name="arrow-down" color="rgb(72,165,132)" />

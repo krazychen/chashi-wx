@@ -1,0 +1,61 @@
+<view class="container">
+  <view class="merchant-detail-container">
+    <view class="merchant-carousel-container">
+      <swiper 
+        autoplay="{{true}}" 
+        class="merchant-carousel-item"
+        interval="{{3000}}"
+        circular="{{true}}"
+        bindchange="changeCrouselIndex"
+        >
+        <block 
+          wx:for="{{merchantDetail.carouselUrlArray}}" 
+          wx:for-item="item" 
+          wx:key="*this">
+          <swiper-item>
+            <view class="merchant-carousel-item" 
+              style="background-image:url({{item}});background-size: 100% 100%;background-repeat:no-repeat;">
+            </view>
+          </swiper-item>
+        </block>
+      </swiper>
+      <view class="merchant-carousel-item-count">
+        {{currentCourselIndex}}/{{merchantDetail.carouselUrlArray.length}}
+      </view>
+    </view>
+
+    <view class="merchant-detail-label-container">
+      <view class="font-14">
+        {{merchantDetail.merchantName}}
+      </view>
+      <view class="font-12 font-dark-gray">
+        已售67份
+      </view>
+    </view>
+    <view class="merchant-detail-label-container">
+      <view class="font-12">
+        ￥1/起<van-rate size="{{14}}" gutter="1" value="{{5}}" color="rgb(72,165,132)" readonly />
+      </view>
+    </view>
+    <view class="merchant-detail-label-container">
+      <view class="font-12 font-dark-gray">
+        <van-icon name="location-o" color="rgb(72,165,132)"/>
+        {{merchantDetail.address}}
+      </view>
+      <view class="font-12 font-dark-green">
+        距您{{merchantDetail.merchantDistance}}km
+      </view>
+    </view>
+
+    <view class="merchant-detail-label-container">
+      <view class="font-12 font-dark-gray">
+        <van-icon name="clock-o" color="rgb(72,165,132)"/>
+        营业时间{{merchantDetail.startTime}}-{{merchantDetail.endTime}}
+      </view>
+      <view class="font-12 font-dark-gray">
+        联系商家
+      </view>
+    </view>
+
+  </view>
+</view>

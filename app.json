@@ -2,8 +2,8 @@
   "pages":[
     "pages/index/index",
     "pages/merchant/index",
-    "pages/city/index",
-    "pages/logs/logs"
+    "pages/merchant/merchantdetail/index",
+    "pages/city/index"
   ],
   "permission": {
     "scope.userLocation": {

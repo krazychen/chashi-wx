@@ -1,0 +1,53 @@
+
+page {
+  background-color: rgb(241, 241, 241);
+}
+
+.merchant-detail-container{
+  width: 94%;
+  box-sizing: border-box;
+  background-color: #ffffff;
+  padding: 6px 10px;
+  margin: 8px 3%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  border-radius: 8px;
+}
+
+.merchant-carousel-container{
+  width: 100%;
+  height: 170px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 14px;
+}
+.merchant-carousel-item{
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+.merchant-carousel-item-count{
+  width: 40px;
+  height: 20px;
+  line-height: 20px;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 10px;
+  position: absolute;
+  right:10px;
+  bottom:5px;
+  text-align: center;
+  color: #ffffff;
+  font-size: 12px;
+}
+
+.merchant-detail-label-container{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0px 0 10px 0;
+}
