@@ -19,6 +19,7 @@ Page{
   width: 60% !important;
 }
 
+
 .search-city-container{
   width: 22%;
   height: 100%;
