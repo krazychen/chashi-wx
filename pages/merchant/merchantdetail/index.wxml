@@ -60,4 +60,16 @@
       <van-icon name="wap-home" color="rgb(72,165,132)" size="24px"/>茶室列表
     </view>
   </view>
+
+  <view class="merchant-detail-container">
+    <view class="merchant-detail-title">
+      <van-icon name="info" color="rgb(72,165,132)" size="24px"/>服务设施
+    </view>
+  </view>
+
+  <view class="merchant-detail-container">
+    <view class="merchant-detail-title">
+      <van-icon name="todo-list" color="rgb(72,165,132)" size="24px"/>预约须知
+    </view>
+  </view>
 </view>
