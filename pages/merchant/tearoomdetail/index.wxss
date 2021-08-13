@@ -261,6 +261,9 @@ page {
   box-sizing: border-box;
   padding: 10px 10px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .room-book-top-tips{
@@ -283,7 +286,21 @@ page {
   width: 100%;
   height: calc(100% - 70px);
   box-sizing: border-box;
-  background-color: red;
+  background-color: rgb(241, 241, 241);
+  padding: 5px 0;
+}
 
+.room-able-booktime-item{
+  width: 20%;
+  height: 40px;
+  line-height: 40px;
+  box-sizing: border-box;
+  display: inline-block;
+  margin: 5px 2.5%;
+  background-color: #fff;
+  border: 1px solid gray;
+  border-radius: 4px;
+  font-size: 14px;
+  text-align: center;
 }
 

@@ -109,20 +109,22 @@ Page({
     const merchantEndTimeArr = roomDetail.merchantEndTime.split(":")
     const merchantEndHour = Number(merchantEndTimeArr[0])
     const ableTimeList = []
-    // 预约日期 在当天
-    if(bookingDate <= nowDate){
-      const currentHour = nowDate.getHours();  
-      if(currentHour > merchantStartHour && currentHour < merchantEndHour){
-        merchantStartHour = currentHour + minBookingTime
-      }else{
-        merchantStartHour = -1
-      }
-    }
+    
     if(merchantStartHour >= 0 && merchantStartHour < merchantEndHour ){
       for(let i=merchantStartHour;i<=merchantEndHour;i=i+minBookingTime){
         const bookingTimeObj = {}
         bookingTimeObj.bookingTime = i+':'+merchantStartTimeArr[1]
-        bookingTimeObj.bookingStatus = 1
+        // 预约日期 在当天
+        if(bookingDate <= nowDate){
+          const currentHour = nowDate.getHours();  
+          if(currentHour >= i){
+            bookingTimeObj.bookingStatus = 0
+          }else{
+            bookingTimeObj.bookingStatus = 1
+          }
+        }else{
+          bookingTimeObj.bookingStatus = 1
+        }
         ableTimeList.push(bookingTimeObj)
       }
     }

@@ -130,34 +130,33 @@
     bind:close="onBookPopClose"
   >
     <view class="room-book-pop-container">
-      <view class="room-book-top-fix">
-        <view class="room-book-top-tips">
-          <van-icon name="volume" color="red" size="12"/>
-          <span class="font-12 font-red">[{{roomDetail.startTime}}小时起订]</span>
-          <span class="font-12 font-gray">选择时间必须连续,灰色不可选</span>
-        </view> 
-        <view class="room-book-date-container">
-            <view class="{{currentDateFlag?'merchant-facilities-item-disable':'merchant-facilities-item'}}"
-              data-days="{{-1}}"
-              bindtap="computedBookingDate">
-              前一天
-            </view>
-            <view>
-            {{bookingDateString}}
-            </view>
-            <view class="merchant-facilities-item" 
-            data-days="{{1}}"
+      <view class="room-book-top-tips">
+        <van-icon name="volume" color="red" size="12"/>
+        <span class="font-12 font-red">[{{roomDetail.startTime}}小时起订]</span>
+        <span class="font-12 font-gray">选择时间必须连续,灰色不可选</span>
+      </view> 
+      <view class="room-book-date-container">
+          <view class="{{currentDateFlag?'merchant-facilities-item-disable':'merchant-facilities-item'}}"
+            data-days="{{-1}}"
             bindtap="computedBookingDate">
-              后一天
-            </view>
-        </view> 
-      </view>
+            前一天
+          </view>
+          <view>
+          {{bookingDateString}}
+          </view>
+          <view class="merchant-facilities-item" 
+          data-days="{{1}}"
+          bindtap="computedBookingDate">
+            后一天
+          </view>
+      </view> 
       <view class="van-hairline--top-bottom"></view>
       <scroll-view class="room-able-booktime-container" scroll-y="true" >
         <view
           wx:for="{{ableBookingTimeList}}"  
           wx:for-item="bookingItem" 
           wx:key="*this"
+          class="room-able-booktime-item"
         >
           {{bookingItem.bookingTime}}
         </view>
