@@ -99,7 +99,7 @@ Page({
           if(!item.startTime || item.startTime==null || item.startTime==''){
             item.startTime = "00:00";
           }
-          if(!item.endTime|| item.startTime==null || item.startTime==''){
+          if(!item.endTime|| item.endTime==null || item.endTime==''){
             item.endTime = "23:59";
           }
           const startTimeArr = item.startTime.split(":");
@@ -113,7 +113,6 @@ Page({
           }
         })
       }
-      console.log(dataList)
       this.setData({
         merchantList:dataList
       })
@@ -238,7 +237,9 @@ Page({
       id:roomId,
       merchantDistance:merchant.merchantDistance,
       address:merchant.address,
-      usageNotice:merchant.usageNotice
+      usageNotice:merchant.usageNotice,
+      merchantStartTime:merchant.startTime,
+      merchantEndTime:merchant.endTime
     }
     wx.navigateTo({
       url: '/pages/merchant/tearoomdetail/index',
