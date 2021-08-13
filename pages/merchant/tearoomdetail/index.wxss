@@ -50,6 +50,24 @@ page {
   align-items: center;
   justify-content: space-between;
   margin: 0px 0 10px 0;
+  overflow: hidden;
+}
+
+.merchant-icon-container{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.merchant-detail-call-icon{
+  width: 24px;
+  height: 24px;
+  background-color: rgb(72,165,132);
+  border-radius: 50%;
+  text-align: center;
+  line-height: 22px;
+  margin-left:20px;
 }
 
 .merchant-detail-call-btn{
@@ -92,7 +110,7 @@ page {
 
 .merchant-room-card-logo{
   width: 100px;
-  height: 100px;
+  height: 98px;
   border-radius: 6px;
   box-sizing: border-box;
 }

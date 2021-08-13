@@ -3,6 +3,7 @@
     "pages/index/index",
     "pages/merchant/index",
     "pages/merchant/merchantdetail/index",
+    "pages/merchant/tearoomdetail/index",
     "pages/city/index"
   ],
   "permission": {

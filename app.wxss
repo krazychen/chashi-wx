@@ -29,9 +29,14 @@
   color: #fff;
 }
 
+.font-blue{
+  color: rgb(60, 76, 151)
+}
+
 .font-green{
   color: rgb(136, 185, 31)
 }
+
 
 .font-orange{
   color: rgb(255,112,4)

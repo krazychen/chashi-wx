@@ -229,5 +229,23 @@ Page({
         res.eventChannel.emit('openMerchantDetail', merchantTrans)
       }
     })
+  },
+  openRoomDetail:function(e){
+    const roomId = e.currentTarget.dataset.id
+    const merchant = e.currentTarget.dataset.merchant
+
+    const dataTrans = {
+      id:roomId,
+      merchantDistance:merchant.merchantDistance,
+      address:merchant.address,
+      usageNotice:merchant.usageNotice
+    }
+    wx.navigateTo({
+      url: '/pages/merchant/tearoomdetail/index',
+      success: function(res) {
+        res.eventChannel.emit('openRoomDetail', dataTrans)
+      }
+    })
+
   }
 })

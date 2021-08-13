@@ -70,7 +70,11 @@
                   <view class="merchant-room-card-container"
                         wx:for="{{roomList}}"  
                         wx:for-item="roomItem" 
-                        wx:key="id">
+                        wx:key="id"
+                        data-id="{{roomItem.id}}"
+                        data-merchant="{{item}}"
+                        bindtap="openRoomDetail"
+                        >
                       <view class="merchant-room-card-logo"
                         style="background-image:url({{roomItem.roomLogoUrl}});background-size: 100% 100%;background-repeat:no-repeat;">
                         <view class="merchant-room-card-logo-corner">
