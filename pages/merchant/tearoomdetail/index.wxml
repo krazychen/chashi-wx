@@ -1,5 +1,9 @@
 <view class="container">
   <view class="merchant-detail-container" style="margin-top:10px">
+     <view class="merchant-card-booktime">
+        <view>{{roomDetail.startTime}}小时</view>
+        <view>起订</view>
+      </view>
     <view class="merchant-carousel-container">
       <swiper 
         autoplay="{{true}}" 
@@ -102,7 +106,7 @@
     </block>
   </view>
 
-  <view class="merchant-detail-container">
+  <view class="merchant-detail-container" style="margin-bottom:70px">
     <view class="merchant-detail-title">
       <van-icon name="todo-list" color="rgb(72,165,132)" size="22px"/><span style="margin-left:8px">预约须知</span>
     </view>
@@ -115,4 +119,34 @@
       <van-empty description="暂无数据" />
     </block>
   </view>
+
+  <view class="room-book-btn-container">
+    <button class="room-book-btn" bindtap="openBookPop">选择预定时间</button>
+  </view>
+  <van-popup
+    show="{{ showBookPop }}"
+    position="bottom"
+    custom-style="height: 80%;"
+    bind:close="onBookPopClose"
+  >
+    <view class="room-book-pop-container">
+      <view class="room-book-tips">
+        <van-icon name="volume" color="red" size="12"/>
+        <span class="font-12 font-red">[{{roomDetail.startTime}}小时起订]</span>
+        <span class="font-12 font-gray">选择时间必须连续,灰色不可选</span>
+      </view> 
+
+      <view class="room-book-date-container">
+          <view class="merchant-facilities-item">
+            前一天
+          </view>
+          <view>
+          2021-08-13
+          </view>
+          <view class="merchant-facilities-item">
+            后一天
+          </view>
+      </view> 
+    </view>
+  </van-popup>
 </view>

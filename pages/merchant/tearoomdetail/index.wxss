@@ -13,6 +13,8 @@ page {
   flex-direction: column;
   justify-content: start;
   border-radius: 8px;
+  position: relative;
+  overflow: hidden;
 }
 
 .merchant-carousel-container{
@@ -23,6 +25,24 @@ page {
   position: relative;
   margin-bottom: 14px;
 }
+
+.merchant-card-booktime{
+  width: 50px;
+  height: 50px;
+  z-index: 10;
+  background-color: rgb(72,165,132);
+  border-radius: 50%;
+  color: #fff;
+  font-size: 12px;
+  position: absolute;
+  top:15px;
+  right:15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .merchant-carousel-item{
   width: 100%;
   height: 100%;
@@ -203,3 +223,40 @@ page {
   color: #ffffff;
   font-size: 14px;
 }
+
+.room-book-btn-container{
+  width: 100%;
+  height: 50px;
+  background-color: #fff;
+  position:fixed;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.room-book-btn{
+  width: 88% !important;
+  height: 40px !important;
+  margin: 5px 0;
+  background-color: rgb(72,165,132);
+  color: #fff;
+}
+
+.room-book-pop-container{
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 10px 10px;
+}
+
+.room-book-date-container{
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+

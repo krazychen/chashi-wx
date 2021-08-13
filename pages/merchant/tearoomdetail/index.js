@@ -11,7 +11,8 @@ Page({
     scrollHeight:null,
     dataTrans:null,
     roomDetail:null,
-    currentCourselIndex:1
+    currentCourselIndex:1,
+    showBookPop:false
   },
   onLoad() {
     const _this = this;
@@ -71,5 +72,33 @@ Page({
         phoneNumber: phoneNo
       })
     }
+  },
+  openBookPop:function(e){
+    const nowDate  = new Date();
+    const nowYear = nowDate.getFullYear(); 
+    const nowMonth = nowDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
+    const nowDay = nowDate.getDate(); //获取当前日(1-31)
+      if(!item.startTime || item.startTime==null || item.startTime==''){
+        item.startTime = "00:00";
+      }
+      if(!item.endTime|| item.startTime==null || item.startTime==''){
+        item.endTime = "23:59";
+      }
+      const startTimeArr = item.startTime.split(":");
+      const startDate = new Date( nowYear, nowMonth, nowDay, startTimeArr[0], startTimeArr[1], 0);
+      const endTimeArr = item.endTime.split(":");
+      const endDate = new Date( nowYear, nowMonth, nowDay, endTimeArr[0], endTimeArr[1], 0);
+
+    this.setData({
+      showBookPop:true
+    })
+  },
+  getBookingAbleTimeList:function(){
+
+  },
+  onBookPopClose:function(){
+    this.setData({
+      showBookPop:false
+    })
   }
 })
