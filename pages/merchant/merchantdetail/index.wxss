@@ -8,7 +8,7 @@ page {
   box-sizing: border-box;
   background-color: #ffffff;
   padding: 6px 10px;
-  margin: 8px 3% 0 3%;
+  margin: 0px 3% 20px 3%;
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -75,4 +75,113 @@ page {
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+}
+
+
+.merchant-room-card-container{
+  width: 100%;
+  height: 120px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+}
+
+
+.merchant-room-card-logo{
+  width: 100px;
+  height: 98px;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+.merchant-room-card-logo-corner{
+  height: 26px;
+  position:absolute;
+  top:0px;
+  right: 30px;
+  padding: 0 10px;
+  line-height: 26px;
+  box-sizing: border-box;
+  background-image: linear-gradient(to right,rgb(255,112,4) , rgb(255, 172, 109));
+  /* background-color: rgb(255,112,4) ; */
+  color: #fff;
+  font-size: 12px;
+  border-radius: 14px;
+}
+
+.merchant-room-card-right-container{
+  width: calc(100% - 100px);
+  height: 100px;
+  box-sizing: border-box;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  border-top:1px solid rgb(255,112,4);
+  border-bottom:1px solid rgb(255,112,4);
+  border-right:1px solid rgb(255,112,4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 10px;
+}
+
+.merchant-room-card-label-container{
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+  justify-content: space-between;
+}
+
+.merchant-room-card-label{
+  text-align: left;
+}
+
+.merchant-room-card-booking{
+  width: 60px;
+  height: 30px;
+  line-height: 30px;
+  background-color: rgb(72,165,132);
+  border-radius: 24px;
+  text-align: center;
+  color: #ffffff;
+  font-size: 16px;
+}
+
+.merchat-gray-container{
+  width: 100%;
+  background-color: rgb(241, 241, 241);
+  box-sizing: border-box;
+  padding: 20px 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: start;
+}
+
+.merchat-gray-text-container{
+  width: 100%;
+  background-color: rgb(241, 241, 241);
+  box-sizing: border-box;
+  padding: 20px 10px;
+  border-radius: 8px;
+}
+
+.merchant-facilities-item{
+  margin: 6px 15px;
+  padding: 0 15px;
+  height: 26px;
+  line-height: 26px;
+  background-color: rgb(72,165,132);
+  border-radius: 12px;
+  text-align: center;
+  color: #ffffff;
+  font-size: 14px;
 }

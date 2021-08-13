@@ -3,6 +3,7 @@
 const app = getApp()
 import request from '../../../utils/request'
 import userBehavior from '../../behavior/user-behavior'
+import util from '../../../utils/util'
 
 Page({
   behaviors: [userBehavior],
@@ -38,7 +39,39 @@ Page({
         }else{
           merchantDetail.carouselUrlArray = [merchantDetail.logoUrlValue]
         }
+        if(merchantDetail.facilitiesName){
+          const facilitiesNameArray = merchantDetail.facilitiesName.split(",")
+          merchantDetail.facilitiesNameArray = facilitiesNameArray
+        }else{
+          merchantDetail.facilitiesNameArray = []
+        }
+        if(merchantDetail.usageNotice){
+          merchantDetail.usageNotice = util.unescape(merchantDetail.usageNotice).replace(/<[^>]*>/g, '')
+        }
+
+        if(merchantDetail.tearoomList && merchantDetail.tearoomList.length>0){
+          let hoursAmount = 9999999
+          let buyRecord = 0
+          merchantDetail.tearoomList.forEach(item=>{
+            if(item.hoursAmount < hoursAmount){
+              hoursAmount = item.hoursAmount
+            }
+            if(!item.buyRecord){
+              item.buyRecord = 0
+            }
+            buyRecord = buyRecord + item.buyRecord
+          });
+          if(hoursAmount == 9999999){
+            hoursAmount = 0
+          }
+          merchantDetail.hoursAmount = hoursAmount
+          merchantDetail.buyRecord = buyRecord
+        }else{
+          merchantDetail.hoursAmount = 0
+          merchantDetail.buyRecord = 0
+        }
       }
+
       merchantDetail.merchantDistance = this.data.merchantTrans.merchantDistance
       this.setData({
         merchantDetail:merchantDetail

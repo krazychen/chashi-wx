@@ -113,6 +113,7 @@ Page{
 .merchant-room-card-container{
   width: 100%;
   height: 120px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -122,8 +123,8 @@ Page{
 .merchant-room-card-logo{
   width: 100px;
   height: 100px;
+  box-sizing: border-box;
   border-radius: 6px;
-  background-image:url('https://seopic.699pic.com/photo/50068/7103.jpg_wh1200.jpg');
 }
 
 .merchant-room-card-logo-corner{
@@ -139,15 +140,30 @@ Page{
   border-bottom-right-radius: 6px;
 }
 
-.merchant-room-card-label-container{
+
+.merchant-room-card-right-container{
+  width: calc(100% - 100px);
   height: 100px;
-  line-height: 16px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 10px;
-  overflow: hidden;
+  justify-content: center;
+  padding: 0px 0px 0 10px;
 }
+
+.merchant-room-card-label-container{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+  justify-content: space-between;
+}
+
+/* .merchant-room-card-label{
+  text-align: left;
+} */
 
 .merchant-room-card-label{
   width: 100%;

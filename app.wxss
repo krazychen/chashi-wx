@@ -33,6 +33,10 @@
   color: rgb(136, 185, 31)
 }
 
+.font-orange{
+  color: rgb(255,112,4)
+}
+
 .font-dark-green{
   color: rgb(72,165,132)
 }

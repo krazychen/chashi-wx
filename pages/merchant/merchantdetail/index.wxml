@@ -1,5 +1,5 @@
 <view class="container">
-  <view class="merchant-detail-container">
+  <view class="merchant-detail-container" style="margin-top:10px">
     <view class="merchant-carousel-container">
       <swiper 
         autoplay="{{true}}" 
@@ -28,12 +28,12 @@
         {{merchantDetail.merchantName}}
       </view>
       <view class="font-12 font-dark-gray">
-        已售67份
+        已售{{merchantDetail.buyRecord}}份
       </view>
     </view>
     <view class="merchant-detail-label-container">
       <view class="font-12">
-        ￥1/起<van-rate size="{{14}}" gutter="1" value="{{5}}" color="rgb(72,165,132)" readonly />
+        ￥{{merchantDetail.hoursAmount}}/起<van-rate size="{{14}}" gutter="1" value="{{5}}" color="rgb(72,165,132)" readonly />
       </view>
     </view>
     <view class="merchant-detail-label-container">
@@ -57,19 +57,90 @@
   </view>
   <view class="merchant-detail-container">
     <view class="merchant-detail-title">
-      <van-icon name="wap-home" color="rgb(72,165,132)" size="24px"/>茶室列表
+      <van-icon name="wap-home" color="rgb(72,165,132)" size="22px"/><span style="margin-left:8px">茶室列表</span>
     </view>
+    <block wx:if="{{merchantDetail.tearoomList && merchantDetail.tearoomList.length>0}}">
+      <view class="merchant-room-card-container"
+            wx:for="{{merchantDetail.tearoomList}}"  
+            wx:for-item="roomItem" 
+            wx:key="id">
+          <view class="merchant-room-card-logo-corner">
+            {{roomItem.startTime}}小时起订
+          </view>
+          <view class="merchant-room-card-logo"
+            style="background-image:url({{roomItem.roomLogoUrl}});background-size: 100% 100%;background-repeat:no-repeat;">
+            
+          </view>
+          <view class="merchant-room-card-right-container">
+            <view class="merchant-room-card-label-container">
+              <view class="merchant-room-card-label font-18">
+                {{roomItem.roomName}}
+              </view>
+            </view>
+            <view class="merchant-room-card-label-container">
+              <view class="merchant-room-card-label font-12 font-dark-gray">
+                推荐：
+                <span wx:if="{{roomItem.recomNumUsers}}">{{roomItem.recomNumUsers}}</span>
+                <span wx:else>1</span>人使用
+              </view>
+              <view class="merchant-room-card-booking">
+                预约
+              </view>
+            </view>
+            <view class="merchant-room-card-label-container">
+              <view class="merchant-room-card-label font-12 font-orange">
+                  <span wx:if="{{roomItem.menberAmount && roomItem.menberAmount >0}}">
+                    会员<span style="font-weight: bolder;">{{roomItem.menberAmount}}</span>/小时
+                  </span>
+                  <span class="font-12 font-gray">
+                    <span wx:if="{{roomItem.menberAmount&&roomItem.menberAmount>0 && roomItem.hoursAmount && roomItem.hoursAmount >0}}" style="text-decoration:line-through;margin-left:10px">
+                      非会员{{roomItem.hoursAmount}}/小时
+                    </span>
+                    <span wx:if="{{!roomItem.menberAmount|| roomItem.menberAmount<=0 && roomItem.hoursAmount && roomItem.hoursAmount >0}}" >
+                      非会员{{roomItem.hoursAmount}}/小时
+                    </span>
+                  </span>
+              </view>
+            </view>
+          </view>
+      </view>
+    </block>
+    <block wx:else>
+      <van-empty description="暂无数据" />
+    </block>
   </view>
 
   <view class="merchant-detail-container">
     <view class="merchant-detail-title">
-      <van-icon name="info" color="rgb(72,165,132)" size="24px"/>服务设施
+      <van-icon name="info" color="rgb(72,165,132)" size="22px"/><span style="margin-left:8px">服务设施</span>
     </view>
+    <block wx:if="{{merchantDetail.facilitiesNameArray && merchantDetail.facilitiesNameArray.length>0}}">
+      <view class="merchat-gray-container">
+          <view class="merchant-facilities-item"
+          wx:for="{{merchantDetail.facilitiesNameArray}}"  
+            wx:for-item="item" 
+            wx:key="*this"
+          >
+            {{item}}
+          </view>
+      </view>
+    </block>
+    <block wx:else>
+      <van-empty description="暂无数据" />
+    </block>
   </view>
 
   <view class="merchant-detail-container">
     <view class="merchant-detail-title">
-      <van-icon name="todo-list" color="rgb(72,165,132)" size="24px"/>预约须知
+      <van-icon name="todo-list" color="rgb(72,165,132)" size="22px"/><span style="margin-left:8px">预约须知</span>
     </view>
+    <block wx:if="{{merchantDetail.usageNotice}}">
+      <view class="merchat-gray-text-container">
+        {{merchantDetail.usageNotice}}
+      </view>
+    </block>
+    <block wx:else>
+      <van-empty description="暂无数据" />
+    </block>
   </view>
 </view>
