@@ -54,7 +54,7 @@
                     <span class="font-12 font-green" style="padding-left: 5px;">{{item.businessState}}</span>
                   </view>     
                 </view>
-                <view class="merchant-card-info-call-icon" data-phoneno="{{item.contactPhonse}}" bindtap="makePhoneCall">
+                <view class="merchant-card-info-call-icon" data-phoneno="{{item.contactPhonse}}" catchtap="makePhoneCall">
                   <van-icon name="phone" size="20" color="#fff"/>
                 </view>
               </view>

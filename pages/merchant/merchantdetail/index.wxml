@@ -63,7 +63,10 @@
       <view class="merchant-room-card-container"
             wx:for="{{merchantDetail.tearoomList}}"  
             wx:for-item="roomItem" 
-            wx:key="id">
+            wx:key="id"
+            data-id="{{roomItem.id}}"
+            data-merchant="{{merchantDetail}}"
+            bindtap="openRoomDetail">
           <view class="merchant-room-card-logo-corner">
             {{roomItem.startTime}}小时起订
           </view>

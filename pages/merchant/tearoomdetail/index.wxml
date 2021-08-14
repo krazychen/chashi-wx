@@ -63,7 +63,7 @@
         {{roomDetail.address}}
       </view>
       <view class="merchant-icon-container">
-        <view class="merchant-detail-call-icon">
+        <view class="merchant-detail-call-icon" bindtap="openMapLocation">
           <van-icon name="location" size="15" color="#fff"/>
         </view>
         <view class="merchant-detail-call-icon" data-phoneno="{{roomDetail.contactPhonse}}" bindtap="makePhoneCall">
@@ -76,7 +76,7 @@
         {{roomDetail.merchantDistance}}km
       </view>
       <view class="merchant-icon-container">
-        <view class="font-14" style="text-align:center;margin-left:20px;">
+        <view class="font-14" style="text-align:center;margin-left:20px;" bindtap="openMapLocation">
           导航
         </view>
         <view class="font-14" style="text-align:center;margin-left:15px;" data-phoneno="{{roomDetail.contactPhonse}}" bindtap="makePhoneCall">
@@ -121,12 +121,12 @@
   </view>
 
   <view class="room-book-btn-container">
-    <button class="room-book-btn" bindtap="openBookPop">选择预定时间</button>
+    <button class="room-book-btn" bindtap="openBookPop">选择预订时间</button>
   </view>
   <van-popup
     show="{{ showBookPop }}"
     position="bottom"
-    custom-style="height: 80%;"
+    custom-style="height: 90%;"
     bind:close="onBookPopClose"
   >
     <view class="room-book-pop-container">
@@ -136,19 +136,19 @@
         <span class="font-12 font-gray">选择时间必须连续,灰色不可选</span>
       </view> 
       <view class="room-book-date-container">
-          <view class="{{currentDateFlag?'merchant-facilities-item-disable':'merchant-facilities-item'}}"
-            data-days="{{-1}}"
-            bindtap="computedBookingDate">
-            前一天
-          </view>
-          <view>
-          {{bookingDateString}}
-          </view>
-          <view class="merchant-facilities-item" 
-          data-days="{{1}}"
+        <view class="{{currentDateFlag?'merchant-facilities-item-disable':'merchant-facilities-item'}}"
+          data-days="{{-1}}"
           bindtap="computedBookingDate">
-            后一天
-          </view>
+          前一天
+        </view>
+        <view>
+        {{bookingDateString}}
+        </view>
+        <view class="merchant-facilities-item" 
+        data-days="{{1}}"
+        bindtap="computedBookingDate">
+          后一天
+        </view>
       </view> 
       <view class="van-hairline--top-bottom"></view>
       <scroll-view class="room-able-booktime-container" scroll-y="true" >
@@ -156,11 +156,25 @@
           wx:for="{{ableBookingTimeList}}"  
           wx:for-item="bookingItem" 
           wx:key="*this"
-          class="room-able-booktime-item"
+          data-bookingtime="{{bookingItem}}"
+          bindtap="selectBookingTime"
+          class="{{bookingItem.bookingStatus==0?'room-able-booktime-item-disable':(startBookingTimeNum && endBookingTimeNum && bookingItem.bookingTimeNum >= startBookingTimeNum &&bookingItem.bookingTimeNum<=endBookingTimeNum ?'room-able-booktime-item-select':'room-able-booktime-item')}}"
         >
           {{bookingItem.bookingTime}}
         </view>
       </scroll-view>
+      <view class="room-booktime-confirm-container" bindtap="confirmBooking">
+          <span wx:if="{{startBookingTime && endBookingTime}}">
+            选好了:{{startBookingTime}}-{{endBookingTime}}
+            <span wx:if="{{endBookingTimeNum-startBookingTimeNum >0}}">
+              共{{(endBookingTimeNum-startBookingTimeNum)/100}}小时
+            </span>
+          </span>
+          <span wx:else>
+            选择预订时间
+          </span>
+          <van-toast id="van-toast" />
+      </view> 
     </view>
   </van-popup>
 </view>

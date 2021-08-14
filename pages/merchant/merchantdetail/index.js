@@ -90,5 +90,25 @@ Page({
         phoneNumber: phoneNo
       })
     }
+  },
+  openRoomDetail:function(e){
+    const roomId = e.currentTarget.dataset.id
+    const merchant = e.currentTarget.dataset.merchant
+    const dataTrans = {
+      id:roomId,
+      merchantDistance:merchant.merchantDistance,
+      address:merchant.address,
+      usageNotice:merchant.usageNotice,
+      merchantStartTime:merchant.startTime,
+      merchantEndTime:merchant.endTime,
+      merchantLongitude:merchant.longitude,
+      merchantLatitude:merchant.latitude
+    }
+    wx.navigateTo({
+      url: '/pages/merchant/tearoomdetail/index',
+      success: function(res) {
+        res.eventChannel.emit('openRoomDetail', dataTrans)
+      }
+    })
   }
 })
