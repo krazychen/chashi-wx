@@ -122,11 +122,9 @@ Page({
     const selectMerchantId = e.currentTarget.dataset.id
     request.post('/csTearoom/getRoomListForWx/'+selectMerchantId,null).then((res)=>{
       const dataList = res.data.data.records||[]
-      if(dataList && dataList.length>0){
-        this.setData({
-          roomList:dataList
-        })
-      }
+      this.setData({
+        roomList:dataList
+      })
       this.setData({
         selectMerchantId:e.currentTarget.dataset.id
       })

@@ -41,7 +41,7 @@ Page({
   },
   getRoomDetailById:function(){
     request.get('/csTearoom/infoForWx/'+this.data.dataTrans.id,null).then((res)=>{
-      const roomDetail = res.data.data
+      const roomDetail = res.data.data || null
       if(roomDetail){
         if(roomDetail.roomBannerUrl){
           const carouselUrlArray = roomDetail.roomBannerUrl.split(",")
@@ -127,13 +127,13 @@ Page({
     if(merchantStartHour >= 0 && merchantStartHour < merchantEndHour ){
       for(let i=merchantStartHour;i<=merchantEndHour;i=i+minBookingTime){
         const bookingTimeObj = {}
-        if(i== merchantEndHour){
-          if(Number(merchantStartTimeArr[1]) > Number(merchantEndTimeArr[1])){
-            break;
-          }
+        if(Number((i+minBookingTime)+merchantStartTimeArr[1]) > Number(merchantEndTimeArr[0]+merchantEndTimeArr[1])){
+          break;
         }
-        bookingTimeObj.bookingTime = i+':'+merchantStartTimeArr[1]
-        bookingTimeObj.bookingTimeNum = Number(i+merchantStartTimeArr[1])
+        bookingTimeObj.bookingItemStartTime = i+':'+merchantStartTimeArr[1]
+        bookingTimeObj.bookingItemStartTimeNum = Number(i+merchantStartTimeArr[1])
+        bookingTimeObj.bookingItemEndTime = (i+minBookingTime)+':'+merchantStartTimeArr[1]
+        bookingTimeObj.bookingItemEndTimeNum = Number((i+minBookingTime)+merchantStartTimeArr[1])
         // 预约日期 在当天
         // TODO 获取已预订日期，比对。
         if(bookingDate <= nowDate){
@@ -184,7 +184,12 @@ Page({
       // 预约日期 在当天。校验小时。
       if(bookingDate <= nowDate){
         const currentHour = nowDate.getHours();  
-        if(currentHour >= Number(bookingItem.bookingTime.split(":")[0])){
+        const startBookingTime = this.data.startBookingTime;
+        let selectTime = bookingItem.bookingItemStartTime
+        if(startBookingTime){
+          selectTime = startBookingTime
+        }
+        if(currentHour >= Number(selectTime.split(":")[0])){
           this.getBookingAbleTimeList(bookingDate)
           this.setData({
             startBookingTime:null,
@@ -197,47 +202,31 @@ Page({
       }
       if(!this.data.startBookingTime){
         this.setData({
-          startBookingTime:bookingItem.bookingTime,
-          startBookingTimeNum:bookingItem.bookingTimeNum,
-          endBookingTime:bookingItem.bookingTime,
-          endBookingTimeNum:bookingItem.bookingTimeNum
+          startBookingTime:bookingItem.bookingItemStartTime,
+          startBookingTimeNum:bookingItem.bookingItemStartTimeNum,
+          endBookingTime:bookingItem.bookingItemEndTime,
+          endBookingTimeNum:bookingItem.bookingItemEndTimeNum
         })
       }else{
-        if(!this.data.endBookingTime){
-          if(this.data.startBookingTimeNum >= bookingItem.bookingTimeNum){
-            this.setData({
-              startBookingTime:bookingItem.bookingTime,
-              startBookingTimeNum:bookingItem.bookingTimeNum,
-              endBookingTime:bookingItem.bookingTime,
-              endBookingTimeNum:bookingItem.bookingTimeNum
-            })
-          }else{
-            this.setData({
-              endBookingTime:bookingItem.bookingTime,
-              endBookingTimeNum:bookingItem.bookingTimeNum
-            })
-          }
+        if(this.data.startBookingTimeNum > bookingItem.bookingItemStartTimeNum){
+          this.setData({
+            startBookingTime:bookingItem.bookingItemStartTime,
+            startBookingTimeNum:bookingItem.bookingItemStartTimeNum,
+            endBookingTime:bookingItem.bookingItemEndTime,
+            endBookingTimeNum:bookingItem.bookingItemEndTimeNum,
+          })
+        }else if(this.data.startBookingTimeNum == bookingItem.bookingItemStartTimeNum){
+          this.setData({
+            startBookingTime:null,
+            startBookingTimeNum:null,
+            endBookingTime:null,
+            endBookingTimeNum:null,
+          })
         }else{
-          if(this.data.startBookingTimeNum > bookingItem.bookingTimeNum){
-            this.setData({
-              startBookingTime:bookingItem.bookingTime,
-              startBookingTimeNum:bookingItem.bookingTimeNum,
-              endBookingTime:bookingItem.bookingTime,
-              endBookingTimeNum:bookingItem.bookingTimeNum,
-            })
-          }else if(this.data.startBookingTimeNum == bookingItem.bookingTimeNum){
-            this.setData({
-              startBookingTime:null,
-              startBookingTimeNum:null,
-              endBookingTime:null,
-              endBookingTimeNum:null,
-            })
-          }else{
-            this.setData({
-              endBookingTime:bookingItem.bookingTime,
-              endBookingTimeNum:bookingItem.bookingTimeNum
-            })
-          }
+          this.setData({
+            endBookingTime:bookingItem.bookingItemEndTime,
+            endBookingTimeNum:bookingItem.bookingItemEndTimeNum
+          })
         }
       }
     }    
