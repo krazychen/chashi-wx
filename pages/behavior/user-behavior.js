@@ -9,6 +9,7 @@ module.exports = Behavior({
     userInfo:{}
   },
   created:function(){
+    console.log('user')
     if (wx.getUserProfile) {
       this.setData({
         canIUseGetUserProfile: true
@@ -23,6 +24,10 @@ module.exports = Behavior({
   },
   methods: {
     getUserProfile(e) {
+      wx.navigateTo({
+        url: '/pages/login/index'
+      })
+      return
       if(!app.globalData.userInfo){
         wx.removeStorageSync('userInfo')
         wx.getUserProfile({

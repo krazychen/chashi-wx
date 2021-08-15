@@ -1,7 +1,6 @@
 <!--index.wxml-->
 <view class="container">
-  <view class="top-banner-container" style="background-size: 100% 100%; background-repeat:no-repeat;">
-    <!-- background-image:url({{paramConfigObj.SEARCH_STATIC_HOMEPAGE_BANNER}}); -->
+  <view class="top-banner-container" style="background-image:url({{paramConfigObj.wx_homepage_static}});background-size: 100% 100%; background-repeat:no-repeat;">
   </view>
   <view class="book-card-container" bindtap="getUserProfile">
     <view class="book-card-item flex-column">

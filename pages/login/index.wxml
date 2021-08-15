@@ -1,0 +1,33 @@
+
+<view class="container">
+  <view class="login-step-container">
+    <view class="login-step-circle-container">
+      <view class="login-step-circle login-step-active">1</view>
+      <view class="login-step-line"></view>
+      <view class="login-step-circle">2</view>
+    </view>
+    <view class="login-step-circle-container">
+      <view class="font-dark-green">绑定手机</view>
+      <view class="{{hasPhoneNumber?'login-step-line-shorter login-step-active':'login-step-line-shorter'}} "></view>
+      <view class="font-gray">微信授权</view>
+    </view>
+  </view>
+  <view class="login-step-container">
+    <view>
+      登录后您可以进行以下操作：
+    </view>
+    <view class="login-step-circle-container">
+      <view class="font-gray font-14" style="margin-right: 14px;display: flex;flex-direction: row;align-items: center;"><span class="login-step-info-dot" style="margin-right: 4px;"></span>在线预订</view>
+      <view class="font-gray font-14" style="margin-left: 30px;display: flex;flex-direction: row;align-items: center;"><span class="login-step-info-dot" style="margin-right: 4px;"></span>预订信息查询</view>
+    </view>
+  </view>
+
+  <view class="login-btn-container">
+    <button wx:if="{{!hasPhoneNumber}}" class="login-btn" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" >微信用户一键登录</button>
+    <button wx:else class="login-btn">授权登录</button>
+  </view>
+  <view class="font-14 font-gray" bindtap="backTo">
+    暂不登录，我先逛逛
+  </view>
+</view>
+

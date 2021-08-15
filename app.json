@@ -4,7 +4,8 @@
     "pages/merchant/index",
     "pages/merchant/merchantdetail/index",
     "pages/merchant/tearoomdetail/index",
-    "pages/city/index"
+    "pages/city/index",
+    "pages/login/index"
   ],
   "permission": {
     "scope.userLocation": {

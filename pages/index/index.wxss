@@ -8,7 +8,6 @@ page {
   height: 200px;
   background-color: #fff;
   position: relative;
-  background-image: url('https://seopic.699pic.com/photo/50068/7103.jpg_wh1200.jpg');
 }
 
 .book-card-container{

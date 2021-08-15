@@ -1,0 +1,77 @@
+
+.login-step-container{
+  width: 100%;
+  height: 100px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;  
+}
+
+.login-step-circle-container{
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;  
+}
+
+.login-step-circle{
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  text-align: center;
+  color: #fff;
+  font-size: 14px;
+  background-color: rgb(215,215,215);
+}
+
+.login-step-active{
+  background-color: rgb(72,165,132);
+}
+
+.login-step-line{
+  width: 160px;
+  height: 4px;
+  box-sizing: border-box;
+  background-color: rgb(215,215,215);
+}
+
+.login-step-line-shorter{
+  width: 140px;
+  height: 4px;
+  box-sizing: border-box;
+  background-color: #fff;
+}
+
+.login-step-info-dot{
+  width: 6px;
+  height: 6px;
+  display: inline-block;
+  box-sizing: border-box;
+  border-radius: 50%;
+  background-color: rgb(72,165,132);
+}
+
+.login-btn-container{
+  width: 100%;
+  height: 50px;
+  background-color: #fff;
+  margin-bottom: 14px;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.login-btn{
+  width: 88% !important;
+  height: 40px !important;
+  margin: 5px 0;
+  background-color: rgb(72,165,132);
+  color: #fff;
+}
