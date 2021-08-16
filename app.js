@@ -7,6 +7,7 @@ App({
   },
   globalData: {
     userInfo: null,
+    hasUserInfo:false,
     tabBarHeight: 50,
     cityList:[],
     mapKey:'FMXBZ-TXULW-2SVRL-RY734-IDFSF-2QFWF',

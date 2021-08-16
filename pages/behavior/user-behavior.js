@@ -9,50 +9,33 @@ module.exports = Behavior({
     userInfo:{}
   },
   created:function(){
-    console.log('user')
     if (wx.getUserProfile) {
       this.setData({
         canIUseGetUserProfile: true
       })
     }
-    if (app.globalData.userInfo) {
+    console.log(1)
+    const userInfo = wx.getStorageSync('userInfo')
+    if (userInfo) {
       this.setData({
-        userInfo: app.globalData.userInfo,
+        userInfo: userInfo,
         hasUserInfo: true
       })
+      this.setUserInfo(userInfo)
     }
   },
   methods: {
-    getUserProfile(e) {
-      wx.navigateTo({
-        url: '/pages/login/index'
-      })
-      return
+    getUserProfile:function() {
       if(!app.globalData.userInfo){
-        wx.removeStorageSync('userInfo')
-        wx.getUserProfile({
-          desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
-          success: (resuser) => {
-            wx.login({
-              success: (res)=> {
-                if (res.code) {
-                  const userData = {...resuser,jsCode:res.code};
-                  request.post('/wxUser/wxLogin',userData).then(result=>{
-                    const userInfoRes = {...result.data.data,...userData.userInfo}
-                    this.setUserInfo(userInfoRes)
-                  });
-                } else {
-                  console.log('登录失败！' + res.errMsg)
-                }
-              }
-            })
-          }
+        wx.navigateTo({
+          url: '/pages/login/index'
         })
       }
     },
     logout:function(){
       wx.removeStorageSync('userInfo')
       app.globalData.userInfo = null
+      app.globalData.hasUserInfo = false
       this.setData({
         userInfo: app.globalData.userInfo,
         hasUserInfo: false
@@ -62,10 +45,7 @@ module.exports = Behavior({
       wx.removeStorageSync('userInfo')
       app.globalData.userInfo = {...app.globalData.userInfo,...userInfo}
       wx.setStorageSync('userInfo', app.globalData.userInfo)
-      this.setData({
-        userInfo:app.globalData.userInfo,
-        hasUserInfo: userInfo!==null?true:false
-      })
+      app.globalData.hasUserInfo = true
     }
   }
 })

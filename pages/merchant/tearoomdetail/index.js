@@ -102,6 +102,10 @@ Page({
     }
   },
   openBookPop:function(e){
+    if(!this.data.hasUserInfo){
+      this.getUserProfile()
+      return
+    }
     const nowDate  = new Date();
     const nowYear = nowDate.getFullYear(); 
     const nowMonth = nowDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 

@@ -24,7 +24,7 @@
 
   <view class="login-btn-container">
     <button wx:if="{{!hasPhoneNumber}}" class="login-btn" open-type="getPhoneNumber" bindgetphonenumber="getPhoneNumber" >微信用户一键登录</button>
-    <button wx:else class="login-btn">授权登录</button>
+    <button wx:else class="login-btn" bindtap="getUserNickName">授权登录</button>
   </view>
   <view class="font-14 font-gray" bindtap="backTo">
     暂不登录，我先逛逛
