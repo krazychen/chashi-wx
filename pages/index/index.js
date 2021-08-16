@@ -12,7 +12,6 @@ Page({
     advertiseBannerList: []
   },
   onLoad() {
-    console.log('index')
     const res = wx.getSystemInfoSync()
     this.setData({
       scrollHeight:res.windowHeight - app.globalData.tabBarHeight - 200 -100 - 10

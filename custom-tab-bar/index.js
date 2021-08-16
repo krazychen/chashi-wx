@@ -16,7 +16,7 @@ Component({
       "text": "预定茶室"
     },
     {
-      "url": "/pages/index/index",
+      "url": "/pages/account/index",
       "icon": "/static/image/wode_icon.png",
       "iconSelected": "/static/image/wode_yes_icon.png",
       "text": "个人中心"

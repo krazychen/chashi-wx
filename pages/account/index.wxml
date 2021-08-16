@@ -1,0 +1,73 @@
+<!--index.wxml-->
+<view class="account-container">
+  <view class="account-nickname-container" style="{{hasUserInfo?'background-color:#fff':''}}">
+    <block wx:if="{{!hasUserInfo}}">
+      <van-icon name="user-circle-o" size="70px" color="rgb(153, 153, 153)" />
+      <span class="font-18" style="margin-left:10px">点击获取头像</span>
+    </block>
+    <block wx:else>
+      <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+      <view>
+        <view class="font-18" style="margin-left:10px;font-weight:bolder">HI，{{userInfo.nickname}}</view>
+        <view class="font-12" style="margin-left:10px">{{userInfo.phoneNumber}}</view>
+      </view>
+    </block>
+  </view>
+
+  <view class="account-card-container">
+    <view class="account-card-title">
+      <view class="account-card-left-icon"></view>我的钱包
+    </view>
+    <view class="account-card-item-container">
+      <view class="account-card-item" style="background-color: rgb(241,247,255);">
+        <view class="font-14" style="font-weight:bolder;margin-bottom:6px">0.00</view>
+        <view class="font-14" style="margin-bottom:6px">余额</view>
+      </view>
+      <view class="account-card-item" style="background-color: rgb(232,255,242);">
+        <view class="font-14" style="font-weight:bolder;margin-bottom:6px">2</view>
+        <view class="font-14" style="margin-bottom:6px">代金券</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="account-card-container">
+    <view class="account-card-title">
+      <view class="account-card-left-icon"></view>茶室订单
+    </view>
+    <view class="account-card-item-container">
+      <view class="account-card-item-shorter">
+        <van-icon name="pending-payment" size="34px" color="rgb(72,165,132)"/>
+        <view class="font-14" style="margin-top:6px;margin-bottom:6px">待付款</view>
+      </view>
+      <view class="account-card-item-shorter" >
+        <van-icon name="todo-list-o" size="34px" color="rgb(72,165,132)" />
+        <view class="font-14" style="margin-top:6px;margin-bottom:6px">待使用</view>
+      </view>
+      <view class="account-card-item-shorter" >
+        <van-icon name="completed" size="34px" color="rgb(72,165,132)" />
+        <view class="font-14" style="margin-top:6px;margin-bottom:6px">已使用</view>
+      </view>
+      <view class="account-card-item-shorter" >
+        <van-icon name="passed" size="34px" color="rgb(72,165,132)" />
+        <view class="font-14" style="margin-top:6px;margin-bottom:6px">已完成</view>
+      </view>
+      <view class="account-card-item-shorter" >
+        <van-icon name="orders-o" size="34px" color="rgb(72,165,132)" />
+        <view class="font-14" style="margin-top:6px;margin-bottom:6px">全部</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="account-card-container">
+    <view class="account-card-title">
+      <view class="account-card-left-icon"></view>我的服务
+    </view>
+    <view class="account-card-item-container">
+      <view class="account-card-item-auto">
+        <van-icon name="vip-card" size="34px" color="rgb(255,98,62)"  />
+        <view class="font-14" style="margin-bottom:6px">会员卡</view>
+      </view>
+    </view>
+  </view>
+
+</view>

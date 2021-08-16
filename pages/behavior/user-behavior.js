@@ -14,7 +14,6 @@ module.exports = Behavior({
         canIUseGetUserProfile: true
       })
     }
-    console.log(1)
     const userInfo = wx.getStorageSync('userInfo')
     if (userInfo) {
       this.setData({

@@ -5,6 +5,7 @@
     "pages/merchant/merchantdetail/index",
     "pages/merchant/tearoomdetail/index",
     "pages/city/index",
+    "pages/account/index",
     "pages/login/index"
   ],
   "permission": {
@@ -33,7 +34,7 @@
         "text": "预定茶室"
       },
       {
-        "pagePath": "pages/index/index",
+        "pagePath": "pages/account/index",
         "text": "个人中心"
       }
     ]
