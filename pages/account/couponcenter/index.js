@@ -3,6 +3,7 @@
 const app = getApp()
 import request from '../../../utils/request'
 import userBehavior from '../../behavior/user-behavior'
+import Toast from '../../../miniprogram_npm/@vant/weapp/toast/toast';
 
 Page({
   behaviors: [userBehavior],
@@ -10,7 +11,8 @@ Page({
     scrollHeight:null,
     hasUserInfo:false,
     userInfo:null,
-    couponList:[]
+    couponList:[],
+    disablegetbtn:false
   },
   onLoad() {
     const res = wx.getSystemInfoSync()
@@ -38,6 +40,43 @@ Page({
       }
       this.setData({
         couponList
+      })
+    })
+  },
+  getCoupon:function(e){
+    console.log(this.data.disablegetbtn)
+    if(this.data.disablegetbtn){
+      return
+    }
+    const _this = this
+    this.setData({
+      disablegetbtn:true
+    },()=>{
+      const couponId = e.currentTarget.dataset.id
+      const saveObj = {
+        wxuserId:_this.data.userInfo.id,
+        couponId
+      }
+      request.post('/csCouponReleased/saveCouponForCouponCenter',saveObj).then((res)=>{
+        if(res.data.success){
+          Toast({
+              message: '领取成功',
+              onClose: () => {
+                _this.setData({
+                  disablegetbtn:false
+                })
+              },
+            });
+        }else{
+          Toast({
+            message: '领取失败',
+            onClose: () => {
+              _this.setData({
+                disablegetbtn:false
+              })
+            },
+          });
+        }
       })
     })
   }

@@ -28,8 +28,8 @@
               使用时间{{item.startTime}}至{{item.endTime}}
             </view>
           </view>
-          <view class="coupon-item-right">
-            <view class="coupon-item-btn" bindtap="goToMerchantList">领取</view>
+          <view class="coupon-item-right" >
+            <view data-id="{{item.id}}"  class="{{disablegetbtn?'coupon-item-btn-disabled':'coupon-item-btn'}}" bindtap="getCoupon">领取</view>
           </view>
         </view>
       </view>
@@ -38,4 +38,5 @@
       <van-empty description="暂无数据" />
     </block>
   </scroll-view>
+  <van-toast id="van-toast" />
   </view>
