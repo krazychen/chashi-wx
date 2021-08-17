@@ -112,8 +112,15 @@ Page({
         package: param.data.package,  
         signType: 'MD5',  
         paySign: param.data.paySign,  
-        success: function (event) {  
-          Toast('付款成功')
+        success: function (event) {
+          Toast({
+            message: '付款成功',
+            onClose: () => {
+              wx.navigateBack({
+                delta: 0,
+              })
+            },
+          });  
         },  
         fail: function (error) {  
           Toast('付款失败')
