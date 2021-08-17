@@ -39,6 +39,10 @@ Page({
     wx.navigateTo({
       url: '/pages/account/coupon/index',
     })
-
+  },
+  openMemberCard:function(){
+    wx.navigateTo({
+      url: '/pages/account/membercard/index',
+    })
   }
 })

@@ -1,39 +1,44 @@
 <!--index.wxml-->
 <view class="container">
   <scroll-view scroll-y="true" style="height:{{scrollHeight}}px;">
-    <view class="coupon-container">
-      <view 
-        wx:for="{{couponList}}"
-        wx:for-item="item"
-        wx:key="id"  
-      class="coupon-item-container">
-        <view class="coupon-item-left">
-          <view class="font-12">满{{item.fullAmount>0?item.fullAmount:0}}使用</view>
-          <view class="font-dark-green" style="overflow:hidden">
-            <view style="display:inline-block;text-align:right;margin-right:-10px;">￥</view>
-            <span style="text-align:left;font-size:26px;font-weight:bolder;letter-spacing:0px;">
-              {{item.reductionAmount>0?item.reductionAmount:0}}
-            </span>
+    <block wx:if="{{couponList && couponList.length>0}}">
+      <view class="coupon-container">
+        <view 
+          wx:for="{{couponList}}"
+          wx:for-item="item"
+          wx:key="id"  
+        class="coupon-item-container">
+          <view class="coupon-item-left">
+            <view class="font-12">满{{item.fullAmount>0?item.fullAmount:0}}使用</view>
+            <view class="font-dark-green" style="overflow:hidden">
+              <view style="display:inline-block;text-align:right;margin-right:-10px;">￥</view>
+              <span style="text-align:left;font-size:26px;font-weight:bolder;letter-spacing:0px;">
+                {{item.reductionAmount>0?item.reductionAmount:0}}
+              </span>
+            </view>
           </view>
-        </view>
-        <view class="coupon-item-middle">
-          <view class="font-12 font-white" style="line-height:12px;background-color:rgb(72,165,132);padding:2px 4px;">
-            {{item.couponName?item.couponName:''}}
+          <view class="coupon-item-middle">
+            <view class="font-12 font-white" style="line-height:12px;background-color:rgb(72,165,132);padding:2px 4px;">
+              {{item.couponName?item.couponName:''}}
+            </view>
+            <view class="font-14" style="width:100%">
+              {{item.couponName?item.couponName:''}}
+            </view>
+            <view class="font-12 font-dark-gray" style="width:100%" wx:if="{{item.startTime}}">
+              {{item.startTime}}生效
+            </view>
+            <view class="font-12 font-dark-gray" style="width:100%" wx:if="{{item.endTime}}">
+              {{item.endTime}}到期</view>
           </view>
-          <view class="font-14" style="width:100%">
-            {{item.couponName?item.couponName:''}}
+          <view class="coupon-item-right">
+            <view class="coupon-item-btn" bindtap="goToMerchantList">去使用</view>
           </view>
-          <view class="font-12 font-dark-gray" style="width:100%" wx:if="{{item.startTime}}">
-            {{item.startTime}}生效
-          </view>
-          <view class="font-12 font-dark-gray" style="width:100%" wx:if="{{item.endTime}}">
-            {{item.endTime}}到期</view>
-        </view>
-        <view class="coupon-item-right">
-          <view class="coupon-item-btn" bindtap="goToMerchantList">去使用</view>
         </view>
       </view>
-    </view>
+    </block>
+    <block wx:else>
+      <van-empty description="暂无数据" />
+    </block>
   </scroll-view>
   <view class="coupon-btn-container">
     <button class="coupon-btn" bindtap="openCouponCenter">去领券中心看看</button>

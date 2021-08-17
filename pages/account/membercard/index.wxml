@@ -1,0 +1,107 @@
+<!--index.wxml-->
+<view class="container">
+  <scroll-view scroll-y="true" style="height:{{scrollHeight}}px">
+    <view class="membercard-container">
+      <view class="membercard-carousel-container">
+        <block wx:if="{{memberCardList && memberCardList.length>0}}">
+          <swiper 
+            circular="{{true}}"
+            indicator-dots="{{true}}"
+            indicator-active-color="rgb(72,165,132)"
+            class="membercard-carousel-item" 
+            bindchange="changeCrouselIndex"
+            >
+            <block 
+              wx:for="{{memberCardList}}" 
+              wx:for-item="item" 
+              wx:key="id"
+              >
+              <swiper-item 
+              item-id="{{item.id}}"
+              >
+                <view class="membercard-carousel-item" 
+                  style="background-image:url({{item.logoUrl}});background-size: 100% 100%;background-repeat:no-repeat;">
+                </view>
+              </swiper-item>
+            </block>
+          </swiper>
+        </block>
+        <block wx:else>
+          <van-empty description="暂无数据" />
+        </block>
+      </view>
+      <view class="membercard-item-container">
+        <view class="font-16 membercard-item-title-label" style="text-align:center;">
+          立即开通{{memberCardDetail.cardname}} 享VIP特权
+        </view>
+      </view>
+      <view class="membercard-item-container">
+        <view class="font-16 membercard-item-title-label" style="color:#fff;background-color:rgb(72,165,132)">
+          {{memberCardDetail.cardname}}优惠权益
+        </view>
+        <view class="membercard-item-equity">
+          <van-icon name="discount" size="40px" color="rgb(72,165,132)" style="padding:0px 14px"/>
+          <view>
+            <view class="font-16">
+              预定茶室{{memberCardDetail.discountOff?memberCardDetail.discountOff:0}}折
+            </view>
+            <view class="font-12 font-dark-gray">
+              例如每小时100元，可优惠{{memberCardDetail.discountOff? (100-memberCardDetail.discountOff*10):0}}元
+            </view>
+          </view>
+        </view>
+        <view class="membercard-item-equity">
+          <van-icon name="balance-o" size="40px" color="rgb(72,165,132)" style="padding:0px 14px"/>
+          <view>
+            <view class="font-16">
+              优惠金额￥{{memberCardDetail.discountPrice?memberCardDetail.discountPrice:0}}元
+            </view>
+            <view class="font-12 font-dark-gray">
+              预约茶室可享优惠金额总计￥{{memberCardDetail.discountPrice?memberCardDetail.discountPrice:0}}元
+            </view>
+          </view>
+        </view>
+        <view class="membercard-item-equity">
+          <van-icon name="calendar-o" size="40px" color="rgb(72,165,132)" style="padding:0px 14px"/>
+          <view>
+            <view class="font-16">
+              有效期{{memberCardDetail.validPeriod?memberCardDetail.validPeriod:0}}个月
+            </view>
+            <view class="font-12 font-dark-gray">
+              购买日期算起，{{memberCardDetail.cardname}}有效期{{memberCardDetail.validPeriod?memberCardDetail.validPeriod:0}}个月
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="membercard-item-container">
+        <view class="font-12 font-dark-green membercard-item-title-label">
+          使用权益
+          <view style="display:inline-block;float:right;">
+            <van-icon name="arrow-down" size="12px" color="rgb(72,165,132)" />
+          </view>
+        </view>
+        <view class="font-16" style="padding:0px 10px 10px 10px">
+          {{memberCardDetail.useRights}}
+        </view>
+      </view>
+
+      <view class="membercard-item-container">
+        <view class="font-12 font-dark-green membercard-item-title-label">
+          使用须知
+          <view style="display:inline-block;float:right;">
+            <van-icon name="arrow-down" size="12px" color="rgb(72,165,132)" />
+          </view>
+        </view>
+        <view class="font-16" style="padding:0px 10px 10px 10px">
+          {{memberCardDetail.usageNotice}}
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+  <view class="membercard-btn-container">
+    <view style="line-height:14px">
+      {{memberCardDetail.cardname}}<span class="font-red">￥{{memberCardDetail.price}}</span>
+    </view>
+    <view class="membercard-btn" bindtap="openCouponCenter">立即开通</view>
+  </view>
+</view>
