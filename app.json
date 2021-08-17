@@ -6,6 +6,8 @@
     "pages/merchant/tearoomdetail/index",
     "pages/city/index",
     "pages/account/index",
+    "pages/account/coupon/index",
+    "pages/account/couponcenter/index",
     "pages/login/index"
   ],
   "permission": {
