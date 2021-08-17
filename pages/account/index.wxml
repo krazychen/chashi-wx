@@ -40,8 +40,8 @@
     </view>
     <view class="account-card-item-container">
       <view class="account-card-item-shorter">
-        <van-icon name="pending-payment" size="34px" color="rgb(72,165,132)"/>
-        <view class="font-14" style="margin-top:6px;margin-bottom:6px">待付款</view>
+        <van-icon name="pending-payment"  size="34px" color="rgb(72,165,132)"/>
+        <view class="font-14" >待付款</view>
       </view>
       <view class="account-card-item-shorter" >
         <van-icon name="todo-list-o" size="34px" color="rgb(72,165,132)" />
@@ -69,7 +69,7 @@
     <view class="account-card-item-container">
       <view class="account-card-item-auto" bindtap="openMemberCard">
         <van-icon name="vip-card" size="34px" color="rgb(255,98,62)"  />
-        <view class="font-14" style="margin-bottom:6px">会员卡</view>
+        <view class="font-14">会员卡</view>
       </view>
     </view>
   </view>

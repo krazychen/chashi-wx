@@ -93,23 +93,22 @@ page {
 
 .account-card-item-shorter{
   width: 19%;
-  height: 60px;
+  height: 80px;
   box-sizing: border-box;
-  padding: 20px 0px;
+  padding: 10px 0px;
   margin-left: 1%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
   text-align: center;
 }
 
 .account-card-item-auto{
   width: 24%;
-  height: 60px;
+  height: 80px;
   margin-left: 1%;
   box-sizing: border-box;
-  padding: 20px 0px;
+  padding: 10px 0px;
   display: flex;
   flex-direction: column;
   align-items: center;
