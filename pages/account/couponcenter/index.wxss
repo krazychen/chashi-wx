@@ -70,7 +70,7 @@ page {
   padding: 0 15px;
   height: 26px;
   line-height: 26px;
-  background-color: rgb(102,102,102);
+  background-color: rgb(153, 153, 153);
   border-radius: 12px;
   text-align: center;
   color: #ffffff;

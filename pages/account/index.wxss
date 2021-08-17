@@ -81,6 +81,7 @@ page {
   width: 30%;
   height: 60px;
   box-sizing: border-box;
+  border-radius: 8px;
   padding: 20px 0px;
   margin-left: 5px;
   display: flex;

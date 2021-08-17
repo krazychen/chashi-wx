@@ -36,13 +36,21 @@ Page({
     }
   },
   openCouponList:function(){
-    wx.navigateTo({
-      url: '/pages/account/coupon/index',
-    })
+    if(this.data.hasUserInfo){
+      wx.navigateTo({
+        url: '/pages/account/coupon/index',
+      })
+    }else{
+      this.getUserProfile()
+    }
   },
   openMemberCard:function(){
-    wx.navigateTo({
-      url: '/pages/account/membercard/index',
-    })
+    if(this.data.hasUserInfo){
+      wx.navigateTo({
+        url: '/pages/account/membercard/index',
+      })
+    }else{
+      this.getUserProfile()
+    }
   }
 })

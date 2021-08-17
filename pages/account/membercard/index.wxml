@@ -102,6 +102,7 @@
     <view style="line-height:14px">
       {{memberCardDetail.cardname}}<span class="font-red">￥{{memberCardDetail.price}}</span>
     </view>
-    <view class="membercard-btn" bindtap="openCouponCenter">立即开通</view>
+    <view class="membercard-btn" bindtap="buyMemberCard">立即开通</view>
   </view>
+  <van-toast id="van-toast" />
 </view>
