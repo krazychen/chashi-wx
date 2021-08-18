@@ -23,6 +23,10 @@ Page({
     })
   },
   onShow(){
+    this.setData({
+      hasUserInfo:app.globalData.hasUserInfo,
+      userInfo:app.globalData.userInfo
+    })
     this.getCsCouponListOfCouponCenter()
   },
   getCsCouponListOfCouponCenter:function(){

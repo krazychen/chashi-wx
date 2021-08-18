@@ -27,6 +27,12 @@ Page({
       _this.getMemberCardDetailByUserId()
     })
   },
+  onShow(){
+    this.setData({
+      hasUserInfo:app.globalData.hasUserInfo,
+      userInfo:app.globalData.userInfo
+    })
+  },
   getMemberCardDetailByUserId:function(){
     request.get('/csMembercardOrder/getMemberCardForWx/'+this.data.userInfo.id,null).then((res)=>{
       const memberCardDetail = res.data.data || null

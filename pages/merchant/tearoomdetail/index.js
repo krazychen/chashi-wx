@@ -21,7 +21,9 @@ Page({
     startBookingTime:null,
     startBookingTimeNum:null,
     endBookingTime:null,
-    endBookingTimeNum:null
+    endBookingTimeNum:null,
+    hasUserInfo:false,
+    userInfo:null
   },
   onLoad() {
     const _this = this;
@@ -37,6 +39,12 @@ Page({
       },()=>{
         _this.getRoomDetailById()
       })
+    })
+  },
+  onShow(){
+    this.setData({
+      hasUserInfo:app.globalData.hasUserInfo,
+      userInfo:app.globalData.userInfo
     })
   },
   getRoomDetailById:function(){

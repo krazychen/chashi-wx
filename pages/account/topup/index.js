@@ -19,6 +19,11 @@ Page({
       hasUserInfo:app.globalData.hasUserInfo,
       userInfo:app.globalData.userInfo
     })
+  },
+  onShow(){
+    this.setData({
+      hasUserInfo:app.globalData.hasUserInfo,
+      userInfo:app.globalData.userInfo
+    })
   }
-  
 })

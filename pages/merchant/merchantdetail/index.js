@@ -11,7 +11,9 @@ Page({
     scrollHeight:null,
     merchantTrans:null,
     merchantDetail:null,
-    currentCourselIndex:1
+    currentCourselIndex:1,
+    hasUserInfo:false,
+    userInfo:null
   },
   onLoad() {
     const _this = this;
@@ -27,6 +29,12 @@ Page({
       },()=>{
         _this.getMerchantDetailById()
       })
+    })
+  },
+  onShow(){
+    this.setData({
+      hasUserInfo:app.globalData.hasUserInfo,
+      userInfo:app.globalData.userInfo
     })
   },
   getMerchantDetailById:function(){

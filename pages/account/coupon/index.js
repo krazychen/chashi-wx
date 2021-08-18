@@ -22,6 +22,10 @@ Page({
   },
   onShow(){
     this.getCouponListByUserId()
+    this.setData({
+      hasUserInfo:app.globalData.hasUserInfo,
+      userInfo:app.globalData.userInfo
+    })
   },
   getCouponListByUserId:function(){
     request.get('/csCouponReleased/getCouponForWx/'+this.data.userInfo.id,null).then((res)=>{

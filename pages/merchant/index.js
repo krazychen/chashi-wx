@@ -33,12 +33,16 @@ Page({
     nowDateTime:'00:00',
     userLng:null,
     userLat:null,
-    currentCityName:''
+    currentCityName:'',
+    hasUserInfo:false,
+    userInfo:null
   },
   onLoad() {
     const sysRes = wx.getSystemInfoSync()
     this.setData({
-      scrollHeight:sysRes.windowHeight - app.globalData.tabBarHeight - 40 // 搜索框高度 及 上下pading
+      scrollHeight:sysRes.windowHeight - app.globalData.tabBarHeight - 40, // 搜索框高度 及 上下pading
+      hasUserInfo:app.globalData.hasUserInfo,
+      userInfo:app.globalData.userInfo
     })
     const that = this
     wx.getLocation({
@@ -51,6 +55,10 @@ Page({
   },
   onShow: function () {
     this.getTabBar().init()
+    this.setData({
+      hasUserInfo:app.globalData.hasUserInfo,
+      userInfo:app.globalData.userInfo
+    })
   },
   getCurrentCity:function(longitude,latitude){
     const _this = this;
