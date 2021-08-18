@@ -212,7 +212,8 @@ Page({
         sortType:e.detail,
         current:1,
         size:10
-      }
+      },
+      merchantList:[]
     },()=>{
       _this.getMerchantListForWx()
     })
