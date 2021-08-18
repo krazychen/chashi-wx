@@ -9,18 +9,26 @@ Page({
   data: {
     paramConfigObj: app.globalData.paramConfigObj,
     scrollHeight:null,
-    advertiseBannerList: []
+    advertiseBannerList: [],
+    hasUserInfo:false,
+    userInfo:null
   },
   onLoad() {
     const res = wx.getSystemInfoSync()
     this.setData({
-      scrollHeight:res.windowHeight - app.globalData.tabBarHeight - 200 -100 - 10
+      scrollHeight:res.windowHeight - app.globalData.tabBarHeight - 200 -100 - 10,
+      hasUserInfo:app.globalData.hasUserInfo,
+      userInfo:app.globalData.userInfo
     })
     this.getParamConfig()
     this.getAdvertiseBannerListForWx()
   },
   onShow: function () {
     this.getTabBar().init()
+    this.setData({
+      hasUserInfo:app.globalData.hasUserInfo,
+      userInfo:app.globalData.userInfo
+    })
   },
   getAdvertiseBannerListForWx:function(){
     request.post('/csAdvertise/getBannerListForWx',{}).then((res)=>{
@@ -48,5 +56,14 @@ Page({
         })
       }
     })
+  },
+  goToMerchantList(){
+    if(this.data.hasUserInfo){
+      wx.switchTab({
+        url: '/pages/merchant/index',
+      })
+    }else{
+      this.getUserProfile()
+    }
   }
 })

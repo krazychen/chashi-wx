@@ -44,7 +44,6 @@ Page({
     })
   },
   getCoupon:function(e){
-    console.log(this.data.disablegetbtn)
     if(this.data.disablegetbtn){
       return
     }

@@ -38,9 +38,6 @@ Page({
     this.setData({
       scrollHeight:sysRes.windowHeight - app.globalData.tabBarHeight - 40 // 搜索框高度 及 上下pading
     })
-  },
-  onShow: function () {
-    this.getTabBar().init()
     const that = this
     wx.getLocation({
       type: 'gcj02',
@@ -49,6 +46,9 @@ Page({
         that.getCurrentCity(res.longitude,res.latitude)
       }
      })
+  },
+  onShow: function () {
+    this.getTabBar().init()
   },
   getCurrentCity:function(longitude,latitude){
     const _this = this;

@@ -2,13 +2,13 @@
 <view class="container">
   <view class="top-banner-container" style="background-image:url({{paramConfigObj.wx_homepage_static}});background-size: 100% 100%; background-repeat:no-repeat;">
   </view>
-  <view class="book-card-container" bindtap="getUserProfile">
+  <view class="book-card-container">
     <view class="book-card-item flex-column">
       <view class="font-14">您未预订房间</view>
       <van-icon name="cart-circle" size="30px"  />
     </view>
     <view class="book-card-divider"></view>
-    <view class="book-card-item flex-row">
+    <view class="book-card-item flex-row" bindtap="goToMerchantList">
         <van-icon name="shop" size="30px"  />
         <span class="font-14">去预订</span>
     </view>

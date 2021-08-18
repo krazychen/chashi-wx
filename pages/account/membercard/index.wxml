@@ -1,12 +1,12 @@
 <!--index.wxml-->
 <view class="container">
-  <scroll-view scroll-y="true" style="height:{{scrollHeight}}px">
+  <scroll-view scroll-y="true" style="height:{{memberCardDetail.ownerFlag?scrollHeight+50:scrollHeight}}px">
     <view class="membercard-container">
       <view class="membercard-carousel-container">
         <block wx:if="{{memberCardList && memberCardList.length>0}}">
           <swiper 
             circular="{{true}}"
-            indicator-dots="{{true}}"
+            indicator-dots="{{!memberCardDetail.ownerFlag}}"
             indicator-active-color="rgb(72,165,132)"
             class="membercard-carousel-item" 
             bindchange="changeCrouselIndex"
@@ -30,7 +30,7 @@
           <van-empty description="暂无数据" />
         </block>
       </view>
-      <view class="membercard-item-container">
+      <view class="membercard-item-container" wx:if="{{!memberCardDetail.ownerFlag}}">
         <view class="font-16 membercard-item-title-label" style="text-align:center;">
           立即开通{{memberCardDetail.cardname}} 享VIP特权
         </view>
@@ -67,38 +67,43 @@
             <view class="font-16">
               有效期{{memberCardDetail.validPeriod?memberCardDetail.validPeriod:0}}个月
             </view>
-            <view class="font-12 font-dark-gray">
+            <view class="font-12 font-dark-gray" wx:if="{{memberCardDetail.ownerFlag}}">
+              生效日期{{memberCardDetail.startTime}}，失效日期{{memberCardDetail.endTime}}
+            </view>
+            <view class="font-12 font-dark-gray" wx:if="{{!memberCardDetail.ownerFlag}}">
               购买日期算起，{{memberCardDetail.cardname}}有效期{{memberCardDetail.validPeriod?memberCardDetail.validPeriod:0}}个月
             </view>
           </view>
         </view>
       </view>
       <view class="membercard-item-container">
-        <view class="font-12 font-dark-green membercard-item-title-label">
+        <view class="font-12 font-dark-green membercard-item-title-label" data-item="{{memberCardDetail}}" bindtap="toggleUseRights">
           使用权益
-          <view style="display:inline-block;float:right;">
-            <van-icon name="arrow-down" size="12px" color="rgb(72,165,132)" />
+          <view style="float:right;">
+            <van-icon wx:if="{{!memberCardDetail.showUseRights}}" name="arrow-down" size="12px" color="rgb(72,165,132)" />
+            <van-icon wx:if="{{memberCardDetail.showUseRights}}" name="arrow-up" size="12px" color="rgb(72,165,132)" />
           </view>
         </view>
-        <view class="font-16" style="padding:0px 10px 10px 10px">
+        <view class="font-16" style="padding:0px 10px 10px 10px" wx:if="{{!memberCardDetail.showUseRights}}">
           {{memberCardDetail.useRights}}
         </view>
       </view>
 
       <view class="membercard-item-container">
-        <view class="font-12 font-dark-green membercard-item-title-label">
+        <view class="font-12 font-dark-green membercard-item-title-label" data-item="{{memberCardDetail}}" bindtap="toggleUsageNotice">
           使用须知
-          <view style="display:inline-block;float:right;">
-            <van-icon name="arrow-down" size="12px" color="rgb(72,165,132)" />
+          <view style="float:right;">
+            <van-icon wx:if="{{!memberCardDetail.showUsageNotice}}" name="arrow-down" size="12px" color="rgb(72,165,132)" />
+            <van-icon wx:if="{{memberCardDetail.showUsageNotice}}" name="arrow-up" size="12px" color="rgb(72,165,132)" />
           </view>
         </view>
-        <view class="font-16" style="padding:0px 10px 10px 10px">
+        <view class="font-16" style="padding:0px 10px 10px 10px" wx:if="{{!memberCardDetail.showUsageNotice}}">
           {{memberCardDetail.usageNotice}}
         </view>
       </view>
     </view>
   </scroll-view>
-  <view class="membercard-btn-container">
+  <view class="membercard-btn-container" wx:if="{{!memberCardDetail.ownerFlag}}">
     <view style="line-height:14px">
       {{memberCardDetail.cardname}}<span class="font-red">￥{{memberCardDetail.price}}</span>
     </view>

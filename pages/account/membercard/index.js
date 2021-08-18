@@ -40,6 +40,13 @@ Page({
         if(memberCardDetail.usageNotice){
           memberCardDetail.usageNotice = util.unescape(memberCardDetail.usageNotice).replace(/<[^>]*>/g, '')
         }
+        if(memberCardDetail.startTime){
+          memberCardDetail.startTime = memberCardDetail.startTime.substring(0,10)
+        }
+        if(memberCardDetail.endTime){
+          memberCardDetail.endTime = memberCardDetail.endTime.substring(0,10)
+        }
+        memberCardDetail.ownerFlag = true
         memberCardList.push(memberCardDetail)
         this.setData({
           memberCardDetail,
@@ -61,6 +68,7 @@ Page({
           if(item.usageNotice){
             item.usageNotice = util.unescape(item.usageNotice).replace(/<[^>]*>/g, '')
           }
+          memberCardDetail.ownerFlag = false
         })
         this.setData({
           memberCardDetail:memberCardList[0]
@@ -85,6 +93,22 @@ Page({
       })
     }
   },
+  toggleUseRights:function(e){
+    const memberCardDetail  = e.currentTarget.dataset.item
+    memberCardDetail.showUseRights = !memberCardDetail.showUseRights
+    this.setData({
+      memberCardDetail
+    })
+  },
+
+  toggleUsageNotice:function(e){
+    const memberCardDetail  = e.currentTarget.dataset.item
+    memberCardDetail.showUsageNotice = !memberCardDetail.showUsageNotice
+    this.setData({
+      memberCardDetail
+    })
+  },
+
   buyMemberCard:function(){
     const _this = this;  
     const cardObj = {
