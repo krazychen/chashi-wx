@@ -18,6 +18,8 @@ Page({
       size:10,
       sortType:1
     },
+    totalPage:0,
+    triggered:false,
     // 1：智能、按照距离、价格、时间，2：最近距离，默认5公里，3：按照价格从小到大，4：按照价格从大到小
     sortTypeOption: [
       { text: '智能', value: 1 },
@@ -77,6 +79,7 @@ Page({
               searchCityName:adInfo.city,
               cityCode:null
             },
+            merchantList:[],
             userLng:longitude,
             userLat:latitude,
             currentCityName: adInfo.city
@@ -88,8 +91,11 @@ Page({
     })
   },
   getMerchantListForWx:function(){
+    const merchantList = this.data.merchantList || []
     request.post('/csMerchant/getPageListForWx',this.data.searchParam).then((res)=>{
       const dataList = res.data.data.records||[]
+      const total = res.data.data.total
+      let totalPage = 0
       if(dataList && dataList.length>0){
         const nowDate  = new Date();
         const nowYear = nowDate.getFullYear(); 
@@ -112,9 +118,12 @@ Page({
             item.businessState = '休息'
           }
         })
+        totalPage = Math.ceil(total/this.data.searchParam.size)
       }
       this.setData({
-        merchantList:dataList
+        merchantList:merchantList.concat(dataList),
+        totalPage,
+        triggered: false
       })
     })
   },
@@ -148,7 +157,8 @@ Page({
         searchCityName:searchParam.searchCityName,
         current:1,
         size:10
-      }
+      },
+      merchantList:[]
     },()=>{
       that.getMerchantListForWx()
     })
@@ -180,7 +190,8 @@ Page({
           searchCityName:city.areaName,
           current:1,
           size:10
-        }
+        },
+        merchantList:[]
       },()=>{
         that.getMerchantListForWx()
       })
@@ -246,5 +257,40 @@ Page({
         res.eventChannel.emit('openRoomDetail', dataTrans)
       }
     })
+  },
+  onRefresh:function(){
+    if (this.data.triggered) return
+    const searchParam = this.data.searchParam
+    searchParam.current = 1
+    searchParam.size = 10
+    this.setData({
+      searchParam,
+      merchantList:[]
+    },()=>{
+       this.getMerchantListForWx();
+    })
+  },
+  onRestore:function(){
+    this.setData({
+      triggered: false
+    })
+  },
+  onAbort:function(){
+    this.setData({
+      triggered: false
+    })
+  },
+  lower(e) {
+    let that = this;
+    const searchParam = this.data.searchParam
+    const page = searchParam.current;
+    if((page+1) <= this.data.totalPage){
+      searchParam.current = page+1
+      this.setData({
+        searchParam
+      },()=>{
+        this.getMerchantListForWx()
+      })
+    }
   }
 })

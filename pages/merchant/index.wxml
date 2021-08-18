@@ -20,7 +20,16 @@
         </van-dropdown-menu>
         </view>
     </view>
-    <scroll-view class="merchant-scroll-view" scroll-y="true" style="height:{{scrollHeight}}px;">
+    <scroll-view 
+      class="merchant-scroll-view" 
+      scroll-y="true" 
+      style="height:{{scrollHeight}}px;"
+      bindscrolltolower="lower"
+      refresher-enabled="{{true}}"
+      refresher-triggered="{{triggered}}"
+      bindrefresherrefresh="onRefresh"
+      bindrefresherrestore="onRestore"
+      bindrefresherabort="onAbort">
         <block wx:if="{{merchantList && merchantList.length>0}}">
           <view 
             wx:for="{{merchantList}}"  
