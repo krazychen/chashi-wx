@@ -2,8 +2,8 @@
 <view class="account-container">
   <view class="account-nickname-container" style="{{hasUserInfo?'background-color:#fff':''}}" bindtap="getUserProfile">
     <block wx:if="{{!hasUserInfo}}">
-        <van-icon name="user-circle-o" size="70px" color="rgb(153, 153, 153)" />
-        <span class="font-18" style="margin-left:10px">点击获取头像</span>
+      <van-icon name="user-circle-o" size="70px" color="rgb(153, 153, 153)" />
+      <span class="font-18" style="margin-left:10px">点击获取头像</span>
     </block>
     <block wx:else>
       <image class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
@@ -27,7 +27,7 @@
       </view>
       <view class="account-card-item" style="background-color: rgb(232,255,242);" bindtap="openCouponList">
         <view class="font-14" style="font-weight:bolder;margin-bottom:6px">
-            {{accountInfo.csCouponReleasedQueryVoList?accountInfo.csCouponReleasedQueryVoList.length:0}}
+          {{accountInfo.csCouponReleasedQueryVoList?accountInfo.csCouponReleasedQueryVoList.length:0}}
         </view>
         <view class="font-14" style="margin-bottom:6px">代金券</view>
       </view>
@@ -40,22 +40,22 @@
     </view>
     <view class="account-card-item-container">
       <view class="account-card-item-shorter">
-        <van-icon name="pending-payment"  size="34px" color="rgb(72,165,132)"/>
-        <view class="font-14" >待付款</view>
+        <van-icon name="pending-payment" size="34px" color="rgb(72,165,132)" />
+        <view class="font-14">待付款</view>
       </view>
-      <view class="account-card-item-shorter" >
+      <view class="account-card-item-shorter">
         <van-icon name="todo-list-o" size="34px" color="rgb(72,165,132)" />
         <view class="font-14" style="margin-top:6px;margin-bottom:6px">待使用</view>
       </view>
-      <view class="account-card-item-shorter" >
+      <view class="account-card-item-shorter">
         <van-icon name="completed" size="34px" color="rgb(72,165,132)" />
         <view class="font-14" style="margin-top:6px;margin-bottom:6px">已使用</view>
       </view>
-      <view class="account-card-item-shorter" >
+      <view class="account-card-item-shorter">
         <van-icon name="passed" size="34px" color="rgb(72,165,132)" />
         <view class="font-14" style="margin-top:6px;margin-bottom:6px">已完成</view>
       </view>
-      <view class="account-card-item-shorter" >
+      <view class="account-card-item-shorter">
         <van-icon name="orders-o" size="34px" color="rgb(72,165,132)" />
         <view class="font-14" style="margin-top:6px;margin-bottom:6px">全部</view>
       </view>
@@ -68,7 +68,7 @@
     </view>
     <view class="account-card-item-container">
       <view class="account-card-item-auto" bindtap="openMemberCard">
-        <van-icon name="vip-card" size="34px" color="rgb(255,98,62)"  />
+        <van-icon name="vip-card" size="34px" color="rgb(255,98,62)" />
         <view class="font-14">会员卡</view>
       </view>
     </view>

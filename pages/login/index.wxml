@@ -3,13 +3,13 @@
   <view class="login-step-container">
     <view class="login-step-circle-container">
       <view class="login-step-circle login-step-active">1</view>
-      <view class="login-step-line"></view>
-      <view class="login-step-circle">2</view>
+      <view class="{{hasPhoneNumber?'login-step-line-active':'login-step-line'}}"></view>
+      <view class="{{hasPhoneNumber?'login-step-circle-active':'login-step-circle'}}">2</view>
     </view>
     <view class="login-step-circle-container">
       <view class="font-dark-green">绑定手机</view>
-      <view class="{{hasPhoneNumber?'login-step-line-shorter login-step-active':'login-step-line-shorter'}} "></view>
-      <view class="font-gray">微信授权</view>
+      <view class="login-step-line-shorter"></view>
+      <view class="{{hasPhoneNumber?'font-dark-green':'font-gray'}}">微信授权</view>
     </view>
   </view>
   <view class="login-step-container">

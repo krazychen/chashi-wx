@@ -31,6 +31,18 @@
   background-color: rgb(215,215,215);
 }
 
+.login-step-circle-active{
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  box-sizing: border-box;
+  border-radius: 50%;
+  text-align: center;
+  color: #fff;
+  font-size: 14px;
+  background-color: rgb(72,165,132);
+}
+
 .login-step-active{
   background-color: rgb(72,165,132);
 }
@@ -42,12 +54,20 @@
   background-color: rgb(215,215,215);
 }
 
+.login-step-line-active{
+  width: 160px;
+  height: 4px;
+  box-sizing: border-box;
+  background-color: rgb(72,165,132);
+}
+
 .login-step-line-shorter{
   width: 140px;
   height: 4px;
   box-sizing: border-box;
   background-color: #fff;
 }
+
 
 .login-step-info-dot{
   width: 6px;
