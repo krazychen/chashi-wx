@@ -19,7 +19,7 @@
       <view class="account-card-left-icon"></view>我的钱包
     </view>
     <view class="account-card-item-container">
-      <view class="account-card-item" style="background-color: rgb(241,247,255);">
+      <view class="account-card-item" style="background-color: rgb(241,247,255);" bindtap="openTopup">
         <view class="font-14" style="font-weight:bolder;margin-bottom:6px">
           {{accountInfo.balance>0?accountInfo.balance:0}}
         </view>

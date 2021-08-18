@@ -35,6 +35,15 @@ Page({
       })
     }
   },
+  openTopup:function(){
+    if(this.data.hasUserInfo){
+      wx.navigateTo({
+        url: '/pages/account/topup/index',
+      })
+    }else{
+      this.getUserProfile()
+    }
+  },
   openCouponList:function(){
     if(this.data.hasUserInfo){
       wx.navigateTo({

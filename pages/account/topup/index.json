@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "van-icon": "@vant/weapp/icon/index",
+    "van-toast": "@vant/weapp/toast/index",
+    "van-field": "@vant/weapp/field/index"
+  },
+  "disableScroll": true,
+  "navigationBarTitleText": "我的钱包"
+}

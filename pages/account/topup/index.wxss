@@ -1,0 +1,86 @@
+page {
+  background-color: #fff;
+}
+
+.topup-balance-container{
+  width: 100%;
+  height: 140px;
+  box-sizing: border-box;
+  background-color: rgb(72,165,132);
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.topup-balance-label{
+  width: 100%;
+  height: 60px;
+  line-height: 80px;
+  box-sizing: border-box;
+  text-align: center;
+  color: #fff;
+  font-size: 16px;
+}
+
+.topup-balance-num{
+  width: 100%;
+  height: 80px;
+  line-height: 60px;
+  box-sizing: border-box;
+  text-align: center;
+  color: #fff;
+  font-size: 28px;
+  font-weight: bolder;
+}
+
+.topup-item-container{
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+}
+
+.topup-item-title{
+  width: 100%;
+  height: 30px;
+  line-height: 30px;
+  text-align: left;
+  font-size: 18px;
+}
+
+.topup-item{
+  width: 30%;
+  height: 90px;
+  box-sizing: border-box;
+  padding: 10px 10px;
+  border: 1px solid rgb(72,165,132);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.topup-item-input-container{
+  width: 100%;
+  height: 60px;
+  box-sizing: border-box;
+  padding:10px 0;
+  background-color: rgb(248,248,250);
+  display: flex;
+  flex-direction: row;
+  align-items: center;  
+}
+
+
+.topup-item-btn{
+  width: 90%;
+  height: 46px;
+  line-height: 46px;
+  background-color: rgb(72,165,132);
+  text-align: center;
+  color: #ffffff;
+  font-size: 16px;
+}

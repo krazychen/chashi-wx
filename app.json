@@ -9,6 +9,7 @@
     "pages/account/coupon/index",
     "pages/account/couponcenter/index",
     "pages/account/membercard/index",
+    "pages/account/topup/index",
     "pages/login/index"
   ],
   "permission": {
