@@ -135,6 +135,10 @@ Page({
     const merchantEndTimeArr = roomDetail.merchantEndTime.split(":")
     const merchantEndHour = Number(merchantEndTimeArr[0])
     const ableTimeList = []
+
+    // TODO 获取已预订日期，比对。
+    const bookedTime = ""
+    const bookedTimeArr = bookedTime.split(",");
     
     if(merchantStartHour >= 0 && merchantStartHour < merchantEndHour ){
       for(let i=merchantStartHour;i<=merchantEndHour;i=i+minBookingTime){
@@ -147,7 +151,6 @@ Page({
         bookingTimeObj.bookingItemEndTime = (i+minBookingTime)+':'+merchantStartTimeArr[1]
         bookingTimeObj.bookingItemEndTimeNum = Number((i+minBookingTime)+merchantStartTimeArr[1])
         // 预约日期 在当天
-        // TODO 获取已预订日期，比对。
         if(bookingDate <= nowDate){
           const currentHour = nowDate.getHours();  
           if(currentHour >= i){
@@ -158,6 +161,14 @@ Page({
         }else{
           bookingTimeObj.bookingStatus = 1
         }
+        
+        bookedTimeArr.forEach(bookedItem=>{
+          const bookingTimeStr = bookingTimeObj.bookingItemStartTime+'-'+bookingTimeObj.bookingItemEndTime
+          if(bookingTimeStr == bookedItem){
+            bookingTimeObj.bookingStatus = 0
+          }
+        })
+
         ableTimeList.push(bookingTimeObj)
       }
     }

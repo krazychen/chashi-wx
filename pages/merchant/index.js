@@ -12,7 +12,7 @@ Page({
       merchantName:null,
       userLng:null,
       userLat:null,
-      searchCityName:null,
+      searchCityName:'',
       cityCode:null,
       current:1,
       size:10,
