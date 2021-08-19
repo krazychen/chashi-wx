@@ -1,0 +1,61 @@
+<view class="order-container">
+  <view class="order-item-container">
+    <view class="order-item-tearoom">
+      <view class="order-item-room-card-logo"
+        style="background-image:url('https://img.zcool.cn/community/0106fb581415f8a84a0e282ba38eba.png@1280w_1l_2o_100sh.png');background-size: 100% 100%;background-repeat:no-repeat;">
+      </view>
+      <view class="order-item-room-label-container">
+        <view class="font-16">
+          茶室名称-实施长
+        </view>
+        <view class="font-14 font-dark-gray">
+          福建省厦门市思明区
+        </view>
+        <view class="font-12">
+          <span class="font-red">￥120</span>
+          <span>/小时</span>
+        </view>
+      </view>
+    </view>
+    <view class="order-item-room-divide-container">
+      <view class="order-item-room-divide-left">
+      </view>
+      <van-divider dashed style="width:calc(100% - 20px);border-color:rgb(153,153,153)" />
+      <view class="order-item-room-divide-right">
+      </view>
+    </view>
+    <view class="order-item-label-container">
+      <view class="font-14 font-gray">
+        服务时间
+      </view>
+      <view class="font-14">
+        2018-08-19 21:30 至 2020-08-20 17:30
+      </view>
+    </view>
+    <view class="order-item-label-container">
+      <view class="font-14 font-gray">
+        时长费
+      </view>
+      <view class="font-14">
+        ￥4
+      </view>
+    </view>
+    <view class="order-item-label-container">
+      <view class="font-14 font-gray">
+        服务时长
+      </view>
+      <view class="font-14">
+        共4小时
+      </view>
+    </view>
+    <view class="order-item-label-container">
+      <view class="font-14 font-gray">
+        优惠
+      </view>
+      <view class="font-14">
+        ￥0.00
+      </view>
+    </view>
+  </view>
+  
+</view>

@@ -259,7 +259,9 @@ Page({
     const endBookingTimeNum = this.data.endBookingTimeNum
     if(startBookingTimeNum && endBookingTimeNum){
       if((endBookingTimeNum - startBookingTimeNum) >= this.data.roomDetail.startTime ){
-
+        wx.navigateTo({
+          url: '/pages/merchant/tearoomorder/index',
+        })
       }else{
         Toast('预订时间需大于或等于'+this.data.roomDetail.startTime+'小时');
       }

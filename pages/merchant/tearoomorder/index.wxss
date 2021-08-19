@@ -1,0 +1,86 @@
+
+page {
+  background-color: rgb(241, 241, 241);
+}
+
+.order-container{
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 10px;
+}
+
+.order-item-container{
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  margin-bottom: 10px;
+}
+
+.order-item-tearoom{
+  width: 100%;
+  height: 120px;
+  box-sizing: border-box;
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: row;
+  background-color: #fff;
+}
+
+.order-item-room-card-logo{
+  width: 100px;
+  height: 100px;
+  box-sizing: border-box;
+  border-radius: 6px;
+}
+
+.order-item-room-label-container{
+  width: calc(100% - 100px);
+  height: 100px;
+  box-sizing: border-box;
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.order-item-room-divide-container{
+  width: 100%;
+  height: 14px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.order-item-room-divide-left{
+  width: 10px;
+  height: 14px;
+  background-color: rgb(241, 241, 241);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.order-item-room-divide-right{
+  width: 10px;
+  height: 14px;
+  background-color: rgb(241, 241, 241);
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+
+.order-item-label-container{
+  width: 100%;
+  height: 30px;
+  box-sizing: border-box;
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+}

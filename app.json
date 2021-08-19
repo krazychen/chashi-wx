@@ -4,6 +4,7 @@
     "pages/merchant/index",
     "pages/merchant/merchantdetail/index",
     "pages/merchant/tearoomdetail/index",
+    "pages/merchant/tearoomorder/index",
     "pages/city/index",
     "pages/account/index",
     "pages/account/coupon/index",
