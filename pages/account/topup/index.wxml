@@ -14,30 +14,19 @@
     </view>
   </view>
   <view class="topup-item-container">
-    <view class="topup-item" style="margin-right:5%">
+    <view 
+      wx:for="{{rechargeSettingList}}"
+      wx:for-item="item"
+      wx:key="id"
+      class="topup-item"
+      data-rechargeitem="{{item}}"
+      bindtap="setRechargeValue">
       <view class="font-dark-green" style="font-size:20px;height:60px;line-height:60px;font-weight: bolder;">
-        10元
+        {{item.rechargeAmount}}元
       </view>
       <view class="font-12 font-gray" style="height:30px;margin-top:-10px">
-        送1元
+        送{{item.rechargeGived}}元
       </view>
-    </view>
-    <view class="topup-item" style="margin-right:5%">
-      <view class="font-dark-green" style="font-size:20px;height:60px;line-height:60px;font-weight: bolder;">
-        50元
-      </view>
-      <view class="font-12 font-gray" style="height:30px;margin-top:-10px">
-        送5元
-      </view>
-    </view>
-    <view class="topup-item">
-      <view class="font-dark-green" style="font-size:20px;height:60px;line-height:60px;font-weight: bolder;">
-        100元
-      </view>
-      <view class="font-12 font-gray" style="height:30px;margin-top:-10px">
-        送10元
-      </view>
-
     </view>
   </view>
 
@@ -45,9 +34,11 @@
     <view class="topup-item-input-container">
       <view style="width:90%;">
         <van-field  placeholder="其他金额"
+          value="{{ rechargeObj.rechargeAmount }}"
           type="number"
           input-align="right"
           custom-style="background-color: rgb(248,248,250);"
+          bind:change="onChangeRecharge"
         />
       </view>
       <view class="font-dark-green">
@@ -57,10 +48,10 @@
   </view>
   
   <view class="topup-item-container" style="justify-content: center;">
-    <view class="topup-item-btn">
+    <view class="topup-item-btn" data-rechargeobj="{{rechargeObj}}" bindtap="rechargeTopup">
       立即充值
     </view>
   </view>
-  
+  <van-toast id="van-toast" />
   
 </view>

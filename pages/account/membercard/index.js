@@ -74,7 +74,7 @@ Page({
           if(item.usageNotice){
             item.usageNotice = util.unescape(item.usageNotice).replace(/<[^>]*>/g, '')
           }
-          memberCardDetail.ownerFlag = false
+          item.ownerFlag = false
         })
         this.setData({
           memberCardDetail:memberCardList[0]
