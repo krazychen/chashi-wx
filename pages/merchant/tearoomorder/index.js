@@ -13,7 +13,10 @@ Page({
     userInfo:null
   },
   onLoad() {
-   
+    const res = wx.getSystemInfoSync()
+    this.setData({
+      scrollHeight:res.windowHeight - app.globalData.tabBarHeight,
+    })
   },
   onShow(){
     this.setData({

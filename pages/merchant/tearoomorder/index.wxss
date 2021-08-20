@@ -5,7 +5,6 @@ page {
 
 .order-container{
   width: 100%;
-  height: 100%;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -83,4 +82,44 @@ page {
   align-items: center;
   justify-content: space-between;
   background-color: #fff;
+}
+
+.order-item-label-big-container{
+  width: 100%;
+  height: 40px;
+  box-sizing: border-box;
+  padding: 10px 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+}
+
+
+.order-btn-container{
+  width: 100%;
+  height: 50px;
+  box-sizing: border-box;
+  background-color: #fff;
+  position:fixed;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+  padding: 5px 10px;
+}
+
+.order-btn{
+  width: 160px !important;
+  height: 40px !important;
+  line-height: 40px;
+  box-sizing: border-box !important;
+  background-color: rgb(72,165,132);
+  color: #fff;
+  text-align: center;
+  font-weight: normal;
+  border-radius: 4px;
 }
