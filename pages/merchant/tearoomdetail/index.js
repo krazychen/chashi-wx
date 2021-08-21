@@ -22,6 +22,7 @@ Page({
     startBookingTimeNum:null,
     endBookingTime:null,
     endBookingTimeNum:null,
+    selectBookingTimeString:null,
     hasUserInfo:false,
     userInfo:null
   },
@@ -131,13 +132,14 @@ Page({
     const nowDate  = new Date()
     const minBookingTime = roomDetail.startTime?Number(roomDetail.startTime):1
     const merchantStartTimeArr = roomDetail.merchantStartTime.split(":")
-    let merchantStartHour = Number(merchantStartTimeArr[0])
+    const merchantStartHour = Number(merchantStartTimeArr[0])
+    const merchantStartMin = Number(merchantStartTimeArr[1])
     const merchantEndTimeArr = roomDetail.merchantEndTime.split(":")
     const merchantEndHour = Number(merchantEndTimeArr[0])
     const ableTimeList = []
 
     // TODO 获取已预订日期，比对。
-    const bookedTime = ""
+    const bookedTime = "19:30-20:30"
     const bookedTimeArr = bookedTime.split(",");
     
     if(merchantStartHour >= 0 && merchantStartHour < merchantEndHour ){
@@ -153,7 +155,10 @@ Page({
         // 预约日期 在当天
         if(bookingDate <= nowDate){
           const currentHour = nowDate.getHours();  
-          if(currentHour >= i){
+          const currentMin = nowDate.getMinutes()
+          if(currentHour >i){
+            bookingTimeObj.bookingStatus = 0
+          }else if(currentHour == i && currentMin>= merchantStartMin){
             bookingTimeObj.bookingStatus = 0
           }else{
             bookingTimeObj.bookingStatus = 1
@@ -207,12 +212,13 @@ Page({
       // 预约日期 在当天。校验小时。
       if(bookingDate <= nowDate){
         const currentHour = nowDate.getHours();  
+        const currentMin = nowDate.getMinutes()
         const startBookingTime = this.data.startBookingTime;
         let selectTime = bookingItem.bookingItemStartTime
         if(startBookingTime){
           selectTime = startBookingTime
         }
-        if(currentHour >= Number(selectTime.split(":")[0])){
+        if(currentHour > Number(selectTime.split(":")[0]) ||(currentHour == Number(selectTime.split(":")[0]) && currentMin>=Number(selectTime.split(":")[1]))){
           this.getBookingAbleTimeList(bookingDate)
           this.setData({
             startBookingTime:null,
@@ -246,10 +252,23 @@ Page({
             endBookingTimeNum:null,
           })
         }else{
-          this.setData({
-            endBookingTime:bookingItem.bookingItemEndTime,
-            endBookingTimeNum:bookingItem.bookingItemEndTimeNum
+          const ableBookingTimeList =  this.data.ableBookingTimeList
+          let existDisabled = false
+          ableBookingTimeList.forEach(item=>{
+            if(item.bookingStatus == 0 && item.bookingItemStartTimeNum >= this.data.startBookingTimeNum 
+              && item.bookingItemEndTimeNum <=bookingItem.bookingItemEndTimeNum){
+                existDisabled = true
+            }
           })
+          if(existDisabled){
+            Toast("中间时段已被预订，请重新选择")
+          }else{
+            this.setData({
+              endBookingTime:bookingItem.bookingItemEndTime,
+              endBookingTimeNum:bookingItem.bookingItemEndTimeNum
+            })
+          }
+
         }
       }
     }    
@@ -259,9 +278,37 @@ Page({
     const endBookingTimeNum = this.data.endBookingTimeNum
     if(startBookingTimeNum && endBookingTimeNum){
       if((endBookingTimeNum - startBookingTimeNum) >= this.data.roomDetail.startTime ){
-        wx.navigateTo({
-          url: '/pages/merchant/tearoomorder/index',
+        const ableBookingTimeList =  this.data.ableBookingTimeList
+        let bookingTimeStr = "";
+        ableBookingTimeList.forEach(item=>{
+          if(item.bookingStatus == 1 && item.bookingItemStartTimeNum >= startBookingTimeNum 
+            && item.bookingItemEndTimeNum <=endBookingTimeNum){
+              bookingTimeStr = bookingTimeStr+item.bookingItemStartTime+"-"+item.bookingItemEndTime+',';
+          }
         })
+        bookingTimeStr = bookingTimeStr.substring(0,bookingTimeStr.length-1)
+        this.setData({
+          selectBookingTimeString:bookingTimeStr
+        })
+    
+        const dataTrans = {
+          bookingTimeStr,
+          bookingDate:this.data.bookingDate,
+          bookingDateString:this.data.bookingDateString,
+          startBookingTime:this.data.startBookingTime,
+          startBookingTimeNum:this.data.startBookingTimeNum,
+          endBookingTime:this.data.endBookingTime,
+          endBookingTimeNum:this.data.endBookingTimeNum,
+          bookingLength:(this.data.endBookingTimeNum-this.data.startBookingTimeNum)/100,
+          bookingPrice:(this.data.roomDetail.menberAmount && this.data.roomDetail.menberAmount>0)?this.data.roomDetail.menberAmount:this.data.roomDetail.hoursAmount,
+          discount:0,
+          ...this.data.roomDetail}
+          wx.navigateTo({
+            url: '/pages/merchant/tearoomorder/index',
+            success: function(res) {
+              res.eventChannel.emit('openRoomOrder', dataTrans)
+            }
+          })
       }else{
         Toast('预订时间需大于或等于'+this.data.roomDetail.startTime+'小时');
       }

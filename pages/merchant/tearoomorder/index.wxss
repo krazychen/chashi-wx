@@ -123,3 +123,61 @@ page {
   font-weight: normal;
   border-radius: 4px;
 }
+
+.order-pop-container{
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 10px 14px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.order-pop-title{
+  height: 30px;
+  line-height: 30px;
+  box-sizing: border-box;
+  font-size: 16px;
+}
+
+.order-pop-scroll-container{
+  width: 100%;
+  height: calc(100% - 70px);
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.order-pop-scroll-item-container{
+  width: 100%;
+  height: 100px;
+  box-sizing: border-box;
+  padding: 10px 10px;
+  background-color: rgb(245,247,253);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top:10px;
+}
+
+.order-pop-scroll-item{
+  height: 70px;
+  padding: 0 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.order-pop-cancel{
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  font-size: 16px;
+  text-align: center;
+  border:1px solid gray;
+}
+
+
+

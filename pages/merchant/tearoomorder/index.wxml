@@ -4,17 +4,17 @@
       <view class="order-item-container">
         <view class="order-item-tearoom">
           <view class="order-item-room-card-logo"
-            style="background-image:url('https://img.zcool.cn/community/0106fb581415f8a84a0e282ba38eba.png@1280w_1l_2o_100sh.png');background-size: 100% 100%;background-repeat:no-repeat;">
+            style="background-image:url({{orderDetail.roomLogoUrl}});background-size: 100% 100%;background-repeat:no-repeat;">
           </view>
           <view class="order-item-room-label-container">
             <view class="font-16">
-              茶室名称-实施长
+              {{orderDetail.roomName}}
             </view>
             <view class="font-14 font-dark-gray">
-              福建省厦门市思明区
+              {{orderDetail.address}}
             </view>
             <view class="font-12">
-              <span class="font-red">￥120</span>
+              <span class="font-red font-14" style="font-weight: bolder;">￥{{orderDetail.bookingPrice}}</span>
               <span>/小时</span>
             </view>
           </view>
@@ -22,7 +22,7 @@
         <view class="order-item-room-divide-container">
           <view class="order-item-room-divide-left">
           </view>
-          <van-divider dashed style="width:calc(100% - 20px);border-color:rgb(153,153,153)" />
+          <van-divider dashed style="width:calc(100% - 20px);border-color:rgb(0, 0, 0)" />
           <view class="order-item-room-divide-right">
           </view>
         </view>
@@ -31,7 +31,7 @@
             服务时间
           </view>
           <view class="font-14">
-            2018-08-19 21:30 至 2020-08-20 17:30
+            {{orderDetail.bookingDateString}} {{orderDetail.startBookingTime}} 至 {{orderDetail.bookingDateString}} {{orderDetail.endBookingTime}}
           </view>
         </view>
         <view class="order-item-label-container">
@@ -39,7 +39,7 @@
             时长费
           </view>
           <view class="font-14">
-            ￥4
+            ￥{{orderDetail.bookingPrice * orderDetail.bookingLength}}
           </view>
         </view>
         <view class="order-item-label-container">
@@ -47,7 +47,7 @@
             服务时长
           </view>
           <view class="font-14">
-            共4小时
+            共{{orderDetail.bookingLength}}小时
           </view>
         </view>
         <view class="order-item-label-container">
@@ -69,12 +69,12 @@
             微信支付
           </view>
         </view>
-        <view class="order-item-label-big-container">
+        <view class="order-item-label-big-container" bindtap="openPop">
           <view class="font-16">
             优惠券
           </view>
           <view class="font-16">
-            2张可用
+            {{couponList&&couponList.length>0? couponList.length:0}}张可用
           </view>
         </view>
       </view>
@@ -90,8 +90,51 @@
   </scroll-view>
   <view class="order-btn-container">
     <view style="line-height:14px">
-      实付<span class="font-red">￥12</span>
+      实付<span class="font-red">￥{{orderDetail.bookingPrice * orderDetail.bookingLength -orderDetail.discount}}</span>
     </view>
     <view class="order-btn">去支付</view>
   </view>
+
+  <van-popup
+    show="{{ showPop }}"
+    position="bottom"
+    custom-style="height: 50%;"
+    bind:close="onPopClose"
+  >
+    <view class="order-pop-container">
+      <view class="order-pop-title">
+        优惠券
+      </view>
+      <view class="order-pop-scroll-container">
+        <view class="order-pop-scroll-item-container"
+        wx:for="{{couponList}}"
+          wx:for-item="item"
+          wx:key="id">
+          <view style="font-weight: bolder;">
+            <span>
+              ￥
+            </span>
+            <span style="font-size:28px;">
+              {{item.reductionAmount>0?item.reductionAmount:0}}
+            </span>
+          </view>
+          <view class="order-pop-scroll-item">
+            <view class="font-16">
+              {{item.couponName?item.couponName:''}}
+            </view>
+            <view class="font-12 font-gray">
+              有效期至{{item.endTime}}
+            </view>
+            <view class="font-12">
+              满{{item.fullAmount>0?item.fullAmount:0}}使用
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <view class="order-pop-cancel" >
+        暂不使用优惠券
+      </view> 
+    </view>
+  </van-popup>
 </view>
