@@ -161,6 +161,19 @@ page {
   margin-top:10px;
 }
 
+.order-pop-scroll-item-container-selected{
+  width: 100%;
+  height: 100px;
+  box-sizing: border-box;
+  padding: 10px 10px;
+  background-color: rgb(245,247,253);
+  border:1px solid rgb(72,165,132);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top:10px;
+}
+
 .order-pop-scroll-item{
   height: 70px;
   padding: 0 10px;

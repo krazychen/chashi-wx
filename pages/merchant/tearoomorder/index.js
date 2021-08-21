@@ -3,7 +3,7 @@
 const app = getApp()
 import request from '../../../utils/request'
 import userBehavior from '../../behavior/user-behavior'
-import util from '../../../utils/util'
+import Toast from '../../../miniprogram_npm/@vant/weapp/toast/toast';
 
 Page({
   behaviors: [userBehavior],
@@ -13,7 +13,8 @@ Page({
     userInfo:null,
     orderDetail:null,
     showPop:false,
-    couponList:[]
+    couponList:[],
+    checkCouponItem:null
   },
   onLoad() {
     const res = wx.getSystemInfoSync()
@@ -26,7 +27,6 @@ Page({
     // 真机需要判断 是否拿到数据
     new Promise((resolve, reject) => {
       eventChannel.on('openRoomOrder', function (data) {
-        console.log(data)
         resolve(data)
       })
     }).then((res) => {
@@ -70,4 +70,22 @@ Page({
       showPop:true
     })
   },
+  checkCoupon:function(e){
+    const couponItem = e.currentTarget.dataset.item
+    const orderPrice = this.data.orderDetail.bookingPrice * this.data.orderDetail.bookingLength
+    if(couponItem.fullAmount > orderPrice){
+      Toast("该优惠券满"+couponItem.fullAmount+"可用")
+    }else{
+      this.setData({
+        checkCouponItem:couponItem,
+        showPop:false
+      })
+    }
+  },
+  unCheckCoupon:function(){
+    this.setData({
+      checkCouponItem:null,
+      showPop:false
+    })
+  }
 })

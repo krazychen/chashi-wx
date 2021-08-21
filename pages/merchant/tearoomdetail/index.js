@@ -301,7 +301,6 @@ Page({
           endBookingTimeNum:this.data.endBookingTimeNum,
           bookingLength:(this.data.endBookingTimeNum-this.data.startBookingTimeNum)/100,
           bookingPrice:(this.data.roomDetail.menberAmount && this.data.roomDetail.menberAmount>0)?this.data.roomDetail.menberAmount:this.data.roomDetail.hoursAmount,
-          discount:0,
           ...this.data.roomDetail}
           wx.navigateTo({
             url: '/pages/merchant/tearoomorder/index',

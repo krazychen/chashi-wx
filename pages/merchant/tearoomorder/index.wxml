@@ -55,7 +55,7 @@
             优惠
           </view>
           <view class="font-14">
-            ￥0.00
+            ￥{{checkCouponItem?checkCouponItem.reductionAmount:0}}
           </view>
         </view>
       </view>
@@ -73,8 +73,11 @@
           <view class="font-16">
             优惠券
           </view>
-          <view class="font-16">
+          <view class="font-16" wx:if="{{!checkCouponItem}}">
             {{couponList&&couponList.length>0? couponList.length:0}}张可用
+          </view>
+          <view class="font-red font-16" wx:if="{{checkCouponItem}}" style="font-weight: bolder;">
+            -{{checkCouponItem.reductionAmount}}元
           </view>
         </view>
       </view>
@@ -90,7 +93,7 @@
   </scroll-view>
   <view class="order-btn-container">
     <view style="line-height:14px">
-      实付<span class="font-red">￥{{orderDetail.bookingPrice * orderDetail.bookingLength -orderDetail.discount}}</span>
+      实付<span class="font-red" style="font-weight: bolder;">￥{{checkCouponItem?(orderDetail.bookingPrice * orderDetail.bookingLength -checkCouponItem.reductionAmount):(orderDetail.bookingPrice * orderDetail.bookingLength)}}</span>
     </view>
     <view class="order-btn">去支付</view>
   </view>
@@ -100,16 +103,19 @@
     position="bottom"
     custom-style="height: 50%;"
     bind:close="onPopClose"
+    close-on-click-overlay="{{false}}"
   >
     <view class="order-pop-container">
       <view class="order-pop-title">
         优惠券
       </view>
       <view class="order-pop-scroll-container">
-        <view class="order-pop-scroll-item-container"
-        wx:for="{{couponList}}"
+        <view class="{{checkCouponItem&&checkCouponItem.id==item.id?'order-pop-scroll-item-container-selected':'order-pop-scroll-item-container'}}"
+          wx:for="{{couponList}}"
           wx:for-item="item"
-          wx:key="id">
+          wx:key="id"
+          data-item="{{item}}"
+          bindtap="checkCoupon">
           <view style="font-weight: bolder;">
             <span>
               ￥
@@ -131,10 +137,10 @@
           </view>
         </view>
       </view>
-
-      <view class="order-pop-cancel" >
+      <view class="order-pop-cancel" bindtap="unCheckCoupon">
         暂不使用优惠券
       </view> 
     </view>
   </van-popup>
+  <van-toast id="van-toast" />
 </view>
