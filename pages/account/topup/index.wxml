@@ -5,7 +5,7 @@
       余额(元)
     </view>
     <view class="topup-balance-num">
-      0
+      {{accountInfo.balance>0?accountInfo.balance:0}}
     </view>
   </view>
   <view class="topup-item-container">

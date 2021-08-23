@@ -12,6 +12,7 @@ Page({
     hasUserInfo:false,
     userInfo:null,
     rechargeSettingList: [],
+    accountInfo:null,
     rechargeObj:{
       rechargeAmount:0,
       rechargeGived:0
@@ -31,6 +32,16 @@ Page({
       hasUserInfo:app.globalData.hasUserInfo,
       userInfo:app.globalData.userInfo
     })
+    this.getAccountInfoByOpenId()
+  },
+  getAccountInfoByOpenId:function(){
+    if(this.data.hasUserInfo){
+      request.get('/wxUser/infoForWx/'+this.data.userInfo.openid,null).then((res)=>{
+        this.setData({
+          accountInfo:res.data.data
+        })
+      })
+    }
   },
   getSettingListForWx:function(){
     request.post('/csRechargeSetting/getSettingListForWx',{}).then((res)=>{
@@ -59,6 +70,7 @@ Page({
   },
   rechargeTopup:function(e){
     const _this = this;  
+    console.log(_this.data.rechargeObj,'')
     const csRechargeRecord = {
       wxuserId: _this.data.userInfo.id,
       wxuserPhone:_this.data.userInfo.phoneNumber,
@@ -92,8 +104,15 @@ Page({
             },
           });  
         },  
-        fail: function (error) {  
-          Toast('付款失败')
+        fail: function (error) {
+          // 取消支付
+          if(error.errMsg=='requestPayment:fail cancel'){
+            const outTradeNo = 'rech_Z6of6ZcWR56U8RI3pO6zDw**'
+            request.post('/weixin/cancelRechargeWxPay?outTradeNo='+outTradeNo,null).then((res)=>{
+            })
+          }else{
+            Toast('付款失败')
+          }
         },  
         complete: function () {  
           // complete     

@@ -38,7 +38,13 @@ Page({
     })
   },
   getMerchantDetailById:function(){
-    request.get('/csMerchant/infoForWx/'+this.data.merchantTrans.id,null).then((res)=>{
+    const merchatDetailSearchParam = {
+      id:this.data.merchantTrans.id
+    }
+    if(this.data.hasUserInfo){
+      merchatDetailSearchParam.openid = this.data.userInfo.openid
+    }
+    request.post('/csMerchant/infoForWx',merchatDetailSearchParam).then((res)=>{
       const merchantDetail = res.data.data
       if(merchantDetail){
         if(merchantDetail.carouselUrlValue){

@@ -137,7 +137,13 @@ Page({
   },
   getRoomList:function(e){
     const selectMerchantId = e.currentTarget.dataset.id
-    request.post('/csTearoom/getRoomListForWx/'+selectMerchantId,null).then((res)=>{
+    const searchTeaRoomParam = {
+      merchantId:selectMerchantId
+    }
+    if(this.data.hasUserInfo){
+      searchTeaRoomParam.openid = this.data.userInfo.openid
+    }
+    request.post('/csTearoom/getRoomListForWx',searchTeaRoomParam).then((res)=>{
       const dataList = res.data.data.records||[]
       this.setData({
         roomList:dataList

@@ -153,7 +153,14 @@ Page({
           });  
         },  
         fail: function (error) {  
-          Toast('付款失败')
+          // 取消支付
+          if(error.errMsg=='requestPayment:fail cancel'){
+            const outTradeNo = ''
+            request.post('/weixin/cancelCardWxPay?outTradeNo='+outTradeNo,null).then((res)=>{
+            })
+          }else{
+            Toast('付款失败')
+          }
         },  
         complete: function () {  
           // complete     
