@@ -105,13 +105,15 @@ Page({
           });  
         },  
         fail: function (error) {
+          const outTradeNo = param.data.outTradeNo
           // 取消支付
           if(error.errMsg=='requestPayment:fail cancel'){
-            const outTradeNo = 'rech_Z6of6ZcWR56U8RI3pO6zDw**'
             request.post('/weixin/cancelRechargeWxPay?outTradeNo='+outTradeNo,null).then((res)=>{
             })
           }else{
-            Toast('付款失败')
+            request.post('/weixin/failRechargeWxPay?outTradeNo='+outTradeNo+"&paymentMsg="+error.errMsg,null).then((res)=>{
+              Toast('付款失败')
+            })
           }
         },  
         complete: function () {  

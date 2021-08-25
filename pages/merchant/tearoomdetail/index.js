@@ -24,7 +24,8 @@ Page({
     endBookingTimeNum:null,
     selectBookingTimeString:null,
     hasUserInfo:false,
-    userInfo:null
+    userInfo:null,
+    accountInfo:null
   },
   onLoad() {
     const _this = this;
@@ -39,6 +40,7 @@ Page({
         dataTrans:res
       },()=>{
         _this.getRoomDetailById()
+        _this.getAccountInfoByOpenId()
       })
     })
   },
@@ -48,8 +50,23 @@ Page({
       userInfo:app.globalData.userInfo
     })
   },
+  getAccountInfoByOpenId:function(){
+    if(this.data.hasUserInfo){
+      request.get('/wxUser/infoForWx/'+this.data.userInfo.openid,null).then((res)=>{
+        this.setData({
+          accountInfo:res.data.data
+        })
+      })
+    }
+  },
   getRoomDetailById:function(){
-    request.get('/csTearoom/infoForWx/'+this.data.dataTrans.id,null).then((res)=>{
+    const searchRoomParam = {
+      id:this.data.dataTrans.id
+    }
+    if(this.data.hasUserInfo){
+      searchRoomParam.openid = this.data.userInfo.openid
+    }
+    request.post('/csTearoom/infoForWx',searchRoomParam).then((res)=>{
       const roomDetail = res.data.data || null
       if(roomDetail){
         if(roomDetail.roomBannerUrl){
@@ -268,7 +285,6 @@ Page({
               endBookingTimeNum:bookingItem.bookingItemEndTimeNum
             })
           }
-
         }
       }
     }    
@@ -300,14 +316,20 @@ Page({
           endBookingTime:this.data.endBookingTime,
           endBookingTimeNum:this.data.endBookingTimeNum,
           bookingLength:(this.data.endBookingTimeNum-this.data.startBookingTimeNum)/100,
-          bookingPrice:(this.data.roomDetail.menberAmount && this.data.roomDetail.menberAmount>0)?this.data.roomDetail.menberAmount:this.data.roomDetail.hoursAmount,
-          ...this.data.roomDetail}
-          wx.navigateTo({
-            url: '/pages/merchant/tearoomorder/index',
-            success: function(res) {
-              res.eventChannel.emit('openRoomOrder', dataTrans)
-            }
-          })
+          ...this.data.roomDetail
+        }
+
+        let bookingPrice = this.data.roomDetail.hoursAmount
+        if(this.data.accountInfo.csMembercardOrderQueryVo){
+          bookingPrice = this.data.roomDetail.menberAmount
+        }
+        dataTrans.bookingPrice = bookingPrice
+        wx.navigateTo({
+          url: '/pages/merchant/tearoomorder/index',
+          success: function(res) {
+            res.eventChannel.emit('openRoomOrder', dataTrans)
+          }
+        })
       }else{
         Toast('预订时间需大于或等于'+this.data.roomDetail.startTime+'小时');
       }

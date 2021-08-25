@@ -123,7 +123,7 @@ Page({
       openid:_this.data.userInfo.openid,
       membercardId:_this.data.memberCardDetail.id,
       membercardName:_this.data.memberCardDetail.cardname,
-      orderPrice:0.01,
+      orderPrice:_this.data.memberCardDetail.price,
       validPeriod:_this.data.memberCardDetail.validPeriod,
     };
     request.get('/weixin/cardWxPay',cardObj).then((res)=>{
@@ -153,13 +153,15 @@ Page({
           });  
         },  
         fail: function (error) {  
+          const outTradeNo = param.data.outTradeNo
           // 取消支付
           if(error.errMsg=='requestPayment:fail cancel'){
-            const outTradeNo = ''
             request.post('/weixin/cancelCardWxPay?outTradeNo='+outTradeNo,null).then((res)=>{
             })
           }else{
-            Toast('付款失败')
+            request.post('/weixin/failCardWxPay?outTradeNo='+outTradeNo+"&paymentMsg="+error.errMsg,null).then((res)=>{
+              Toast('付款失败')
+            })
           }
         },  
         complete: function () {  
