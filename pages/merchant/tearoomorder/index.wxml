@@ -81,21 +81,21 @@
           </view>
         </view>
       </view>
-      <view class="order-item-container">
-        <view class="font-dark-green" style=" padding:10px 10px">
-          温馨提示：
-            温馨提示：温馨提示：温馨提示：温馨提示：温馨提示：温馨提示：温馨提示：
-            温馨提示：温馨提示：温馨提示：温馨提示：温馨提示：温馨提示：
-            温馨提示：温馨提示：温馨提示：温馨提示：
+      <block wx:if="{{orderDetail.usageNotice}}">
+        <view class="order-item-container">
+          <view class="font-dark-green" style=" padding:10px 10px">
+            {{orderDetail.usageNotice}}
+          </view>
         </view>
-      </view>
+      </block>
+     
     </view>
   </scroll-view>
   <view class="order-btn-container">
     <view style="line-height:14px">
-      实付<span class="font-red" style="font-weight: bolder;">￥{{checkCouponItem?(orderDetail.bookingPrice * orderDetail.bookingLength -checkCouponItem.reductionAmount):(orderDetail.bookingPrice * orderDetail.bookingLength)}}</span>
+      实付<span class="font-red" style="font-weight: bolder;">￥{{checkCouponItem?(orderPayObj.orderPrice -checkCouponItem.reductionAmount):orderPayObj.orderPrice}}</span>
     </view>
-    <view class="order-btn">去支付</view>
+    <view class="order-btn" bindtap="openPayType">去支付</view>
   </view>
 
   <van-popup
@@ -142,5 +142,18 @@
       </view> 
     </view>
   </van-popup>
+
+  <van-dialog
+    use-slot
+    title="选择支付方式"
+    show="{{showPayType}}"
+    show-cancel-button
+    bind:close="onPayTypeClose"
+  >
+   <view>
+    qianbao
+   </view>
+  </van-dialog>
+  
   <van-toast id="van-toast" />
 </view>
