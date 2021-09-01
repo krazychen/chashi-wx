@@ -192,5 +192,42 @@ page {
   border:1px solid gray;
 }
 
+.pay-type-container{
+  width: 100%;
+  height: 90px;
+  padding: 10px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+.pay-type-title{
+  height: 40px;
+  font-size: 16px;
+}
 
+.pay-type-item-container{
+  width: 100%;
+  height: 50px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.pay-type-item{
+  height: 30px;
+  line-height: 30px;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 16px;
+}
+
+.pay-type-item-active{
+  border:1px solid rgb(72,165,132);
+}
 

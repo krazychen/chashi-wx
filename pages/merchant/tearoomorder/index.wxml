@@ -149,11 +149,30 @@
     show="{{showPayType}}"
     show-cancel-button
     bind:close="onPayTypeClose"
+    confirm-button-color="rgb(63,122,254)"
+    bind:confirm="payForOrder"
   >
-   <view>
-    qianbao
+   <view class="pay-type-container">
+    <view class="pay-type-title">
+      支付方式
+    </view>
+    <view class="pay-type-item-container">
+      <view class="pay-type-item font-gray" 
+        data-paytype="1"
+        bindtap="changePayType"
+        style="{{paymentType==1?'border:1px solid rgb(72,165,132)':''}}">
+        <van-icon name="balance-o" color="rgb(72,165,132)" />
+        <span style="padding-left: 10px;">钱包支付</span>
+      </view>
+      <view class="pay-type-item font-gray" 
+        data-paytype="2"
+        bindtap="changePayType"
+        style="{{paymentType==2?'border:1px solid rgb(72,165,132)':''}}">
+        <van-icon name="wechat" color="rgb(141,184,35)" />
+        <span style="padding-left: 10px;">微信支付</span>
+      </view>
+    </view>
    </view>
   </van-dialog>
-  
   <van-toast id="van-toast" />
 </view>

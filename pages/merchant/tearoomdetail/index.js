@@ -49,6 +49,7 @@ Page({
       hasUserInfo:app.globalData.hasUserInfo,
       userInfo:app.globalData.userInfo
     })
+    this.getAccountInfoByOpenId()
   },
   getAccountInfoByOpenId:function(){
     if(this.data.hasUserInfo){

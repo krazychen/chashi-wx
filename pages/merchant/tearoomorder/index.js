@@ -18,7 +18,8 @@ Page({
     checkCouponItem:null,
     accountInfo:null,
     orderPayObj:null,
-    showPayType:false
+    showPayType:false,
+    paymentType: 2
   },
   onLoad() {
     const res = wx.getSystemInfoSync()
@@ -111,7 +112,6 @@ Page({
   computeOrderPrice(){
      const orderPayObj = {}
      const orderDetail = this.data.orderDetail
-     console.log(orderDetail)
      const accountInfo = this.data.accountInfo
      orderPayObj.merchantId = orderDetail.merchantId
      orderPayObj.tearoomId = orderDetail.id
@@ -179,6 +179,12 @@ Page({
       showPayType:false
     })
   },
+  changePayType:function(e){
+    const payType = e.currentTarget.dataset.paytype
+    this.setData({
+      paymentType:payType
+    })
+  },
   payForOrder:function(){
     const orderPayObj = this.data.orderPayObj
     const checkCouponItem = this.data.checkCouponItem
@@ -190,6 +196,8 @@ Page({
     } else {
       orderPayObj.orderCpAmount = 0
     }
+    orderPayObj.paymentType = this.data.paymentType
+
 
      console.log(orderPayObj)
      
