@@ -61,5 +61,14 @@ Page({
     }else{
       this.getUserProfile()
     }
+  },
+  openOrderList:function(){
+    if(this.data.hasUserInfo){
+      wx.navigateTo({
+        url: '/pages/account/orderinfo/index',
+      })
+    }else{
+      this.getUserProfile()
+    }
   }
 })

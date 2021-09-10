@@ -1,0 +1,50 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="order-info-type-container">
+    <view class="order-info-type-item"
+     wx:for="{{orderType}}"
+      wx:for-item="item"
+      wx:key="queryType"  
+     >
+      {{item.queryTypeName}}
+    </view>
+  </view>
+
+  <view class="order-list-container">
+    <view class="order-list-item">
+      <view class="order-list-item-title">
+        <span>
+          茶室001
+        </span>
+        <view style="float:right; font-size:14px;" class="font-gray">
+          待付款
+        </view>
+      </view>
+      <view class="order-list-item-label">
+        <span>茶室地址：</span>
+        <span>附件省得</span>
+      </view>
+      <view class="order-list-item-label font-gray">
+        <span>使用时间：</span>
+        <span>附件省得</span>
+      </view>
+      <view class="order-list-item-label font-gray">
+        <span>使用时长：</span>
+        <span>附件省得</span>
+      </view>
+      <view class="order-list-item-label font-gray">
+        <span>订单金额：</span>
+        <span>附件省得</span>
+      </view>
+      <view class="order-list-item-btn-container">
+        <view class="order-list-item-btn">
+          取消订单
+        </view>
+        <view class="order-list-item-btn">
+          去支付
+        </view>
+      </view>
+    </view>
+  </view>
+  
+</view>

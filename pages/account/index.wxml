@@ -39,7 +39,7 @@
       <view class="account-card-left-icon"></view>茶室订单
     </view>
     <view class="account-card-item-container">
-      <view class="account-card-item-shorter">
+      <view class="account-card-item-shorter" bindtap="openOrderList">
         <van-icon name="pending-payment" size="34px" color="rgb(72,165,132)" />
         <view class="font-14">待付款</view>
       </view>
