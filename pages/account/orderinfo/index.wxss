@@ -35,6 +35,7 @@ page {
   padding: 10px 10px;
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
 }
 
 .order-list-item{

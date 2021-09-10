@@ -11,6 +11,12 @@ Page({
     hasUserInfo:false,
     userInfo:null,
     accountInfo:null,
+    searchObj:{
+      queryType:1,
+      nameAphone:null,
+      current:1,
+      size:999
+    },
     orderType:[
       {
         queryType:1,
@@ -40,29 +46,32 @@ Page({
         queryType:7,
         queryTypeName:'已退款'
       }
-    ]
+    ],
+    orderList:[]
   },
   onLoad() {
+    const _this = this
     this.setData({
       hasUserInfo:app.globalData.hasUserInfo,
       userInfo:app.globalData.userInfo
+    },()=>{
+      _this.getOrderList()
     })
   },
   getOrderList(){
-    request.post('/csMerchantOrder/getCsMerchantOrderListForWx',null).then((res)=>{
-      const couponList = res.data.data
-      if(couponList && couponList.length>0){
-        couponList.forEach(item=>{
-          if(item.startTime){
-            item.startTime = item.startTime.substring(0,10)
-          }
-          if(item.endTime){
-            item.endTime = item.endTime.substring(0,10)
+    const searchObj = this.data.searchObj
+    searchObj.nameAphone = this.data.userInfo.phoneNumber
+    request.post('/csMerchantOrder/getCsMerchantOrderListForWx',searchObj).then((res)=>{
+      const orderList = res.data.data.records || []
+      if(orderList && orderList.length>0){
+        orderList.forEach(item=>{
+          if(item.orderDate){
+            item.orderDate = item.orderDate.substring(0,10)
           }
         })
       }
       this.setData({
-        couponList
+        orderList
       })
     })
   }
