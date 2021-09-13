@@ -138,14 +138,28 @@ Page({
     const nowMonth = nowDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
     const nowDay = nowDate.getDate(); //获取当前日(1-31)
     const bookingDate = new Date(nowYear,nowMonth,nowDay)
-    this.getBookingAbleTimeList(bookingDate)
+    const _this = this
     this.setData({
       showBookPop:true,
       bookingDate:bookingDate,
       bookingDateString:nowYear+'-'+(nowMonth+1).toString().padStart(2,'0')+'-'+nowDay.toString().padStart(2,'0')
+    },()=>{
+      _this.getBookingedTimeRange()
     })
   },
-  getBookingAbleTimeList:function(bookingDate){
+  getBookingedTimeRange: function(){
+    const searchBookingedObj = {
+      tearoomId:this.data.roomDetail.id,
+      orderDate:this.data.bookingDateString
+    }
+    const bookingDate = this.data.bookingDate
+    let orderTimeRange = null
+    request.post('/csMerchantOrder/getTimeRangeForWx',searchBookingedObj).then((res)=>{
+      orderTimeRange = res.data.data || null
+      this.getBookingAbleTimeList(bookingDate,orderTimeRange)
+    })
+  },
+  getBookingAbleTimeList: function(bookingDate,bookedTime){
     const roomDetail = this.data.roomDetail
     const nowDate  = new Date()
     const minBookingTime = roomDetail.startTime?Number(roomDetail.startTime):1
@@ -157,8 +171,11 @@ Page({
     const ableTimeList = []
 
     // TODO 获取已预订日期，比对。
-    const bookedTime = "19:30-20:30"
-    const bookedTimeArr = bookedTime.split(",");
+    let bookedTimeArr = []
+    if(bookedTime){
+      bookedTimeArr = bookedTime.split(",");
+    }
+
     
     if(merchantStartHour >= 0 && merchantStartHour < merchantEndHour ){
       for(let i=merchantStartHour;i<=merchantEndHour;i=i+minBookingTime){
@@ -199,6 +216,7 @@ Page({
       ableBookingTimeList:ableTimeList
     })
   },
+
   onBookPopClose:function(){
     this.setData({
       showBookPop:false
@@ -211,6 +229,7 @@ Page({
     }
     let bookingDate = this.data.bookingDate
     bookingDate.setDate(bookingDate.getDate()+addDays); 
+    const _this = this
     this.setData({
       bookingDate:bookingDate,
       bookingDateString:bookingDate.getFullYear()+'-'+(bookingDate.getMonth()+1).toString().padStart(2,'0')+'-'+bookingDate.getDate().toString().padStart(2,'0'),
@@ -219,8 +238,9 @@ Page({
       startBookingTimeNum:null,
       endBookingTime:null,
       endBookingTimeNum:null
+    },()=>{
+      _this.getBookingedTimeRange()
     })
-    this.getBookingAbleTimeList(bookingDate)
   },
   selectBookingTime:function(e){
     const bookingItem = e.currentTarget.dataset.bookingtime
@@ -237,7 +257,7 @@ Page({
           selectTime = startBookingTime
         }
         if(currentHour > Number(selectTime.split(":")[0]) ||(currentHour == Number(selectTime.split(":")[0]) && currentMin>=Number(selectTime.split(":")[1]))){
-          this.getBookingAbleTimeList(bookingDate)
+          this.getBookingedTimeRange()
           this.setData({
             startBookingTime:null,
             startBookingTimeNum:null,

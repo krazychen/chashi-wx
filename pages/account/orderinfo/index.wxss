@@ -24,7 +24,24 @@ page {
   box-sizing: border-box;
   padding: 2px 0px;
   border-radius: 12px;
+  border: 1px solid gray;
+  font-size: 14px;
+  text-align: center;
+}
+
+.order-info-type-item-selected{
+  margin-top: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  min-width: 60px;
+  height: 24px;
+  line-height: 18px;
+  box-sizing: border-box;
+  padding: 2px 0px;
+  border-radius: 12px;
   border: 1px solid rgb(72,165,132);
+  background-color: rgb(72,165,132);
+  color: #fff;
   font-size: 14px;
   text-align: center;
 }

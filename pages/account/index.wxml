@@ -61,9 +61,6 @@
       </view>
     </view>
   </view>
-  <view class="account-card-container">
-    <button open-type="share">分享</button>
-  </view>
 
   <view class="account-card-container">
     <view class="account-card-title">
@@ -74,6 +71,11 @@
         <van-icon name="vip-card" size="34px" color="rgb(255,98,62)" />
         <view class="font-14">会员卡</view>
       </view>
+      
+      <button class="account-card-item-auto" plain="{{true}}" open-type="share">
+        <van-icon name="share" size="34px" color="rgb(72,165,132)" />
+        <view class="font-14">分享</view>
+      </button>
     </view>
   </view>
 

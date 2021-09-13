@@ -15,7 +15,7 @@ Page({
       queryType:1,
       nameAphone:null,
       current:1,
-      size:999
+      size:9999
     },
     orderType:[
       {
@@ -66,13 +66,46 @@ Page({
       if(orderList && orderList.length>0){
         orderList.forEach(item=>{
           if(item.orderDate){
-            item.orderDate = item.orderDate.substring(0,10)
+            item.orderDate = item.orderDate.substring(0,10)+" "
+          }
+          if(item.orderTimerage){
+             const orderRange = item.orderTimerage.split(',')
+             if(orderRange.length>1){
+               const startRange = orderRange[0].split('-')[0]
+               const endRange = orderRange[orderRange.length-1].split('-')[1]
+               item.orderTimerage = startRange +'-'+endRange
+             }
+          }
+
+          if(item.paymentStatus == 0){
+             item.orderStatusName = '待付款' 
+          }else if(item.paymentStatus == 2 && item.usedStatus == 0){
+            item.orderStatusName = '待使用' 
+          }else if(item.paymentStatus == 2 && item.usedStatus == 1){
+            item.orderStatusName = '已使用' 
+          }else if(item.paymentStatus == 2 && item.usedStatus == 3){
+            item.orderStatusName = '已完成' 
+          }else if(item.paymentStatus == 3){
+            item.orderStatusName = '已取消' 
+          }else{
+            item.orderStatusName = '已退款' 
           }
         })
       }
       this.setData({
         orderList
       })
+    })
+  },
+  searchByQueryType:function(e){
+    const queryTypeItem = e.currentTarget.dataset.querytype
+    const searchObj = this.data.searchObj
+    searchObj.queryType = queryTypeItem.queryType
+    const _this = this
+    this.setData({
+      searchObj
+    },()=>{
+      _this.getOrderList()
     })
   }
 
