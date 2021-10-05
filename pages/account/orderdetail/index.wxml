@@ -1,0 +1,24 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="order-container">
+    <view class="order-item-container">
+      <view class="order-item-tearoom">
+        <view class="order-item-room-card-logo"
+          style="background-image:url({{orderDetail.roomLogoUrl}});background-size: 100% 100%;background-repeat:no-repeat;">
+        </view>
+        <view class="order-item-room-label-container">
+          <view class="font-16">
+            {{orderDetail.roomName}}
+          </view>
+          <view class="font-14 font-dark-gray">
+            {{orderDetail.address}}
+          </view>
+          <view class="font-12">
+            <span class="font-red font-14" style="font-weight: bolder;">￥{{orderDetail.bookingPrice}}</span>
+            <span>/小时</span>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

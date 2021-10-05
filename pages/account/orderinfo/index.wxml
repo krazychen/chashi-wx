@@ -18,6 +18,8 @@
       <view class="order-list-item"
         wx:for="{{orderList}}"
         wx:item="item"
+        data-orderid="{{item.id}}"
+        bindtap="openOrderDetail"  
         wx:key="id">
           <view class="order-list-item-title">
             <span>

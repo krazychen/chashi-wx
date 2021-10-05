@@ -143,5 +143,18 @@ Page({
         Toast('申请退款失败')
       }
     })
+  },
+  openOrderDetail:function(e){
+    const orderid = e.currentTarget.dataset.orderid
+    if(this.data.hasUserInfo){
+      wx.navigateTo({
+        url: '/pages/account/orderdetail/index',
+        success: function(res) {
+          res.eventChannel.emit('openOrderDetail', orderid)
+        }
+      })
+    }else{
+      this.getUserProfile()
+    }
   }
 })
