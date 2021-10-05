@@ -62,10 +62,14 @@ Page({
       this.getUserProfile()
     }
   },
-  openOrderList:function(){
+  openOrderList:function(e){
+    const queryType = e.currentTarget.dataset.querytype
     if(this.data.hasUserInfo){
       wx.navigateTo({
         url: '/pages/account/orderinfo/index',
+        success: function(res) {
+          res.eventChannel.emit('openOrderList', queryType)
+        }
       })
     }else{
       this.getUserProfile()

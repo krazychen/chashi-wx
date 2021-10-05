@@ -206,7 +206,14 @@ Page({
       }
       request.post('/csMerchantOrder/addCsMerchantOrderForWx',orderPayObj).then((res)=>{
         if(res.data.code ===200){
-          Toast('付款成功')
+          Toast({
+            message: '付款成功',
+            onClose: () => {
+              wx.navigateBack({
+                delta: 0,
+              })
+            },
+          });
         }else{
           Toast('付款失败')
         }

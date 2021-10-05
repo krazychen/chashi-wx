@@ -55,7 +55,24 @@ Page({
       hasUserInfo:app.globalData.hasUserInfo,
       userInfo:app.globalData.userInfo
     },()=>{
-      _this.getOrderList()
+      const eventChannel = _this.getOpenerEventChannel()
+      // 真机需要判断 是否拿到数据
+      new Promise((resolve, reject) => {
+        eventChannel.on('openOrderList', function (data) {
+          resolve(data)
+        })
+      }).then((res) => {
+        _this.setData({
+          searchObj:{
+            queryType:res,
+            nameAphone:null,
+            current:1,
+            size:9999
+          }
+        },()=>{
+          _this.getOrderList()
+        })
+      })
     })
   },
   getOrderList(){
@@ -107,6 +124,24 @@ Page({
     },()=>{
       _this.getOrderList()
     })
+  },
+  refundOrder:function(e){
+    const orderitem = e.currentTarget.dataset.orderitem
+    const orderRefundObj = {
+      id:orderitem.id,
+      orderPrice: orderitem.orderPrice,
+      outTradeNo: orderitem.outTradeNo,
+      paymentType: orderitem.paymentType,
+      paymentStatus:orderitem.paymentStatus
+    }
+    const _this = this
+    request.get('/weixin/refundOrderWxPay',orderRefundObj).then((res)=>{
+      if(res.data.code ===200){
+        Toast('申请退款成功')
+        _this.getOrderList()
+      }else{
+        Toast('申请退款失败')
+      }
+    })
   }
-
 })

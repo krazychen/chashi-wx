@@ -8,7 +8,7 @@
  */
 const system = {
   netError: '服务器开小差啦',
-  severUrl: 'https://9005b7.cpolar.io'
+  severUrl: 'https://3fd67ae9.cpolar.io'
 }
 
 module.exports = {

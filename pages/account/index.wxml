@@ -39,23 +39,23 @@
       <view class="account-card-left-icon"></view>茶室订单
     </view>
     <view class="account-card-item-container">
-      <view class="account-card-item-shorter" bindtap="openOrderList">
+      <view class="account-card-item-shorter" data-querytype="2" bindtap="openOrderList">
         <van-icon name="pending-payment" size="34px" color="rgb(72,165,132)" />
         <view class="font-14">待付款</view>
       </view>
-      <view class="account-card-item-shorter">
+      <view class="account-card-item-shorter" data-querytype="3" bindtap="openOrderList">
         <van-icon name="todo-list-o" size="34px" color="rgb(72,165,132)" />
         <view class="font-14" style="margin-top:6px;margin-bottom:6px">待使用</view>
       </view>
-      <view class="account-card-item-shorter">
+      <view class="account-card-item-shorter" data-querytype="4" bindtap="openOrderList">
         <van-icon name="completed" size="34px" color="rgb(72,165,132)" />
         <view class="font-14" style="margin-top:6px;margin-bottom:6px">已使用</view>
       </view>
-      <view class="account-card-item-shorter">
+      <view class="account-card-item-shorter" data-querytype="5" bindtap="openOrderList" >
         <van-icon name="passed" size="34px" color="rgb(72,165,132)" />
         <view class="font-14" style="margin-top:6px;margin-bottom:6px">已完成</view>
       </view>
-      <view class="account-card-item-shorter">
+      <view class="account-card-item-shorter" data-querytype="1" bindtap="openOrderList">
         <van-icon name="orders-o" size="34px" color="rgb(72,165,132)" />
         <view class="font-14" style="margin-top:6px;margin-bottom:6px">全部</view>
       </view>
@@ -74,7 +74,7 @@
       
       <button class="account-card-item-auto" plain="{{true}}" open-type="share">
         <van-icon name="share" size="34px" color="rgb(72,165,132)" />
-        <view class="font-14">分享</view>
+        <view class="font-14" style="line-height:14px !important;margin-bottom:2px">分享</view>
       </button>
     </view>
   </view>

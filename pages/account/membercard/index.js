@@ -14,7 +14,10 @@ Page({
     userInfo:null,
     memberCardList:[],
     currentCourselIndex:0,
-    memberCardDetail:null
+    memberCardDetail:null,
+    showPayType:false,
+    paymentType: 2,
+    accountInfo:null
   },
   onLoad() {
     const _this = this
@@ -25,6 +28,7 @@ Page({
       userInfo:app.globalData.userInfo
     },()=>{
       _this.getMemberCardDetailByUserId()
+      _this.getAccountInfoByOpenId()
     })
   },
   onShow(){
@@ -32,6 +36,18 @@ Page({
       hasUserInfo:app.globalData.hasUserInfo,
       userInfo:app.globalData.userInfo
     })
+  },
+  getAccountInfoByOpenId:function(){
+    const _this = this
+    if(this.data.hasUserInfo){
+      request.get('/wxUser/infoForWx/'+this.data.userInfo.openid,null).then((res)=>{
+        this.setData({
+          accountInfo:res.data.data
+        },()=>{
+          _this.computeOrderPrice()
+        })
+      })
+    }
   },
   getMemberCardDetailByUserId:function(){
     request.get('/csMembercardOrder/getMemberCardForWx/'+this.data.userInfo.id,null).then((res)=>{
@@ -115,8 +131,25 @@ Page({
     })
   },
 
-  buyMemberCard:function(){
-    const _this = this;  
+  openPayType:function(e){
+    this.setData({
+      showPayType:true
+    })
+  },
+  onPayTypeClose:function(){
+    this.setData({
+      showPayType:false
+    })
+  },
+  changePayType:function(e){
+    const payType = e.currentTarget.dataset.paytype
+    this.setData({
+      paymentType:payType
+    })
+  },
+  payForOrder:function(){
+    const paymentType = this.data.paymentType
+    const _this = this
     const cardObj = {
       wxuserId: _this.data.userInfo.id,
       wxuserPhone:_this.data.userInfo.phoneNumber,
@@ -126,6 +159,42 @@ Page({
       orderPrice:_this.data.memberCardDetail.price,
       validPeriod:_this.data.memberCardDetail.validPeriod,
     };
+    // 余额支付
+    if(paymentType==1){
+      if(_this.data.memberCardDetail.price > this.data.accountInfo.balance){
+        Toast('余额不足')
+        return
+      }
+      request.post('/csMembercardOrder/saveMembercardOrder',cardObj).then((res)=>{
+        if(res.data.code ===200){
+          Toast({
+            message: '付款成功',
+            onClose: () => {
+              wx.navigateBack({
+                delta: 0,
+              })
+            },
+          })
+        }else{
+          Toast('付款失败')
+        }
+      })
+    }else{
+      _this.buyMemberCard(cardObj)
+    }
+  },
+
+  buyMemberCard:function(cardObj){
+    const _this = this;  
+    // const cardObj = {
+    //   wxuserId: _this.data.userInfo.id,
+    //   wxuserPhone:_this.data.userInfo.phoneNumber,
+    //   openid:_this.data.userInfo.openid,
+    //   membercardId:_this.data.memberCardDetail.id,
+    //   membercardName:_this.data.memberCardDetail.cardname,
+    //   orderPrice:_this.data.memberCardDetail.price,
+    //   validPeriod:_this.data.memberCardDetail.validPeriod,
+    // };
     request.get('/weixin/cardWxPay',cardObj).then((res)=>{
       if(res.data.code ===200){
         _this.doWxPay(res.data); 
