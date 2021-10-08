@@ -36,11 +36,82 @@ Page({
   },
   getOrderDetail:function(){
     request.get('/csMerchantOrder/infoForWx/'+this.data.orderId,null).then((res)=>{
-      console.log(res)
+      const orderDetail = res.data.data
+      if(orderDetail.orderDate){
+        orderDetail.orderDate = orderDetail.orderDate.substring(0,10)+" "
+      }
+      if(orderDetail.paymentType && orderDetail.paymentType ==1){
+        orderDetail.paymentTypeName='余额支付'
+      }else{
+          orderDetail.paymentTypeName='微信支付'
+      }
+      if(orderDetail.orderTimerage){
+         const orderRange = orderDetail.orderTimerage.split(',')
+         if(orderRange.length>1){
+           const startRange = orderRange[0].split('-')[0]
+           const endRange = orderRange[orderRange.length-1].split('-')[1]
+           orderDetail.orderTimerage = startRange +'-'+endRange
+         }
+      }
+      if(orderDetail.paymentStatus == 0){
+        orderDetail.orderStatusName = '待付款' 
+      }else if(orderDetail.paymentStatus == 2 && orderDetail.usedStatus == 0){
+        orderDetail.orderStatusName = '待使用' 
+      }else if(orderDetail.paymentStatus == 2 && orderDetail.usedStatus == 1){
+        orderDetail.orderStatusName = '已使用' 
+      }else if(orderDetail.paymentStatus == 2 && orderDetail.usedStatus == 3){
+        orderDetail.orderStatusName = '已完成' 
+      }else if(orderDetail.paymentStatus == 3){
+        orderDetail.orderStatusName = '已取消' 
+      }else{
+        orderDetail.orderStatusName = '已退款' 
+      }
+
       this.setData({
-        orderDetail:res.data.data
+        orderDetail
       })
     })
-
+  },
+  makePhoneCall:function(e){
+    const phoneNo = e.currentTarget.dataset.phoneno
+    if(phoneNo){
+      wx.makePhoneCall({
+        phoneNumber: phoneNo
+      })
+    }
+  },
+  refundOrder:function(e){
+    const orderitem = e.currentTarget.dataset.orderitem
+    const nowDate  = new Date()
+    const currentHour = nowDate.getHours();  
+    const currentMin = nowDate.getMinutes()
+    if(orderitem.orderTimerage){
+      const orderRange = orderitem.orderTimerage.split('-')
+      const orderHour = orderRange[0].split(':')[0]
+      const orderMin = orderRange[0].split(':')[1]
+      if(currentHour > orderHour){
+        Toast('已超过预定时间，无法退款')
+        return
+      }else if((currentHour==orderHour && parseInt(orderMin) - parseInt(currentMin)<=10 )){
+        Toast('离预定时间不足10分钟，无法退款')
+        return
+      }
+    }
+    const orderRefundObj = {
+      id:orderitem.id,
+      orderPrice: orderitem.orderPrice,
+      outTradeNo: orderitem.outTradeNo,
+      paymentType: orderitem.paymentType,
+      paymentStatus:orderitem.paymentStatus
+    }
+    const _this = this
+    request.get('/weixin/refundOrderWxPay',orderRefundObj).then((res)=>{
+      if(res.data.code ===200){
+        Toast('申请退款成功')
+        _this.getOrderList()
+      }else{
+        Toast('申请退款失败')
+      }
+    })
   }
 })

@@ -127,6 +127,22 @@ Page({
   },
   refundOrder:function(e){
     const orderitem = e.currentTarget.dataset.orderitem
+    const nowDate  = new Date()
+    const currentHour = nowDate.getHours();  
+    const currentMin = nowDate.getMinutes()
+    if(orderitem.orderTimerage){
+      const orderRange = orderitem.orderTimerage.split('-')
+      const orderHour = orderRange[0].split(':')[0]
+      const orderMin = orderRange[0].split(':')[1]
+      if(currentHour > orderHour){
+        Toast('已超过预定时间，无法退款')
+        return
+      }else if((currentHour==orderHour && parseInt(orderMin) - parseInt(currentMin)<=10 )){
+        Toast('离预定时间不足10分钟，无法退款')
+        return
+      }
+    }
+    
     const orderRefundObj = {
       id:orderitem.id,
       orderPrice: orderitem.orderPrice,

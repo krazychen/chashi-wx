@@ -6,11 +6,11 @@
           <view class="order-item-room-card-logo"
             style="background-image:url({{orderDetail.roomLogoUrl}});background-size: 100% 100%;background-repeat:no-repeat;">
           </view>
-          <view class="order-item-room-label-container">
+          <view class="order-item-room-label-container" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
             <view class="font-16">
               {{orderDetail.roomName}}
             </view>
-            <view class="font-14 font-dark-gray">
+            <view class="font-14 font-dark-gray" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
               {{orderDetail.address}}
             </view>
             <view class="font-12">

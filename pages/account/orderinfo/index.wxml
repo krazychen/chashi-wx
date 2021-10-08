@@ -47,12 +47,12 @@
           </view>
           <view class="order-list-item-btn-container">
             <view wx:if="{{item.paymentStatus==2 && item.usedStatus == 0}}" class="order-list-item-btn"
-            bindtap="refundOrder"
+            catchtap="refundOrder"
             data-orderitem="{{item}}">
               申请退款
             </view>
             <view wx:if="{{item.paymentStatus==0}}" class="order-list-item-btn">
-              去支付
+              继续支付
             </view>
           </view>
         </view>
