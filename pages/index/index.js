@@ -11,23 +11,36 @@ Page({
     scrollHeight:null,
     advertiseBannerList: [],
     hasUserInfo:false,
-    userInfo:null
+    userInfo:null,
+    searchObj:{
+      queryType:3,
+      nameAphone:null,
+      current:1,
+      size:9999
+    },
+    orderNum:0
   },
   onLoad() {
     const res = wx.getSystemInfoSync()
+    const _this = this
     this.setData({
       scrollHeight:res.windowHeight - app.globalData.tabBarHeight - 200 -100 - 10,
       hasUserInfo:app.globalData.hasUserInfo,
       userInfo:app.globalData.userInfo
+    },()=>{
+      _this.getOrderList()
     })
     this.getParamConfig()
     this.getAdvertiseBannerListForWx()
   },
   onShow: function () {
+    const _this = this
     this.getTabBar().init()
     this.setData({
       hasUserInfo:app.globalData.hasUserInfo,
       userInfo:app.globalData.userInfo
+    },()=>{
+      _this.getOrderList()
     })
   },
   getAdvertiseBannerListForWx:function(){
@@ -61,6 +74,32 @@ Page({
     if(this.data.hasUserInfo){
       wx.switchTab({
         url: '/pages/merchant/index',
+      })
+    }else{
+      this.getUserProfile()
+    }
+  },
+  getOrderList(){
+    if(this.data.hasUserInfo){
+      const searchObj = this.data.searchObj
+      searchObj.nameAphone = this.data.userInfo.phoneNumber
+      request.post('/csMerchantOrder/getCsMerchantOrderListForWx',searchObj).then((res)=>{
+        const orderList = res.data.data.records || []
+        if(orderList && orderList.length>0){
+          this.setData({
+            orderNum:orderList.length
+          })
+        }
+      })
+    }
+  },
+  goToOrderList:function(){
+    if(this.data.hasUserInfo){
+      wx.navigateTo({
+        url: '/pages/account/orderinfo/index',
+        success: function(res) {
+          res.eventChannel.emit('openOrderList', 3)
+        }
       })
     }else{
       this.getUserProfile()

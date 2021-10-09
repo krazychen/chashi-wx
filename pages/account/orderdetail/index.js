@@ -107,8 +107,14 @@ Page({
     const _this = this
     request.get('/weixin/refundOrderWxPay',orderRefundObj).then((res)=>{
       if(res.data.code ===200){
-        Toast('申请退款成功')
-        _this.getOrderList()
+        Toast({
+          message: '申请退款成功',
+          onClose: () => {
+            wx.navigateBack({
+              delta: 0,
+            })
+          },
+        });          
       }else{
         Toast('申请退款失败')
       }

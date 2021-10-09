@@ -47,11 +47,20 @@
           </view>
           <view class="order-list-item-btn-container">
             <view wx:if="{{item.paymentStatus==2 && item.usedStatus == 0}}" class="order-list-item-btn"
+            catchtap="showDoorPwd"
+            data-orderitem="{{item}}">
+              查看开锁密码
+            </view>
+            
+            <view wx:if="{{item.paymentStatus==2 && item.usedStatus == 0}}" class="order-list-item-btn"
             catchtap="refundOrder"
             data-orderitem="{{item}}">
               申请退款
             </view>
-            <view wx:if="{{item.paymentStatus==0}}" class="order-list-item-btn">
+            <view wx:if="{{item.paymentStatus==0}}" 
+              catchtap="rePay"
+              data-orderitem="{{item}}"
+              class="order-list-item-btn">
               继续支付
             </view>
           </view>
@@ -63,5 +72,6 @@
   </view>
 
   <van-toast id="van-toast" />
+  <van-dialog id="van-dialog" />
   
 </view>

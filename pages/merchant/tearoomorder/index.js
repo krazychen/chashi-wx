@@ -219,7 +219,6 @@ Page({
         }
       })
     }else{
-      orderPayObj.orderPrice = 0.01
       request.get('/weixin/orderWxPay',orderPayObj).then((res)=>{
         if(res.data.code ===200){
           _this.doWxPay(res.data); 

@@ -3,8 +3,13 @@
   <view class="top-banner-container" style="background-image:url({{paramConfigObj.wx_homepage_static}});background-size: 100% 100%; background-repeat:no-repeat;">
   </view>
   <view class="book-card-container">
-    <view class="book-card-item flex-column">
-      <view class="font-14">您未预订房间</view>
+    <view class="book-card-item flex-column" bindtap="goToOrderList">
+      <view class="font-14" wx:if="{{orderNum>0}}">
+        您已预定{{orderNum}}个房间  
+      </view>
+      <view class="font-14" wx:else>
+        您未预订房间  
+      </view>
       <van-icon name="cart-circle" size="30px"  />
     </view>
     <view class="book-card-divider"></view>
