@@ -19,7 +19,8 @@ Page({
     accountInfo:null,
     orderPayObj:null,
     showPayType:false,
-    paymentType: 2
+    paymentType: 2,
+    showOver:false
   },
   onLoad() {
     const res = wx.getSystemInfoSync()
@@ -176,7 +177,8 @@ Page({
   },
   onPayTypeClose:function(){
     this.setData({
-      showPayType:false
+      showPayType:false,
+      showOver:false
     })
   },
   changePayType:function(e){
@@ -186,6 +188,9 @@ Page({
     })
   },
   payForOrder:function(){
+    this.setData({
+      showOver:true
+    })
     const orderPayObj = this.data.orderPayObj
     const checkCouponItem = this.data.checkCouponItem
     // 如果使用优惠卷，需要增加couponReleasedId, orderCpAmount, 需要控制满X才能使用优惠卷
@@ -202,6 +207,9 @@ Page({
     if(orderPayObj.paymentType==1){
       if(orderPayObj.orderPrice > this.data.accountInfo.balance){
         Toast('余额不足')
+        this.setData({
+          showOver:false
+        })
         return
       }
       request.post('/csMerchantOrder/addCsMerchantOrderForWx',orderPayObj).then((res)=>{
@@ -209,13 +217,19 @@ Page({
           Toast({
             message: '付款成功',
             onClose: () => {
-              wx.navigateBack({
-                delta: 0,
+              this.setData({
+                showOver:false
+              })
+              wx.switchTab({
+                url: '/pages/merchant/index',
               })
             },
           });
         }else{
           Toast('付款失败')
+          this.setData({
+            showOver:false
+          })
         }
       })
     }else{
@@ -224,6 +238,9 @@ Page({
           _this.doWxPay(res.data); 
         }else{
           Toast('付款失败')
+          this.setData({
+            showOver:false
+          })
         }
       })
     }
@@ -240,9 +257,13 @@ Page({
           Toast({
             message: '付款成功',
             onClose: () => {
-              wx.navigateBack({
-                delta: 0,
+              this.setData({
+                showOver:false
               })
+              wx.switchTab({
+                url: '/pages/merchant/index',
+              })
+              
             },
           });  
         },  
@@ -251,16 +272,25 @@ Page({
           // // 取消支付
           if(error.errMsg=='requestPayment:fail cancel'){
             request.post('/weixin/cancelOrderWxPay?id='+id,null).then((res)=>{
+              this.setData({
+                showOver:false
+              })
             })
           }else{
             request.post('/weixin/failOrderWxPay?id='+id+"&paymentMsg="+error.errMsg,null).then((res)=>{
               Toast('付款失败')
+              this.setData({
+                showOver:false
+              })
             })
           }
         },  
         complete: function () {  
           // complete     
           console.log("pay complete")  
+          this.setData({
+            showOver:false
+          })
         }  
       })
   }

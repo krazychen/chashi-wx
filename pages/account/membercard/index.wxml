@@ -143,4 +143,7 @@
   </van-dialog>
 
   <van-toast id="van-toast" />
+
+  <van-overlay show="{{ showOver }}">
+  </van-overlay>
 </view>

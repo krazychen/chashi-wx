@@ -70,7 +70,10 @@ Page({
   },
   rechargeTopup:function(e){
     const _this = this;  
-    console.log(_this.data.rechargeObj,'')
+    if(_this.data.rechargeObj.rechargeAmount<=0){
+      Toast('请输入充值金额')
+      return
+    }
     const csRechargeRecord = {
       wxuserId: _this.data.userInfo.id,
       wxuserPhone:_this.data.userInfo.phoneNumber,

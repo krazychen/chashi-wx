@@ -17,7 +17,8 @@ Page({
     memberCardDetail:null,
     showPayType:false,
     paymentType: 2,
-    accountInfo:null
+    accountInfo:null,
+    showOver:false
   },
   onLoad() {
     const _this = this
@@ -138,7 +139,8 @@ Page({
   },
   onPayTypeClose:function(){
     this.setData({
-      showPayType:false
+      showPayType:false,
+      showOver:false
     })
   },
   changePayType:function(e){
@@ -148,6 +150,9 @@ Page({
     })
   },
   payForOrder:function(){
+    this.setData({
+      showOver:true
+    })
     const paymentType = this.data.paymentType
     const _this = this
     const cardObj = {
@@ -163,6 +168,9 @@ Page({
     if(paymentType==1){
       if(_this.data.memberCardDetail.price > this.data.accountInfo.balance){
         Toast('余额不足')
+        this.setData({
+          showOver:false
+        })
         return
       }
       request.post('/csMembercardOrder/saveMembercardOrder',cardObj).then((res)=>{
@@ -170,6 +178,9 @@ Page({
           Toast({
             message: '付款成功',
             onClose: () => {
+              this.setData({
+                showOver:false
+              })
               wx.navigateBack({
                 delta: 0,
               })
@@ -177,6 +188,9 @@ Page({
           })
         }else{
           Toast('付款失败')
+          this.setData({
+            showOver:false
+          })
         }
       })
     }else{
@@ -200,6 +214,9 @@ Page({
         _this.doWxPay(res.data); 
       }else{
         Toast('付款失败')
+        this.setData({
+          showOver:false
+        })
       }
     })
   },
@@ -215,6 +232,9 @@ Page({
           Toast({
             message: '付款成功',
             onClose: () => {
+              this.setData({
+                showOver:false
+              })
               wx.navigateBack({
                 delta: 0,
               })
@@ -226,16 +246,25 @@ Page({
           // 取消支付
           if(error.errMsg=='requestPayment:fail cancel'){
             request.post('/weixin/cancelCardWxPay?outTradeNo='+outTradeNo,null).then((res)=>{
+              this.setData({
+                showOver:false
+              })
             })
           }else{
             request.post('/weixin/failCardWxPay?outTradeNo='+outTradeNo+"&paymentMsg="+error.errMsg,null).then((res)=>{
               Toast('付款失败')
+              this.setData({
+                showOver:false
+              })
             })
           }
         },  
         complete: function () {  
           // complete     
           console.log("pay complete")  
+          this.setData({
+            showOver:false
+          })
         }  
       })
   }  
