@@ -26,7 +26,8 @@ Page({
     this.setData({
       scrollHeight:res.windowHeight - app.globalData.tabBarHeight - 200 -100 - 10,
       hasUserInfo:app.globalData.hasUserInfo,
-      userInfo:app.globalData.userInfo
+      userInfo:app.globalData.userInfo,
+      paramConfigObj:app.globalData.paramConfigObj
     },()=>{
       _this.getOrderList()
     })
@@ -38,7 +39,8 @@ Page({
     this.getTabBar().init()
     this.setData({
       hasUserInfo:app.globalData.hasUserInfo,
-      userInfo:app.globalData.userInfo
+      userInfo:app.globalData.userInfo,
+      paramConfigObj:app.globalData.paramConfigObj
     },()=>{
       _this.getOrderList()
     })
