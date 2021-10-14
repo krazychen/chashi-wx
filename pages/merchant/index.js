@@ -36,23 +36,25 @@ Page({
     currentCityName:'',
     hasUserInfo:false,
     userInfo:null,
-    mapKey:'FMXBZ-TXULW-2SVRL-RY734-IDFSF-2QFWF'
+    mapKey:'FMXBZ-TXULW-2SVRL-RY734-IDFSF-2QFWF',
+    cityList:null
   },
   onLoad() {
+    const that = this
     const sysRes = wx.getSystemInfoSync()
     this.setData({
       scrollHeight:sysRes.windowHeight - app.globalData.tabBarHeight - 40, // 搜索框高度 及 上下pading
       hasUserInfo:app.globalData.hasUserInfo,
       userInfo:app.globalData.userInfo
+    },()=>{
+      wx.getLocation({
+        type: 'gcj02',
+        success (res) {
+          // 获取当前城市名称
+          that.getCurrentCity(res.longitude,res.latitude)
+        }
+       })
     })
-    const that = this
-    wx.getLocation({
-      type: 'gcj02',
-      success (res) {
-        // 获取当前城市名称
-        that.getCurrentCity(res.longitude,res.latitude)
-      }
-     })
   },
   onShow: function () {
     this.getTabBar().init()
@@ -67,35 +69,38 @@ Page({
       url: "https://apis.map.qq.com/ws/geocoder/v1/?location="+latitude+","+longitude+"&key="+_this.data.mapKey,
       method: 'GET',
       success: (res => {
+        let currentCityCode = null;
         if (res.data.status === 0) {
           const adInfo = res.data.result.ad_info;
-          let currentCityCode = null;
-          if(adInfo && app.globalData.cityList && app.globalData.cityList.length > 0){
-            app.globalData.cityList.forEach(item=>{
-              if(item.areaName == adInfo.city){
-                currentCityCode = item.areaCode;
-              }
-            })
-          }
-          _this.setData({
-            searchParam:{
-              merchantName:null,
-              userLng:longitude,
-              userLat:latitude,
-              current:1,
-              size:10,
-              cityCode:currentCityCode,
-              searchCityName:adInfo.city,
-              cityCode:null
-            },
-            merchantList:[],
-            userLng:longitude,
-            userLat:latitude,
-            currentCityName: adInfo.city
-          },()=>{
-            _this.getMerchantListForWx()
+          request.get('/sysArea/getReleaseCityWx',null).then((res1)=>{
+            const dataList = res1.data.data||[]
+            if(adInfo && dataList && dataList.length > 0){
+              dataList.forEach(item=>{
+                if(item.areaName == adInfo.city){
+                  currentCityCode = item.areaCode;
+                }
+              })
+            }
+            _this.setData({
+                searchParam:{
+                  merchantName:null,
+                  userLng:longitude,
+                  userLat:latitude,
+                  current:1,
+                  size:10,
+                  cityCode:currentCityCode,
+                  searchCityName:adInfo.city,
+                  cityCode:null
+                },
+                merchantList:[],
+                userLng:longitude,
+                userLat:latitude,
+                currentCityName: adInfo.city
+              },()=>{
+                _this.getMerchantListForWx()
+              })
           })
-        } 
+        }
       })
     })
   },
