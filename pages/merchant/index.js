@@ -35,7 +35,8 @@ Page({
     userLat:null,
     currentCityName:'',
     hasUserInfo:false,
-    userInfo:null
+    userInfo:null,
+    mapKey:'FMXBZ-TXULW-2SVRL-RY734-IDFSF-2QFWF'
   },
   onLoad() {
     const sysRes = wx.getSystemInfoSync()
@@ -63,7 +64,7 @@ Page({
   getCurrentCity:function(longitude,latitude){
     const _this = this;
     wx.request({
-      url: "https://apis.map.qq.com/ws/geocoder/v1/?location="+latitude+","+longitude+"&key="+app.globalData.mapKey,
+      url: "https://apis.map.qq.com/ws/geocoder/v1/?location="+latitude+","+longitude+"&key="+_this.data.mapKey,
       method: 'GET',
       success: (res => {
         if (res.data.status === 0) {
