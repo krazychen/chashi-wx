@@ -10,7 +10,7 @@ App({
     hasUserInfo:false,
     tabBarHeight: 50,
     cityList:[],
-    mapKey:null,
+    mapKey:'FMXBZ-TXULW-2SVRL-RY734-IDFSF-2QFWF',
     paramConfigObj:{}
   },
   getReleaseCityWx:function(){
@@ -28,9 +28,9 @@ App({
           if(item.configKey.startsWith("wx_homepage_static")){
             paramConfigObj[item.configKey] = item.configValue
           }
-          if(item.configKey.startsWith("mapKey")){
-            this.globalData.mapKey = item.configValue
-          }
+          // if(item.configKey.startsWith("mapKey")){
+          //   this.globalData.mapKey = item.configValue
+          // }
         })
       }
       this.globalData.paramConfigObj = paramConfigObj
