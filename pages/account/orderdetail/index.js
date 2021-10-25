@@ -119,5 +119,46 @@ Page({
         Toast('申请退款失败')
       }
     })
+  },
+  rePay:function(e){
+    const orderitem = e.currentTarget.dataset.orderitem
+    const _this = this
+    request.post('/weixin/orderReWxPay',orderitem).then((res)=>{
+      if(res.data.code ===200){
+        _this.doWxPay(res.data)
+      }else{
+        Toast('付款失败')
+      }
+    })
+  },
+  doWxPay:function(param){  
+      const _this = this
+    //小程序发起微信支付  
+      wx.requestPayment({  
+        timeStamp: param.data.timeStamp,
+        nonceStr: param.data.nonceStr,  
+        package: param.data.package,  
+        signType: 'MD5',  
+        paySign: param.data.paySign,  
+        success: function (event) {
+          Toast( '付款成功')
+        },  
+        fail: function (error) {
+          const id = param.data.id
+          // // 取消支付
+          if(error.errMsg=='requestPayment:fail cancel'){
+            request.post('/weixin/cancelOrderWxPay?id='+id,null).then((res)=>{
+            })
+          }else{
+            request.post('/weixin/failOrderWxPay?id='+id+"&paymentMsg="+error.errMsg,null).then((res)=>{
+              Toast('付款失败')
+            })
+          }
+        },  
+        complete: function () {  
+          // complete     
+          console.log("pay complete")  
+        }  
+      })
   }
 })

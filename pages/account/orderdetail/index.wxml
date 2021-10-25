@@ -61,7 +61,9 @@
       bindtap="refundOrder"
       data-orderitem="{{orderDetail}}"
       style="background-color: rgb(251,189,8);">申请退款</view>
-    <view class="order-item-btn" bindtap="openPayType" style="background-color: rgb(247,83,81);"
+    <view class="order-item-btn" bindtap="rePay" 
+    data-orderitem="{{orderDetail}}"
+    style="background-color: rgb(247,83,81);"
     wx:if="{{orderDetail.paymentStatus==0}}" >继续支付</view>
   </view>
 </view>
