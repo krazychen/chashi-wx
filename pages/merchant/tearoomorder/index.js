@@ -217,9 +217,6 @@ Page({
           Toast({
             message: '付款成功',
             onClose: () => {
-              this.setData({
-                showOver:false
-              })
               wx.switchTab({
                 url: '/pages/merchant/index',
               })
