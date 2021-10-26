@@ -64,11 +64,16 @@ Page({
   },
   openOrderList:function(e){
     const queryType = e.currentTarget.dataset.querytype
+    const queryObj = {
+      queryType,
+      queryFrom:'accountInfo'
+    }
+    
     if(this.data.hasUserInfo){
       wx.navigateTo({
         url: '/pages/account/orderinfo/index',
         success: function(res) {
-          res.eventChannel.emit('openOrderList', queryType)
+          res.eventChannel.emit('openOrderList', queryObj)
         }
       })
     }else{

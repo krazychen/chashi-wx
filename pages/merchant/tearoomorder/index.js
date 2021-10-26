@@ -214,14 +214,17 @@ Page({
       }
       request.post('/csMerchantOrder/addCsMerchantOrderForWx',orderPayObj).then((res)=>{
         if(res.data.code ===200){
-          Toast({
-            message: '付款成功',
-            onClose: () => {
-              wx.switchTab({
-                url: '/pages/merchant/index',
-              })
-            },
-          });
+          Toast('付款成功')
+          const queryObj = {
+            queryType:1,
+            queryFrom:'tearoom'
+          }
+          wx.navigateTo({
+            url: '/pages/account/orderinfo/index',
+            success: function(res) {
+              res.eventChannel.emit('openOrderList', queryObj)
+            }
+          })
         }else{
           Toast('付款失败')
           this.setData({
@@ -251,14 +254,17 @@ Page({
         signType: 'MD5',  
         paySign: param.data.paySign,  
         success: function (event) {
-          Toast({
-            message: '付款成功',
-            onClose: () => {
-              wx.switchTab({
-                url: '/pages/merchant/index',
-              })
+          Toast('付款成功')
+          const queryObj = {
+            queryType:1,
+            queryFrom:'tearoom'
+          }
+          wx.navigateTo({
+            url: '/pages/account/orderinfo/index',
+            success: function(res) {
+              res.eventChannel.emit('openOrderList', queryObj)
             }
-          });  
+          })
         },  
         fail: function (error) {
           const id = param.data.id
@@ -279,11 +285,7 @@ Page({
           }
         },  
         complete: function () {  
-          // complete     
-          console.log("pay complete")  
-          this.setData({
-            showOver:false
-          })
+          
         }  
       })
   }

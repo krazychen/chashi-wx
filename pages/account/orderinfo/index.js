@@ -48,7 +48,8 @@ Page({
         queryTypeName:'已退款'
       }
     ],
-    orderList:[]
+    orderList:[],
+    queryFrom:'accountInfo'
   },
   onLoad() {
     const _this = this
@@ -65,16 +66,28 @@ Page({
       }).then((res) => {
         _this.setData({
           searchObj:{
-            queryType:res,
+            queryType:res.queryType,
             nameAphone:null,
             current:1,
             size:9999
-          }
+          },
+          queryFrom:res.queryFrom
         },()=>{
           _this.getOrderList()
         })
       })
     })
+  },
+  onUnload(){
+    if(this.data.queryFrom=='tearoom'){
+      wx.switchTab({
+        url: '/pages/merchant/index'
+      })
+    }else{
+      wx.navigateBack({
+        delta: 1
+      })
+    }
   },
   getOrderList(){
     const searchObj = this.data.searchObj
