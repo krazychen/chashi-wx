@@ -163,6 +163,8 @@ Page({
   getBookingAbleTimeList: function(bookingDate,bookedTime){
     const roomDetail = this.data.roomDetail
     const nowDate  = new Date()
+    const currentHour = nowDate.getHours()
+    const currentMin = nowDate.getMinutes()
     const minBookingTime = roomDetail.startTime?Number(roomDetail.startTime):1
     const merchantStartTimeArr = roomDetail.merchantStartTime.split(":")
     const merchantStartHour = Number(merchantStartTimeArr[0])
@@ -195,8 +197,6 @@ Page({
           bookingTimeObj.bookingItemEndTimeNum = Number((i+minBookingTime)+merchantStartTimeArr[1])
           // 预约日期 在当天
           if(bookingDate <= nowDate){
-            const currentHour = nowDate.getHours();  
-            const currentMin = nowDate.getMinutes()
             if(currentHour >i){
               bookingTimeObj.bookingStatus = 0
             }else if(currentHour == i && currentMin>= merchantStartMin){
@@ -253,8 +253,6 @@ Page({
           }
           // 预约日期 在当天
           if(bookingDate <= nowDate){
-            const currentHour = nowDate.getHours();  
-            const currentMin = nowDate.getMinutes()
             if(currentHour >beginHour){
               bookingTimeObj.bookingStatus = 0
             }else if(currentHour == beginHour && currentMin>= merchantStartMin){
@@ -276,11 +274,40 @@ Page({
         }
       }
     }
+    this.insertCurrentBookingTime(ableTimeList)
     this.setData({
       ableBookingTimeList:ableTimeList
     })
   },
-
+  insertCurrentBookingTime:function(ableTimeList){
+    const nowDate  = new Date(new Date().valueOf() + 60 * 1000 * 5)
+    if(this.data.bookingDate <= nowDate){
+      const currentHour = nowDate.getHours()
+      const currentMin = nowDate.getMinutes()
+      if(ableTimeList && ableTimeList.length >0){
+        let insertIndex = 0
+        for(let i=0;i<ableTimeList.length;i++){
+          if(ableTimeList[i].bookingStatus==1){
+            insertIndex = i
+            break;
+          }
+        }
+        const currentEndTimeObj = ableTimeList[insertIndex]
+        const endHour = Number(currentEndTimeObj.bookingItemStartTime.split(':')[0])
+        const endMin =Number(currentEndTimeObj.bookingItemStartTime.split(':')[1]) 
+        if(currentHour < endHour || currentHour==endHour&& currentMin<endMin){
+          const currentTimeObj = {}
+          currentTimeObj.bookingItemStartTime = currentHour+':'+currentMin
+          currentTimeObj.bookingItemStartTimeNum = Number(currentHour+''+currentMin)
+          currentTimeObj.bookingItemEndTime = currentEndTimeObj.bookingItemStartTime
+          currentTimeObj.bookingItemEndTimeNum = currentEndTimeObj.bookingItemStartTimeNum
+          currentTimeObj.bookingStatus = 1
+          ableTimeList.splice(insertIndex, 0, currentTimeObj)
+        }
+      }
+      // splice(2, 0, "three")
+    }
+  },
   onBookPopClose:function(){
     this.setData({
       showBookPop:false
