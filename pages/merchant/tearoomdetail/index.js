@@ -25,7 +25,8 @@ Page({
     selectBookingTimeString:null,
     hasUserInfo:false,
     userInfo:null,
-    accountInfo:null
+    accountInfo:null,
+    bookingLength:null
   },
   onLoad() {
     const _this = this;
@@ -168,6 +169,7 @@ Page({
     const merchantStartMin = Number(merchantStartTimeArr[1])
     const merchantEndTimeArr = roomDetail.merchantEndTime.split(":")
     const merchantEndHour = Number(merchantEndTimeArr[0])
+    const merchantEndMin = Number(merchantEndTimeArr[1])
     const ableTimeList = []
 
     // TODO 获取已预订日期，比对。
@@ -175,41 +177,103 @@ Page({
     if(bookedTime){
       bookedTimeArr = bookedTime.split(",");
     }
-
-    
+    let hourFlag = false
+    // 判断最小的预定时间，除以0.5小时 是奇数还是偶数，偶数只要加小时。 奇数要判断分钟。
+    // if((minBookingTime/0.5)%2==0){
+    //   hourFlag = true
+    // }
     if(merchantStartHour >= 0 && merchantStartHour < merchantEndHour ){
-      for(let i=merchantStartHour;i<=merchantEndHour;i=i+minBookingTime){
-        const bookingTimeObj = {}
-        if(Number((i+minBookingTime)+merchantStartTimeArr[1]) > Number(merchantEndTimeArr[0]+merchantEndTimeArr[1])){
-          break;
-        }
-        bookingTimeObj.bookingItemStartTime = i+':'+merchantStartTimeArr[1]
-        bookingTimeObj.bookingItemStartTimeNum = Number(i+merchantStartTimeArr[1])
-        bookingTimeObj.bookingItemEndTime = (i+minBookingTime)+':'+merchantStartTimeArr[1]
-        bookingTimeObj.bookingItemEndTimeNum = Number((i+minBookingTime)+merchantStartTimeArr[1])
-        // 预约日期 在当天
-        if(bookingDate <= nowDate){
-          const currentHour = nowDate.getHours();  
-          const currentMin = nowDate.getMinutes()
-          if(currentHour >i){
-            bookingTimeObj.bookingStatus = 0
-          }else if(currentHour == i && currentMin>= merchantStartMin){
-            bookingTimeObj.bookingStatus = 0
+      if(hourFlag){
+        for(let i=merchantStartHour;i<=merchantEndHour;i=i+minBookingTime){
+          const bookingTimeObj = {}
+          if(Number((i+minBookingTime)+merchantStartTimeArr[1]) > Number(merchantEndTimeArr[0]+merchantEndTimeArr[1])){
+            break;
+          }
+          bookingTimeObj.bookingItemStartTime = i+':'+merchantStartTimeArr[1]
+          bookingTimeObj.bookingItemStartTimeNum = Number(i+merchantStartTimeArr[1])
+          bookingTimeObj.bookingItemEndTime = (i+minBookingTime)+':'+merchantStartTimeArr[1]
+          bookingTimeObj.bookingItemEndTimeNum = Number((i+minBookingTime)+merchantStartTimeArr[1])
+          // 预约日期 在当天
+          if(bookingDate <= nowDate){
+            const currentHour = nowDate.getHours();  
+            const currentMin = nowDate.getMinutes()
+            if(currentHour >i){
+              bookingTimeObj.bookingStatus = 0
+            }else if(currentHour == i && currentMin>= merchantStartMin){
+              bookingTimeObj.bookingStatus = 0
+            }else{
+              bookingTimeObj.bookingStatus = 1
+            }
           }else{
             bookingTimeObj.bookingStatus = 1
           }
-        }else{
-          bookingTimeObj.bookingStatus = 1
+          
+          bookedTimeArr.forEach(bookedItem=>{
+            const bookingTimeStr = bookingTimeObj.bookingItemStartTime+'-'+bookingTimeObj.bookingItemEndTime
+            if(bookingTimeStr == bookedItem){
+              bookingTimeObj.bookingStatus = 0
+            }
+          })
+          ableTimeList.push(bookingTimeObj)
         }
-        
-        bookedTimeArr.forEach(bookedItem=>{
-          const bookingTimeStr = bookingTimeObj.bookingItemStartTime+'-'+bookingTimeObj.bookingItemEndTime
-          if(bookingTimeStr == bookedItem){
-            bookingTimeObj.bookingStatus = 0
+      }else{
+        const merchantStart = Number(merchantStartTimeArr[0]+merchantStartTimeArr[1])
+        const merchantEnd = Number(merchantEndTimeArr[0]+merchantEndTimeArr[1])
+        let beginLoop = merchantStart
+        while(beginLoop<merchantEnd){
+          let hourNo = parseInt((minBookingTime/0.5/2))
+          const minuteNo =((minBookingTime/0.5/2) - hourNo) *  60
+          let beginHour = (beginLoop+'').substring(0,(beginLoop+'').length-2)
+          const beginMin = (beginLoop+'').substring((beginLoop+'').length-2)
+          if(beginLoop==0 || beginHour==''){
+            beginHour = '0'
           }
-        })
-
-        ableTimeList.push(bookingTimeObj)
+          let endMin = beginMin
+          if(beginLoop==0 ){
+            endMin='00'
+          }
+          if(minuteNo>0){
+            const computeMin = Number(beginMin) + minuteNo - 60
+            if(computeMin>=0){
+              hourNo = hourNo+1
+            }            
+            endMin = Math.abs(Number(beginMin) + minuteNo - 60)+''
+            if(endMin=='60' || endMin=='0'){
+              endMin = '00'
+            }
+          }
+          const bookingTimeObj = {}
+          bookingTimeObj.bookingItemStartTime = beginHour+':'+beginMin
+          bookingTimeObj.bookingItemStartTimeNum = Number(beginHour+''+beginMin)
+          bookingTimeObj.bookingItemEndTime = (Number(beginHour)+hourNo)+':'+endMin
+          bookingTimeObj.bookingItemEndTimeNum = Number(Number(beginHour)+hourNo+''+endMin) 
+          beginLoop = Number(Number(beginHour)+hourNo+''+endMin) 
+          if(beginLoop>merchantEnd){
+            break
+          }
+          // 预约日期 在当天
+          if(bookingDate <= nowDate){
+            const currentHour = nowDate.getHours();  
+            const currentMin = nowDate.getMinutes()
+            if(currentHour >beginHour){
+              bookingTimeObj.bookingStatus = 0
+            }else if(currentHour == beginHour && currentMin>= merchantStartMin){
+              bookingTimeObj.bookingStatus = 0
+            }else{
+              bookingTimeObj.bookingStatus = 1
+            }
+          }else{
+            bookingTimeObj.bookingStatus = 1
+          }
+          
+          bookedTimeArr.forEach(bookedItem=>{
+            const bookingTimeStr = bookingTimeObj.bookingItemStartTime+'-'+bookingTimeObj.bookingItemEndTime
+            if(bookingTimeStr == bookedItem){
+              bookingTimeObj.bookingStatus = 0
+            }
+          })
+          ableTimeList.push(bookingTimeObj)
+        }
       }
     }
     this.setData({
@@ -263,16 +327,21 @@ Page({
             startBookingTimeNum:null,
             endBookingTime:null,
             endBookingTimeNum:null,
+          },()=>{
+            _this.computeBookingLength()
           })
           return
         }
       }
+      const _this = this
       if(!this.data.startBookingTime){
         this.setData({
           startBookingTime:bookingItem.bookingItemStartTime,
           startBookingTimeNum:bookingItem.bookingItemStartTimeNum,
           endBookingTime:bookingItem.bookingItemEndTime,
           endBookingTimeNum:bookingItem.bookingItemEndTimeNum
+        },()=>{
+          _this.computeBookingLength()
         })
       }else{
         if(this.data.startBookingTimeNum > bookingItem.bookingItemStartTimeNum){
@@ -281,6 +350,8 @@ Page({
             startBookingTimeNum:bookingItem.bookingItemStartTimeNum,
             endBookingTime:bookingItem.bookingItemEndTime,
             endBookingTimeNum:bookingItem.bookingItemEndTimeNum,
+          },()=>{
+            _this.computeBookingLength()
           })
         }else if(this.data.startBookingTimeNum == bookingItem.bookingItemStartTimeNum){
           this.setData({
@@ -288,6 +359,8 @@ Page({
             startBookingTimeNum:null,
             endBookingTime:null,
             endBookingTimeNum:null,
+          },()=>{
+            _this.computeBookingLength()
           })
         }else{
           const ableBookingTimeList =  this.data.ableBookingTimeList
@@ -304,17 +377,18 @@ Page({
             this.setData({
               endBookingTime:bookingItem.bookingItemEndTime,
               endBookingTimeNum:bookingItem.bookingItemEndTimeNum
+            },()=>{
+              _this.computeBookingLength()
             })
           }
         }
       }
     }    
   },
-  confirmBooking:function(){
+  computeBookingLength:function(){
     const startBookingTimeNum = this.data.startBookingTimeNum
     const endBookingTimeNum = this.data.endBookingTimeNum
     if(startBookingTimeNum && endBookingTimeNum){
-      if((endBookingTimeNum - startBookingTimeNum) >= this.data.roomDetail.startTime ){
         const ableBookingTimeList =  this.data.ableBookingTimeList
         let bookingTimeStr = "";
         ableBookingTimeList.forEach(item=>{
@@ -325,18 +399,43 @@ Page({
         })
         bookingTimeStr = bookingTimeStr.substring(0,bookingTimeStr.length-1)
         this.setData({
+          bookingLength:bookingTimeStr.split(",").length * this.data.roomDetail.startTime,
           selectBookingTimeString:bookingTimeStr
         })
+    }else{
+      this.setData({
+        bookingLength:0,
+        selectBookingTimeString:''
+      })
+    }
+  },
+  confirmBooking:function(){
+    const startBookingTimeNum = this.data.startBookingTimeNum
+    const endBookingTimeNum = this.data.endBookingTimeNum
+    if(startBookingTimeNum && endBookingTimeNum){
+      if(this.data.bookingLength >= this.data.roomDetail.startTime ){
+        // const ableBookingTimeList =  this.data.ableBookingTimeList
+        // let bookingTimeStr = "";
+        // ableBookingTimeList.forEach(item=>{
+        //   if(item.bookingStatus == 1 && item.bookingItemStartTimeNum >= startBookingTimeNum 
+        //     && item.bookingItemEndTimeNum <=endBookingTimeNum){
+        //       bookingTimeStr = bookingTimeStr+item.bookingItemStartTime+"-"+item.bookingItemEndTime+',';
+        //   }
+        // })
+        // bookingTimeStr = bookingTimeStr.substring(0,bookingTimeStr.length-1)
+        // this.setData({
+        //   selectBookingTimeString:bookingTimeStr
+        // })
     
         const dataTrans = {
-          bookingTimeStr,
+          bookingTimeStr:this.data.selectBookingTimeString,
           bookingDate:this.data.bookingDate,
           bookingDateString:this.data.bookingDateString,
           startBookingTime:this.data.startBookingTime,
           startBookingTimeNum:this.data.startBookingTimeNum,
           endBookingTime:this.data.endBookingTime,
           endBookingTimeNum:this.data.endBookingTimeNum,
-          bookingLength:(this.data.endBookingTimeNum-this.data.startBookingTimeNum)/100,
+          bookingLength:this.data.bookingLength,
           ...this.data.roomDetail
         }
 

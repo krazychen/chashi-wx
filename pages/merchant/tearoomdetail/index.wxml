@@ -151,7 +151,7 @@
         </view>
       </view> 
       <view class="van-hairline--top-bottom"></view>
-      <scroll-view class="room-able-booktime-container" scroll-y="true" >
+      <view class="room-able-booktime-container">
         <view
           wx:for="{{ableBookingTimeList}}"  
           wx:for-item="bookingItem" 
@@ -162,12 +162,12 @@
         >
           {{bookingItem.bookingItemStartTime}}-{{bookingItem.bookingItemEndTime}}
         </view>
-      </scroll-view>
+      </view>
       <view class="room-booktime-confirm-container" bindtap="confirmBooking">
           <span wx:if="{{startBookingTime && endBookingTime}}">
             选好了:{{startBookingTime}}-{{endBookingTime}}
             <span wx:if="{{endBookingTimeNum-startBookingTimeNum >0}}">
-              共{{(endBookingTimeNum-startBookingTimeNum)/100}}小时
+              共{{bookingLength}}小时
             </span>
           </span>
           <span wx:else>
