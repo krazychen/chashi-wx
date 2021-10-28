@@ -26,7 +26,9 @@ Page({
     hasUserInfo:false,
     userInfo:null,
     accountInfo:null,
-    bookingLength:null
+    bookingLength:null,
+    showPickerPop:false,
+    pickerTimeList:[]
   },
   onLoad() {
     const _this = this;
@@ -127,6 +129,120 @@ Page({
       wx.makePhoneCall({
         phoneNumber: phoneNo
       })
+    }
+  },
+
+  bookAtOnce:function(){
+    if(!this.data.hasUserInfo){
+      this.getUserProfile()
+      return
+    }
+    const roomDetail = this.data.roomDetail
+    const pickerTimeList = []
+    const step = roomDetail.startTime?Number(roomDetail.startTime):1
+    const merchantEndTime = roomDetail.merchantEndTime
+    const bookDate = new Date()
+    const nowYear = bookDate.getFullYear(); 
+    const nowMonth = bookDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
+    const nowDay = bookDate.getDate(); //获取当前日(1-31)
+    const merchantEndDate = new Date(nowYear,nowMonth,nowDay,Number(merchantEndTime.split(":")[0]),Number(merchantEndTime.split(":")[1]))
+    if(bookDate < merchantEndDate){
+      const diffHour = Math.ceil((merchantEndDate.getTime() - bookDate.getTime())/1000/60/60)
+      for(let i=0;i<diffHour;i++){
+        const objTemp ={
+          timelength:i+step,
+          label:i+step+'小时'
+        }
+        pickerTimeList.push(objTemp)
+      }
+      this.setData({
+        showPickerPop:true,
+        pickerTimeList
+      })
+    }else{
+      Toast('当天营业已结束')
+      this.setData({
+        showPickerPop:false,
+        pickerTimeList:[]
+      })
+      return
+    }
+  },
+  onBookAtOncePopClose:function(){
+    this.setData({
+      showPickerPop:false
+    })
+  },
+  onBookPickerConfirm:function(e){
+    const { picker, value, index } = e.detail;
+    const searchBookingedObj = {
+      tearoomId:this.data.roomDetail.id,
+      orderDate:this.data.bookingDateString
+    }
+    const nowDate  = new Date();
+    const nowYear = nowDate.getFullYear(); 
+    const nowMonth = nowDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
+    const nowDay = nowDate.getDate(); //获取当前日(1-31)
+    const bookingDate = new Date(nowYear,nowMonth,nowDay)
+    const _this = this
+    this.setData({
+      showPickerPop:false,
+      bookingDate:bookingDate,
+      bookingDateString:nowYear+'-'+(nowMonth+1).toString().padStart(2,'0')+'-'+nowDay.toString().padStart(2,'0')
+    },()=>{
+      request.post('/csMerchantOrder/getTimeRangeForWx',searchBookingedObj).then((res)=>{
+          const orderTimeRange = res.data.data || null
+          const ableTimeList =  _this.getBookingAbleTimeList(bookingDate,orderTimeRange)
+          _this.computeCanBookTime(nowDate,ableTimeList,value.timelength)
+      })
+    })
+  },
+  computeCanBookTime:function(bookDate,ableTimeList,bookTimeLeng){
+    const roomDetail = this.data.roomDetail
+    const bookTimeRange = []
+    const currentHour = bookDate.getHours()
+    const currentMin = bookDate.getMinutes()
+    if(ableTimeList && ableTimeList.length >0){
+      let insertIndex = 0
+      for(let i=0;i<ableTimeList.length;i++){
+        if(ableTimeList[i].bookingStatus==1){
+          insertIndex = i
+          break;
+        }
+      }
+      const firstEndTimeObj = ableTimeList[insertIndex]
+      const endHour = Number(firstEndTimeObj.bookingItemStartTime.split(':')[0])
+      const endMin =Number(firstEndTimeObj.bookingItemStartTime.split(':')[1]) 
+      if(currentHour < endHour || currentHour==endHour&& currentMin<endMin){
+        const firstTimeObj = {}
+        firstTimeObj.bookingItemStartTime = currentHour+':'+currentMin
+        firstTimeObj.bookingItemStartTimeNum = Number(currentHour+''+currentMin)
+        firstTimeObj.bookingItemEndTime = firstEndTimeObj.bookingItemStartTime
+        firstTimeObj.bookingItemEndTimeNum = firstEndTimeObj.bookingItemStartTimeNum
+        firstTimeObj.bookingStatus = 1
+        bookTimeRange.push(firstTimeObj)
+      }
+      const step = roomDetail.startTime?Number(roomDetail.startTime):1
+      const loopLength = bookTimeLeng / step;
+      for(let i=0;i<loopLength-1;i++){
+          const currentTimeObj = ableTimeList[insertIndex+i]
+          if(currentTimeObj.bookingStatus == 0){
+            Toast(currentTimeObj.bookingItemStartTime+'时段被预定')
+            break;
+          }
+          bookTimeRange.push(currentTimeObj)
+      }
+      const _this = this
+      if(bookTimeRange && bookTimeRange.length>0){
+        this.setData({
+          startBookingTime:bookTimeRange[0].bookingItemStartTime,
+          startBookingTimeNum:bookTimeRange[0].bookingItemStartTimeNum,
+          endBookingTime:bookTimeRange[bookTimeRange.length-1].bookingItemEndTime,
+          endBookingTimeNum:bookTimeRange[bookTimeRange.length-1].bookingItemEndTimeNum
+        },()=>{
+          _this.computeBookingLength(true)
+        })
+      }    
     }
   },
   openBookPop:function(e){
@@ -253,9 +369,9 @@ Page({
           }
           // 预约日期 在当天
           if(bookingDate <= nowDate){
-            if(currentHour >beginHour){
+            if(currentHour >Number(beginHour)){
               bookingTimeObj.bookingStatus = 0
-            }else if(currentHour == beginHour && currentMin>= merchantStartMin){
+            }else if(currentHour == Number(beginHour) && currentMin>= Number(beginMin)){
               bookingTimeObj.bookingStatus = 0
             }else{
               bookingTimeObj.bookingStatus = 1
@@ -274,10 +390,11 @@ Page({
         }
       }
     }
-    this.insertCurrentBookingTime(ableTimeList)
+    // this.insertCurrentBookingTime(ableTimeList)
     this.setData({
       ableBookingTimeList:ableTimeList
     })
+    return ableTimeList
   },
   insertCurrentBookingTime:function(ableTimeList){
     const nowDate  = new Date(new Date().valueOf() + 60 * 1000 * 5)
@@ -412,10 +529,11 @@ Page({
       }
     }    
   },
-  computeBookingLength:function(){
+  computeBookingLength:function(openFlag){
+    const _this = this
     const startBookingTimeNum = this.data.startBookingTimeNum
     const endBookingTimeNum = this.data.endBookingTimeNum
-    if(startBookingTimeNum && endBookingTimeNum){
+    if(startBookingTimeNum>=0 && endBookingTimeNum >=0){
         const ableBookingTimeList =  this.data.ableBookingTimeList
         let bookingTimeStr = "";
         ableBookingTimeList.forEach(item=>{
@@ -428,6 +546,10 @@ Page({
         this.setData({
           bookingLength:bookingTimeStr.split(",").length * this.data.roomDetail.startTime,
           selectBookingTimeString:bookingTimeStr
+        },()=>{
+          if(openFlag){
+            _this.confirmBooking()
+          }
         })
     }else{
       this.setData({
@@ -439,7 +561,7 @@ Page({
   confirmBooking:function(){
     const startBookingTimeNum = this.data.startBookingTimeNum
     const endBookingTimeNum = this.data.endBookingTimeNum
-    if(startBookingTimeNum && endBookingTimeNum){
+    if(startBookingTimeNum>=0 && endBookingTimeNum>=0){
       if(this.data.bookingLength >= this.data.roomDetail.startTime ){
         // const ableBookingTimeList =  this.data.ableBookingTimeList
         // let bookingTimeStr = "";
@@ -453,7 +575,7 @@ Page({
         // this.setData({
         //   selectBookingTimeString:bookingTimeStr
         // })
-    
+    console.log(this.data.selectBookingTimeString)
         const dataTrans = {
           bookingTimeStr:this.data.selectBookingTimeString,
           bookingDate:this.data.bookingDate,

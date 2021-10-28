@@ -121,6 +121,7 @@
   </view>
 
   <view class="room-book-btn-container">
+    <button class="room-book-btn" bindtap="bookAtOnce">立即使用</button>
     <button class="room-book-btn" bindtap="openBookPop">选择预订时间</button>
   </view>
   <van-popup
@@ -177,4 +178,23 @@
       </view> 
     </view>
   </van-popup>
+
+
+  <van-popup
+    show="{{ showPickerPop }}"
+    position="bottom"
+    custom-style="height: 50%;"
+    bind:close="onBookAtOncePopClose"
+  >
+  <van-picker
+        show-toolbar
+        title="选择使用时长"
+        columns="{{ pickerTimeList }}"
+        value-key="label"
+        bind:cancel="onBookAtOncePopClose"
+        bind:confirm="onBookPickerConfirm"
+      />
+  </van-popup>
+
+
 </view>
