@@ -94,6 +94,7 @@
     show="{{ showQrCode }}"
     bind:confirm="onQrClose"
     custom-style="width:240px; display: flex;flex-direction: column;align-items: center;"
+    confirm-button-text="请截图保存"
   >
     <view class="qr-code-container">
       <image src="{{accountInfo.recommendQr}}" class="qr-code-img" />
