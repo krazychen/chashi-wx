@@ -20,7 +20,7 @@ Page({
     },
     orderNum:0
   },
-  onLoad() {
+  onLoad(query) {
     const res = wx.getSystemInfoSync()
     const _this = this
     this.setData({
@@ -33,6 +33,8 @@ Page({
     })
     this.getParamConfig()
     this.getAdvertiseBannerListForWx()
+    const scene = decodeURIComponent(query.scene)
+    app.globalData.recommendId = scene
   },
   onShow: function () {
     const _this = this

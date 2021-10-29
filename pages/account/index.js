@@ -10,7 +10,8 @@ Page({
     scrollHeight:null,
     hasUserInfo:false,
     userInfo:null,
-    accountInfo:null
+    accountInfo:null,
+    showQrCode:false
   },
   onLoad() {
     this.setData({
@@ -79,5 +80,19 @@ Page({
     }else{
       this.getUserProfile()
     }
+  },
+  openQrCode:function(){
+    if(this.data.hasUserInfo){
+      this.setData({
+        showQrCode:true
+      })    
+    }else{
+      this.getUserProfile()
+    }
+  },
+  onQrClose:function(){
+    this.setData({
+      showQrCode:false
+    }) 
   }
 })

@@ -45,19 +45,29 @@
       </view>
       <view class="account-card-item-shorter" data-querytype="3" bindtap="openOrderList">
         <van-icon name="todo-list-o" size="34px" color="rgb(72,165,132)" />
-        <view class="font-14" style="margin-top:6px;margin-bottom:6px">待使用</view>
+        <view class="font-14" >待使用</view>
       </view>
       <view class="account-card-item-shorter" data-querytype="4" bindtap="openOrderList">
         <van-icon name="completed" size="34px" color="rgb(72,165,132)" />
-        <view class="font-14" style="margin-top:6px;margin-bottom:6px">已使用</view>
+        <view class="font-14" >已使用</view>
       </view>
       <view class="account-card-item-shorter" data-querytype="5" bindtap="openOrderList" >
         <van-icon name="passed" size="34px" color="rgb(72,165,132)" />
-        <view class="font-14" style="margin-top:6px;margin-bottom:6px">已完成</view>
+        <view class="font-14" >已完成</view>
       </view>
       <view class="account-card-item-shorter" data-querytype="1" bindtap="openOrderList">
         <van-icon name="orders-o" size="34px" color="rgb(72,165,132)" />
-        <view class="font-14" style="margin-top:6px;margin-bottom:6px">全部</view>
+        <view class="font-14" >全部</view>
+      </view>
+    </view>
+  </view>
+  <view class="account-card-container">
+    <view class="account-card-title" bindtap="openQrCode">
+      <view class="account-card-left-icon"></view>
+      邀请好友
+      <view class="account-cart-title-sep font-dark-green">
+        <van-icon name="qr" />
+        邀请码
       </view>
     </view>
   </view>
@@ -78,5 +88,13 @@
       </button>
     </view>
   </view>
+
+  <van-dialog
+    use-slot
+    show="{{ showQrCode }}"
+    bind:confirm="onQrClose"
+  >
+    <image src="{{userInfo.recommendQR}}" />
+  </van-dialog>
 
 </view>

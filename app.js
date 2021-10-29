@@ -11,7 +11,8 @@ App({
     tabBarHeight: 50,
     cityList:[],
     mapKey:'FMXBZ-TXULW-2SVRL-RY734-IDFSF-2QFWF',
-    paramConfigObj:{}
+    paramConfigObj:{},
+    recommendId:null
   },
   getReleaseCityWx:function(){
     request.get('/sysArea/getReleaseCityWx',null).then((res)=>{

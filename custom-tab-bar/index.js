@@ -16,6 +16,12 @@ Component({
       "text": "预定茶室"
     },
     {
+      "url": "/pages/other/index",
+      "icon": "/static/image/wenzhang_icon.png",
+      "iconSelected": "/static/image/wenzhang_yes_icon.png",
+      "text": "荣景商城"
+    },
+    {
       "url": "/pages/account/index",
       "icon": "/static/image/wode_icon.png",
       "iconSelected": "/static/image/wode_yes_icon.png",

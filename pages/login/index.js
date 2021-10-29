@@ -66,7 +66,9 @@ Page({
         if(!_this.data.currentSessionObj){
           _this.getSessionKeyObjReGet()
         }
-        const userData = {iv:e.detail.iv,encryptedData:e.detail.encryptedData,..._this.data.currentSessionObj}
+        const recommendID = app.globalData.recommendId
+        console.log(recommendID)
+        const userData = {iv:e.detail.iv,encryptedData:e.detail.encryptedData,..._this.data.currentSessionObj,recommendID}
         request.post('/wxUser/wxLogin',userData).then(result=>{
           const userInfoRes = {...result.data.data}
           if( userInfoRes && userInfoRes.phoneNumber){
@@ -87,7 +89,8 @@ Page({
           success: (res)=> {
             if (res.code) {
               _this.getSessionKeyObj(res.code)
-              const userData = {iv:e.detail.iv,encryptedData:e.detail.encryptedData,..._this.data.currentSessionObj}
+              const recommendID = app.globalData.recommendId
+              const userData = {iv:e.detail.iv,encryptedData:e.detail.encryptedData,..._this.data.currentSessionObj,recommendID}
               request.post('/wxUser/wxLogin',userData).then(result=>{
                 const userInfoRes = {...result.data.data}
                 if( userInfoRes && userInfoRes.phoneNumber){
