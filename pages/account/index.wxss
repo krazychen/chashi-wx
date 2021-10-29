@@ -134,11 +134,12 @@ page {
 }
 
 .qr-code-container{
-  width: 180px;
+  width: 240px;
   height: 180px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   align-items: center;
   padding: 10px 0px;
 }

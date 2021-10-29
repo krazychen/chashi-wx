@@ -82,24 +82,26 @@
         <view class="font-14">会员卡</view>
       </view>
       
-      <button class="account-card-item-auto" plain="{{true}}" open-type="share">
+      <!-- <button class="account-card-item-auto" plain="{{true}}" open-type="share">
         <van-icon name="share" size="34px" color="rgb(72,165,132)" />
         <view class="font-14" style="line-height:14px !important;margin-bottom:2px">分享</view>
-      </button>
+      </button> -->
     </view>
   </view>
 
   <van-dialog
     use-slot
     show="{{ showQrCode }}"
-    bind:confirm="onQrClose"
-    custom-style="width:240px; display: flex;flex-direction: column;align-items: center;"
-    confirm-button-text="请截图保存"
+    bind:cancel="onQrClose"
+    custom-style="width:240px; "
+    show-cancel-button="{{true}}"
+    show-confirm-button="{{false}}"
+    cancel-button-text="关闭"
+    title="请截图保存"
   >
     <view class="qr-code-container">
       <image src="{{accountInfo.recommendQr}}" class="qr-code-img" />
     </view>
-    
   </van-dialog>
 
 </view>
