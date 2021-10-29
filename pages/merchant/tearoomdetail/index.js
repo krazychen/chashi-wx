@@ -213,9 +213,9 @@ Page({
       const firstEndTimeObj = ableTimeList[insertIndex]
       const endHour = Number(firstEndTimeObj.bookingItemStartTime.split(':')[0])
       const endMin =Number(firstEndTimeObj.bookingItemStartTime.split(':')[1]) 
+      const firstTimeObj = {}
       if(currentHour < endHour || currentHour==endHour&& currentMin<endMin){
-        const firstTimeObj = {}
-        firstTimeObj.bookingItemStartTime = currentHour+':'+currentMin
+        firstTimeObj.bookingItemStartTime = currentHour+':'+currentMin.toString().padStart(2,'0')
         firstTimeObj.bookingItemStartTimeNum = Number(currentHour+''+currentMin)
         firstTimeObj.bookingItemEndTime = firstEndTimeObj.bookingItemStartTime
         firstTimeObj.bookingItemEndTimeNum = firstEndTimeObj.bookingItemStartTimeNum
@@ -233,12 +233,16 @@ Page({
           bookTimeRange.push(currentTimeObj)
       }
       const _this = this
+      if(firstTimeObj.bookingStatus){
+        ableTimeList.splice(insertIndex, 0, firstTimeObj)
+      }
       if(bookTimeRange && bookTimeRange.length>0){
         this.setData({
           startBookingTime:bookTimeRange[0].bookingItemStartTime,
           startBookingTimeNum:bookTimeRange[0].bookingItemStartTimeNum,
           endBookingTime:bookTimeRange[bookTimeRange.length-1].bookingItemEndTime,
-          endBookingTimeNum:bookTimeRange[bookTimeRange.length-1].bookingItemEndTimeNum
+          endBookingTimeNum:bookTimeRange[bookTimeRange.length-1].bookingItemEndTimeNum,
+          ableBookingTimeList:ableTimeList
         },()=>{
           _this.computeBookingLength(true)
         })

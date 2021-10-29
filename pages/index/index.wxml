@@ -25,7 +25,9 @@
       wx:for-item="item" 
       wx:key="id"
       src="{{item.picUrl}}"
-      class="advertise-banner-item" 
+      class="advertise-banner-item"
+      data-item="{{item}}"
+      bindtap="openWeb" 
     >
     </image>
   </view>

@@ -13,7 +13,8 @@
     "pages/account/topup/index",
     "pages/account/orderinfo/index",
     "pages/account/orderdetail/index",
-    "pages/login/index"
+    "pages/login/index",
+    "pages/webpage/index"
   ],
   "permission": {
     "scope.userLocation": {
