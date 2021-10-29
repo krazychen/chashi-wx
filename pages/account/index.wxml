@@ -94,7 +94,7 @@
     show="{{ showQrCode }}"
     bind:confirm="onQrClose"
   >
-    <image src="{{userInfo.recommendQR}}" />
+    <image src="{{userInfo.recommendQr}}" />
   </van-dialog>
 
 </view>
