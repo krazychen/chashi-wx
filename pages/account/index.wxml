@@ -93,8 +93,12 @@
     use-slot
     show="{{ showQrCode }}"
     bind:confirm="onQrClose"
+    custom-style="width:240px; display: flex;flex-direction: column;align-items: center;"
   >
-    <image src="{{accountInfo.recommendQr}}" />
+    <view class="qr-code-container">
+      <image src="{{accountInfo.recommendQr}}" class="qr-code-img" />
+    </view>
+    
   </van-dialog>
 
 </view>
