@@ -83,9 +83,20 @@ Page({
   },
   openQrCode:function(){
     if(this.data.hasUserInfo){
-      this.setData({
-        showQrCode:true
-      })    
+      const accountInfo = this.data.accountInfo
+      if(!accountInfo.recommendQr){
+        request.get('/wxUser/getWxQRCode/'+accountInfo.id,null).then((res)=>{
+          accountInfo.recommendQr = res.data.data
+          this.setData({
+            accountInfo,
+            showQrCode:true
+          })
+        })
+      }else{
+        this.setData({
+          showQrCode:true
+        })
+      }   
     }else{
       this.getUserProfile()
     }
