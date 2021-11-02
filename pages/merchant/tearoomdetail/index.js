@@ -285,7 +285,7 @@ Page({
     const nowDate  = new Date()
     const currentHour = nowDate.getHours()
     const currentMin = nowDate.getMinutes()
-    const minBookingTime = roomDetail.startTime?Number(roomDetail.startTime):1
+    const minBookingTime = roomDetail.timeRange?Number(roomDetail.timeRange):0.5
     const merchantStartTimeArr = roomDetail.merchantStartTime.split(":")
     const merchantStartHour = Number(merchantStartTimeArr[0])
     const merchantStartMin = Number(merchantStartTimeArr[1])
