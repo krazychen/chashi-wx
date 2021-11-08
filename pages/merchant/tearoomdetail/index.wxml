@@ -174,10 +174,10 @@
           <span wx:else>
             选择预订时间
           </span>
-          <van-toast id="van-toast" />
       </view> 
     </view>
   </van-popup>
+  <van-toast id="van-toast" />
 
 
   <van-popup

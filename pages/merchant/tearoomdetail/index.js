@@ -148,7 +148,7 @@ Page({
     const merchantEndDate = new Date(nowYear,nowMonth,nowDay,Number(merchantEndTime.split(":")[0]),Number(merchantEndTime.split(":")[1]))
     if(bookDate < merchantEndDate){
       const diffHour = Math.ceil((merchantEndDate.getTime() - bookDate.getTime())/1000/60/60)
-      for(let i=0;i<diffHour;i++){
+      for(let i=0;i<diffHour;i=i+step){
         const objTemp ={
           timelength:i+step,
           label:i+step+'小时'
@@ -552,7 +552,14 @@ Page({
           selectBookingTimeString:bookingTimeStr
         },()=>{
           if(openFlag){
-            _this.confirmBooking()
+            // if((bookingTimeStr.split(",").length * _this.data.roomDetail.timeRange) < Number(_this.data.roomDetail.startTime)){
+            //   Toast('预订时间需大于或等于'+_this.data.roomDetail.startTime+'小时');
+            //   _this.setData({
+            //     showPickerPop:false
+            //   })
+            // }else{
+              _this.confirmBooking()
+            // }
           }
         })
     }else{
@@ -566,7 +573,8 @@ Page({
     const startBookingTimeNum = this.data.startBookingTimeNum
     const endBookingTimeNum = this.data.endBookingTimeNum
     if(startBookingTimeNum>=0 && endBookingTimeNum>=0){
-      if(this.data.bookingLength >= this.data.roomDetail.startTime ){
+      console.log(this.data.bookingLength,this.data.roomDetail.startTime );
+      if(this.data.bookingLength >= Number(this.data.roomDetail.startTime) ){
         // const ableBookingTimeList =  this.data.ableBookingTimeList
         // let bookingTimeStr = "";
         // ableBookingTimeList.forEach(item=>{
@@ -579,7 +587,7 @@ Page({
         // this.setData({
         //   selectBookingTimeString:bookingTimeStr
         // })
-    console.log(this.data.selectBookingTimeString)
+    
         const dataTrans = {
           bookingTimeStr:this.data.selectBookingTimeString,
           bookingDate:this.data.bookingDate,
@@ -604,6 +612,7 @@ Page({
           }
         })
       }else{
+        console.log(this.data.bookingLength,this.data.roomDetail.startTime );
         Toast('预订时间需大于或等于'+this.data.roomDetail.startTime+'小时');
       }
     }else{

@@ -105,5 +105,10 @@ Page({
     this.setData({
       showQrCode:false
     }) 
+  },
+  openCouponCenter:function(){
+    wx.navigateTo({
+      url: '/pages/account/couponcenter/index',
+    })
   }
 })
