@@ -139,7 +139,7 @@ Page({
     }
     const roomDetail = this.data.roomDetail
     const pickerTimeList = []
-    const step = roomDetail.startTime?Number(roomDetail.startTime):1
+    const step = roomDetail.timeRange?Number(roomDetail.timeRange):0.5
     const merchantEndTime = roomDetail.merchantEndTime
     const bookDate = new Date()
     const nowYear = bookDate.getFullYear(); 
@@ -222,7 +222,7 @@ Page({
         firstTimeObj.bookingStatus = 1
         bookTimeRange.push(firstTimeObj)
       }
-      const step = roomDetail.startTime?Number(roomDetail.startTime):1
+      const step = roomDetail.timeRange?Number(roomDetail.timeRange):0.5
       const loopLength = bookTimeLeng / step;
       for(let i=0;i<loopLength-1;i++){
           const currentTimeObj = ableTimeList[insertIndex+i]
@@ -548,7 +548,7 @@ Page({
         })
         bookingTimeStr = bookingTimeStr.substring(0,bookingTimeStr.length-1)
         this.setData({
-          bookingLength:bookingTimeStr.split(",").length * this.data.roomDetail.startTime,
+          bookingLength:bookingTimeStr.split(",").length * this.data.roomDetail.timeRange,
           selectBookingTimeString:bookingTimeStr
         },()=>{
           if(openFlag){
