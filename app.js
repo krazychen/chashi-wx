@@ -4,6 +4,10 @@ App({
   onLaunch() {
     this.getReleaseCityWx()
     this.getParamConfig()
+    wx.showShareMenu({
+      withShareTicket: false,
+      menus: ['shareAppMessage', 'shareTimeline']
+    })
   },
   globalData: {
     userInfo: null,

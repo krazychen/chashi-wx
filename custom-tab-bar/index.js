@@ -31,10 +31,17 @@ Component({
   },
   methods: {
    onChange(e) {
+     if(e.detail==2){
+      wx.navigateToMiniProgram({
+        appId: 'wx93c826738d8ae8b9'
+      })
+     }else{
       this.setData({ active: e.detail });
       wx.switchTab({
         url: this.data.list[e.detail].url
       });
+     }
+      
    },
    hideTabBar(){
       this.setData({

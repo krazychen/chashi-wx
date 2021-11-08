@@ -8,9 +8,9 @@ Page({
     // })
   },
   onShow: function () {
-    this.getTabBar().init()
-    wx.navigateToMiniProgram({
-      appId: 'wx93c826738d8ae8b9'
-    })
+    // this.getTabBar().init()
+    // wx.navigateToMiniProgram({
+    //   appId: 'wx93c826738d8ae8b9'
+    // })
   }
 })
