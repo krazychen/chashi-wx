@@ -175,16 +175,16 @@ Page({
   },
   onBookPickerConfirm:function(e){
     const { picker, value, index } = e.detail;
-    const searchBookingedObj = {
-      tearoomId:this.data.roomDetail.id,
-      orderDate:this.data.bookingDateString
-    }
     const nowDate  = new Date();
     const nowYear = nowDate.getFullYear(); 
     const nowMonth = nowDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
     const nowDay = nowDate.getDate(); //获取当前日(1-31)
     const bookingDate = new Date(nowYear,nowMonth,nowDay)
     const _this = this
+    const searchBookingedObj = {
+      tearoomId:this.data.roomDetail.id,
+      orderDate: nowYear+'-'+(nowMonth+1).toString().padStart(2,'0')+'-'+nowDay.toString().padStart(2,'0')
+    }
     this.setData({
       showPickerPop:false,
       bookingDate:bookingDate,
@@ -202,6 +202,7 @@ Page({
     const bookTimeRange = []
     const currentHour = bookDate.getHours()
     const currentMin = bookDate.getMinutes()
+    
     if(ableTimeList && ableTimeList.length >0){
       let insertIndex = 0
       for(let i=0;i<ableTimeList.length;i++){
@@ -213,13 +214,18 @@ Page({
       const firstEndTimeObj = ableTimeList[insertIndex]
       const endHour = Number(firstEndTimeObj.bookingItemStartTime.split(':')[0])
       const endMin =Number(firstEndTimeObj.bookingItemStartTime.split(':')[1]) 
-      const firstTimeObj = {}
+      let firstTimeObj = {}
       if(currentHour < endHour || currentHour==endHour&& currentMin<endMin){
-        firstTimeObj.bookingItemStartTime = currentHour+':'+currentMin.toString().padStart(2,'0')
-        firstTimeObj.bookingItemStartTimeNum = Number(currentHour+''+currentMin)
-        firstTimeObj.bookingItemEndTime = firstEndTimeObj.bookingItemStartTime
-        firstTimeObj.bookingItemEndTimeNum = firstEndTimeObj.bookingItemStartTimeNum
-        firstTimeObj.bookingStatus = 1
+        if(currentHour < endHour){
+          firstTimeObj = firstEndTimeObj
+        }
+        if(currentHour == endHour){
+          firstTimeObj.bookingItemStartTime = currentHour+':'+currentMin.toString().padStart(2,'0')
+          firstTimeObj.bookingItemStartTimeNum = Number(currentHour+''+currentMin)
+          firstTimeObj.bookingItemEndTime = firstEndTimeObj.bookingItemStartTime
+          firstTimeObj.bookingItemEndTimeNum = firstEndTimeObj.bookingItemStartTimeNum
+          firstTimeObj.bookingStatus = 1
+        }
         bookTimeRange.push(firstTimeObj)
       }
       const step = roomDetail.timeRange?Number(roomDetail.timeRange):0.5
@@ -299,99 +305,67 @@ Page({
     if(bookedTime){
       bookedTimeArr = bookedTime.split(",");
     }
-    let hourFlag = false
     // 判断最小的预定时间，除以0.5小时 是奇数还是偶数，偶数只要加小时。 奇数要判断分钟。
     // if((minBookingTime/0.5)%2==0){
     //   hourFlag = true
     // }
     if(merchantStartHour >= 0 && merchantStartHour < merchantEndHour ){
-      if(hourFlag){
-        for(let i=merchantStartHour;i<=merchantEndHour;i=i+minBookingTime){
-          const bookingTimeObj = {}
-          if(Number((i+minBookingTime)+merchantStartTimeArr[1]) > Number(merchantEndTimeArr[0]+merchantEndTimeArr[1])){
-            break;
+      const merchantStart = Number(merchantStartTimeArr[0]+merchantStartTimeArr[1])
+      const merchantEnd = Number(merchantEndTimeArr[0]+merchantEndTimeArr[1])
+      let beginLoop = merchantStart
+      while(beginLoop<merchantEnd){
+        let hourNo = parseInt((minBookingTime/0.5/2))
+        const minuteNo =((minBookingTime/0.5/2) - hourNo) *  60
+        let beginHour = (beginLoop+'').substring(0,(beginLoop+'').length-2)
+        const beginMin = (beginLoop+'').substring((beginLoop+'').length-2)
+        if(beginLoop==0 || beginHour==''){
+          beginHour = '0'
+        }
+        let endMin = beginMin
+        if(beginLoop==0 ){
+          endMin='00'
+        }
+        if(minuteNo>0){
+          const computeMin = Number(beginMin) + minuteNo - 60
+          if(computeMin>=0){
+            hourNo = hourNo+1
+          }            
+          endMin = Math.abs(Number(beginMin) + minuteNo - 60)+''
+          if(endMin=='60' || endMin=='0'){
+            endMin = '00'
           }
-          bookingTimeObj.bookingItemStartTime = i+':'+merchantStartTimeArr[1]
-          bookingTimeObj.bookingItemStartTimeNum = Number(i+merchantStartTimeArr[1])
-          bookingTimeObj.bookingItemEndTime = (i+minBookingTime)+':'+merchantStartTimeArr[1]
-          bookingTimeObj.bookingItemEndTimeNum = Number((i+minBookingTime)+merchantStartTimeArr[1])
-          // 预约日期 在当天
-          if(bookingDate <= nowDate){
-            if(currentHour >i){
-              bookingTimeObj.bookingStatus = 0
-            }else if(currentHour == i && currentMin>= merchantStartMin){
-              bookingTimeObj.bookingStatus = 0
-            }else{
-              bookingTimeObj.bookingStatus = 1
-            }
+        }
+        const bookingTimeObj = {}
+        bookingTimeObj.bookingItemStartTime = beginHour+':'+beginMin
+        bookingTimeObj.bookingItemStartTimeNum = Number(beginHour+''+beginMin)
+        bookingTimeObj.bookingItemEndTime = (Number(beginHour)+hourNo)+':'+endMin
+        bookingTimeObj.bookingItemEndTimeNum = Number(Number(beginHour)+hourNo+''+endMin) 
+        beginLoop = Number(Number(beginHour)+hourNo+''+endMin) 
+        if(beginLoop>merchantEnd){
+          break
+        }
+        // 预约日期 在当天
+        if(bookingDate <= nowDate){
+          if(currentHour >Number(beginHour)){
+            bookingTimeObj.bookingStatus = 0
+          }else if(currentHour == Number(beginHour) && currentMin>= Number(beginMin)){
+            bookingTimeObj.bookingStatus = 0
           }else{
             bookingTimeObj.bookingStatus = 1
           }
-          
-          bookedTimeArr.forEach(bookedItem=>{
-            const bookingTimeStr = bookingTimeObj.bookingItemStartTime+'-'+bookingTimeObj.bookingItemEndTime
-            if(bookingTimeStr == bookedItem){
-              bookingTimeObj.bookingStatus = 0
-            }
-          })
-          ableTimeList.push(bookingTimeObj)
+        }else{
+          bookingTimeObj.bookingStatus = 1
         }
-      }else{
-        const merchantStart = Number(merchantStartTimeArr[0]+merchantStartTimeArr[1])
-        const merchantEnd = Number(merchantEndTimeArr[0]+merchantEndTimeArr[1])
-        let beginLoop = merchantStart
-        while(beginLoop<merchantEnd){
-          let hourNo = parseInt((minBookingTime/0.5/2))
-          const minuteNo =((minBookingTime/0.5/2) - hourNo) *  60
-          let beginHour = (beginLoop+'').substring(0,(beginLoop+'').length-2)
-          const beginMin = (beginLoop+'').substring((beginLoop+'').length-2)
-          if(beginLoop==0 || beginHour==''){
-            beginHour = '0'
+        bookedTimeArr.forEach(bookedItem=>{
+          const bookedItemArr = bookedItem.split("-")
+          const bookedStartTime = Number(bookedItemArr[0].replace(":",''))
+          const bookedEndTime = Number(bookedItemArr[1].replace(":",''))
+          const bookingTimeStr = bookingTimeObj.bookingItemStartTime+'-'+bookingTimeObj.bookingItemEndTime
+          if(bookingTimeStr == bookedItem || (bookingTimeObj.bookingItemStartTimeNum<=bookedStartTime && bookingTimeObj.bookingItemEndTimeNum == bookedEndTime)){
+            bookingTimeObj.bookingStatus = 0
           }
-          let endMin = beginMin
-          if(beginLoop==0 ){
-            endMin='00'
-          }
-          if(minuteNo>0){
-            const computeMin = Number(beginMin) + minuteNo - 60
-            if(computeMin>=0){
-              hourNo = hourNo+1
-            }            
-            endMin = Math.abs(Number(beginMin) + minuteNo - 60)+''
-            if(endMin=='60' || endMin=='0'){
-              endMin = '00'
-            }
-          }
-          const bookingTimeObj = {}
-          bookingTimeObj.bookingItemStartTime = beginHour+':'+beginMin
-          bookingTimeObj.bookingItemStartTimeNum = Number(beginHour+''+beginMin)
-          bookingTimeObj.bookingItemEndTime = (Number(beginHour)+hourNo)+':'+endMin
-          bookingTimeObj.bookingItemEndTimeNum = Number(Number(beginHour)+hourNo+''+endMin) 
-          beginLoop = Number(Number(beginHour)+hourNo+''+endMin) 
-          if(beginLoop>merchantEnd){
-            break
-          }
-          // 预约日期 在当天
-          if(bookingDate <= nowDate){
-            if(currentHour >Number(beginHour)){
-              bookingTimeObj.bookingStatus = 0
-            }else if(currentHour == Number(beginHour) && currentMin>= Number(beginMin)){
-              bookingTimeObj.bookingStatus = 0
-            }else{
-              bookingTimeObj.bookingStatus = 1
-            }
-          }else{
-            bookingTimeObj.bookingStatus = 1
-          }
-          
-          bookedTimeArr.forEach(bookedItem=>{
-            const bookingTimeStr = bookingTimeObj.bookingItemStartTime+'-'+bookingTimeObj.bookingItemEndTime
-            if(bookingTimeStr == bookedItem){
-              bookingTimeObj.bookingStatus = 0
-            }
-          })
-          ableTimeList.push(bookingTimeObj)
-        }
+        })
+        ableTimeList.push(bookingTimeObj)
       }
     }
     // this.insertCurrentBookingTime(ableTimeList)
