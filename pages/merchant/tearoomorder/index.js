@@ -29,6 +29,7 @@ Page({
       hasUserInfo:app.globalData.hasUserInfo,
       userInfo:app.globalData.userInfo
     })
+    const _this =this
     const eventChannel = this.getOpenerEventChannel()
     // 真机需要判断 是否拿到数据
     new Promise((resolve, reject) => {
@@ -39,12 +40,18 @@ Page({
       if(res.usageNotice){
         res.usageNotice = util.unescape(res.usageNotice).replace(/<[^>]*>/g, '')
       }
+      if(res.bookingPrice && res.bookingLength){
+        res.servicePrice = (res.bookingPrice * res.bookingLength).toFixed(2)
+      }else{
+        res.servicePrice = 0
+      }
       this.setData({
         orderDetail:res
+      },()=>{
+        _this.getCouponListByUserId()
+        this.getAccountInfoByOpenId()
       })
     })
-    this.getCouponListByUserId()
-    this.getAccountInfoByOpenId()
   },
   onShow(){
     this.setData({
@@ -166,6 +173,8 @@ Page({
       orderPayObj.orderTimenum = 0
       orderPayObj.orderPrice = orderPayObj.orderOriginPrice
     }
+
+    orderPayObj.orderPrice = orderPayObj.orderPrice.toFixed(2)
     this.setData({
       orderPayObj
     })
