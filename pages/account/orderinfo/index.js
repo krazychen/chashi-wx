@@ -233,6 +233,13 @@ Page({
   },
   showDoorPwd:function(e){
     const orderitem = e.currentTarget.dataset.orderitem
+    const orderRange = orderitem.orderTimerage.split('-')
+    const orderDateTime = new Date(orderitem.orderDate + " "+ orderRange[0]+":00")
+    const nowDate = new Date(new Date().valueOf() + 60 * 1000 * 5)
+    if(nowDate < orderDateTime){
+      Toast('只能在订单使用前5分钟查看密码')
+      return
+    }
     request.get('/csMerchantOrder/lockKeyForWx/'+orderitem.id,null).then((res)=>{
       if(res.data.code == 200){
         Dialog.alert({
@@ -248,6 +255,13 @@ Page({
   },
   openDoor:function(e){
     const orderitem = e.currentTarget.dataset.orderitem
+    const orderRange = orderitem.orderTimerage.split('-')
+    const orderDateTime = new Date(orderitem.orderDate + " "+ orderRange[0]+":00")
+    const nowDate = new Date(new Date().valueOf() + 60 * 1000 * 5)
+    if(nowDate < orderDateTime){
+      Toast('只能在订单使用前5分钟一键开锁')
+      return
+    }
     const lockPostObj={
       merchantId:orderitem.merchantId,
       tearoomId:orderitem.tearoomId

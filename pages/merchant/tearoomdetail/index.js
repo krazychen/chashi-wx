@@ -147,7 +147,7 @@ Page({
     const nowDay = bookDate.getDate(); //获取当前日(1-31)
     const merchantEndDate = new Date(nowYear,nowMonth,nowDay,Number(merchantEndTime.split(":")[0]),Number(merchantEndTime.split(":")[1]))
     if(bookDate < merchantEndDate){
-      const diffHour = Math.ceil((merchantEndDate.getTime() - bookDate.getTime())/1000/60/60)
+      const diffHour = Math.floor((merchantEndDate.getTime() - bookDate.getTime())/1000/60/60)
       for(let i=0;i<diffHour;i=i+step){
         const objTemp ={
           timelength:i+step,
@@ -215,9 +215,11 @@ Page({
       const endHour = Number(firstEndTimeObj.bookingItemStartTime.split(':')[0])
       const endMin =Number(firstEndTimeObj.bookingItemStartTime.split(':')[1]) 
       let firstTimeObj = {}
+      let addIndex = 0
       if(currentHour < endHour || currentHour==endHour&& currentMin<endMin){
         if(currentHour < endHour){
           firstTimeObj = firstEndTimeObj
+          addIndex = 1
         }
         if(currentHour == endHour){
           firstTimeObj.bookingItemStartTime = currentHour+':'+currentMin.toString().padStart(2,'0')
@@ -229,19 +231,38 @@ Page({
         bookTimeRange.push(firstTimeObj)
       }
       const step = roomDetail.timeRange?Number(roomDetail.timeRange):0.5
-      const loopLength = bookTimeLeng / step;
-      for(let i=0;i<loopLength-1;i++){
-          const currentTimeObj = ableTimeList[insertIndex+i]
-          if(currentTimeObj.bookingStatus == 0){
-            Toast(currentTimeObj.bookingItemStartTime+'时段被预定')
+      let loopLength = bookTimeLeng / step
+      if(loopLength > (ableTimeList.length- insertIndex)){
+        loopLength = ableTimeList.length - insertIndex
+      }
+      if(addIndex > 0){
+        for(let i=0;i<(loopLength - 1);i++){
+          if((insertIndex+i+addIndex) > ableTimeList.length){
             break;
           }
-          bookTimeRange.push(currentTimeObj)
+          const currentTimeObj = ableTimeList[insertIndex+i+addIndex]
+            if(currentTimeObj.bookingStatus == 0){
+              Toast(currentTimeObj.bookingItemStartTime+'时段被预定')
+              break;
+            }
+            bookTimeRange.push(currentTimeObj)
+        }
+      }else{
+        for(let i=0;i<(loopLength - 1);i++){
+            const currentTimeObj = ableTimeList[insertIndex+i]
+            if(currentTimeObj.bookingStatus == 0){
+              Toast(currentTimeObj.bookingItemStartTime+'时段被预定')
+              break;
+            }
+            bookTimeRange.push(currentTimeObj)
+        }
       }
+      
       const _this = this
       if(firstTimeObj.bookingStatus){
         ableTimeList.splice(insertIndex, 0, firstTimeObj)
       }
+      
       if(bookTimeRange && bookTimeRange.length>0){
         this.setData({
           startBookingTime:bookTimeRange[0].bookingItemStartTime,
