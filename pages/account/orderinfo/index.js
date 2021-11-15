@@ -245,5 +245,19 @@ Page({
         Toast('获取开锁密码失败')
       }
     })
+  },
+  openDoor:function(e){
+    const orderitem = e.currentTarget.dataset.orderitem
+    const lockPostObj={
+      merchantId:orderitem.merchantId,
+      tearoomId:orderitem.tearoomId
+    }
+    request.post('/csMerchantOrder/openLock',lockPostObj).then((res)=>{
+      if(res.data.code == 200){
+        Toast(res.data.data)
+      }else{
+        Toast('开锁失败')
+      }
+    })
   }
 })

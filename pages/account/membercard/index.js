@@ -58,10 +58,10 @@ Page({
       if(memberCardDetail){
         memberCardDetail.cardname = memberCardDetail.membercardName
         if(memberCardDetail.useRights){
-          memberCardDetail.useRights = util.unescape(memberCardDetail.useRights).replace(/<[^>]*>/g, '')
+          memberCardDetail.useRights = util.unescape(memberCardDetail.useRights)
         }
         if(memberCardDetail.usageNotice){
-          memberCardDetail.usageNotice = util.unescape(memberCardDetail.usageNotice).replace(/<[^>]*>/g, '')
+          memberCardDetail.usageNotice = util.unescape(memberCardDetail.usageNotice)
         }
         if(memberCardDetail.startTime){
           memberCardDetail.startTime = memberCardDetail.startTime.substring(0,10)
@@ -86,10 +86,10 @@ Page({
       if(memberCardList && memberCardList.length>0){
         memberCardList.forEach(item=>{
           if(item.useRights){
-            item.useRights = util.unescape(item.useRights).replace(/<[^>]*>/g, '')
+            item.useRights = util.unescape(item.useRights)
           }
           if(item.usageNotice){
-            item.usageNotice = util.unescape(item.usageNotice).replace(/<[^>]*>/g, '')
+            item.usageNotice = util.unescape(item.usageNotice)
           }
           item.ownerFlag = false
         })

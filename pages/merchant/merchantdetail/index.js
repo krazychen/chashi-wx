@@ -60,7 +60,7 @@ Page({
           merchantDetail.facilitiesNameArray = []
         }
         if(merchantDetail.usageNotice){
-          merchantDetail.usageNotice = util.unescape(merchantDetail.usageNotice).replace(/<[^>]*>/g, '')
+          merchantDetail.usageNotice = util.unescape(merchantDetail.usageNotice)
         }
 
         if(merchantDetail.tearoomList && merchantDetail.tearoomList.length>0){

@@ -139,7 +139,7 @@
     </view>
     <block wx:if="{{merchantDetail.usageNotice}}">
       <view class="merchat-gray-text-container">
-        {{merchantDetail.usageNotice}}
+        <rich-text nodes="{{merchantDetail.usageNotice}}"></rich-text>
       </view>
     </block>
     <block wx:else>

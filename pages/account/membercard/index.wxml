@@ -85,7 +85,7 @@
           </view>
         </view>
         <view class="font-16" style="padding:0px 10px 10px 10px" wx:if="{{!memberCardDetail.showUseRights}}">
-          {{memberCardDetail.useRights}}
+          <rich-text nodes="{{memberCardDetail.useRights}}"></rich-text>
         </view>
       </view>
 
@@ -98,7 +98,7 @@
           </view>
         </view>
         <view class="font-16" style="padding:0px 10px 10px 10px" wx:if="{{!memberCardDetail.showUsageNotice}}">
-          {{memberCardDetail.usageNotice}}
+          <rich-text nodes="{{memberCardDetail.usageNotice}}"></rich-text>
         </view>
       </view>
     </view>

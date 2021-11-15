@@ -86,7 +86,7 @@ Page({
           roomDetail.facilitiesNameArray = []
         }
         if(this.data.dataTrans.usageNotice){
-          roomDetail.usageNotice = util.unescape(this.data.dataTrans.usageNotice).replace(/<[^>]*>/g, '')
+          roomDetail.usageNotice = util.unescape(this.data.dataTrans.usageNotice)
         }
         if(this.data.dataTrans.address){
           roomDetail.address = this.data.dataTrans.address

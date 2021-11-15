@@ -47,6 +47,11 @@
           </view>
           <view class="order-list-item-btn-container">
             <view wx:if="{{item.paymentStatus==2 && item.usedStatus == 0}}" class="order-list-item-btn"
+            catchtap="openDoor"
+            data-orderitem="{{item}}">
+              一键开锁
+            </view>
+            <view wx:if="{{item.paymentStatus==2 && item.usedStatus == 0}}" class="order-list-item-btn"
             catchtap="showDoorPwd"
             data-orderitem="{{item}}">
               查看开锁密码

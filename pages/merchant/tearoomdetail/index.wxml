@@ -112,7 +112,7 @@
     </view>
     <block wx:if="{{roomDetail.usageNotice}}">
       <view class="merchat-gray-text-container">
-        {{roomDetail.usageNotice}}
+        <rich-text nodes="{{roomDetail.usageNotice}}"></rich-text>
       </view>
     </block>
     <block wx:else>
