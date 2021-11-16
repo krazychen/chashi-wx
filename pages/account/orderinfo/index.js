@@ -233,8 +233,9 @@ Page({
   },
   showDoorPwd:function(e){
     const orderitem = e.currentTarget.dataset.orderitem
-    const orderRange = orderitem.orderTimerage.split('-')
-    const orderDateTime = new Date(orderitem.orderDate + " "+ orderRange[0]+":00")
+    const orderRange = orderitem.orderTimerage.split(',')
+    const orderDateTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[0]+":00"
+    const orderDateTime = new Date(orderDateTimeStr)
     const nowDate = new Date(new Date().valueOf() + 60 * 1000 * 5)
     if(nowDate < orderDateTime){
       Toast('只能在订单使用前5分钟查看密码')
@@ -255,8 +256,9 @@ Page({
   },
   openDoor:function(e){
     const orderitem = e.currentTarget.dataset.orderitem
-    const orderRange = orderitem.orderTimerage.split('-')
-    const orderDateTime = new Date(orderitem.orderDate + " "+ orderRange[0]+":00")
+    const orderRange = orderitem.orderTimerage.split(',')
+    const orderDateTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[0]+":00"
+    const orderDateTime = new Date(orderDateTimeStr)
     const nowDate = new Date(new Date().valueOf() + 60 * 1000 * 5)
     if(nowDate < orderDateTime){
       Toast('只能在订单使用前5分钟一键开锁')

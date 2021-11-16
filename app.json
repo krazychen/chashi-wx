@@ -1,6 +1,7 @@
 {
   "pages":[
     "pages/index/index",
+    "pages/index/renew/index",
     "pages/merchant/index",
     "pages/merchant/merchantdetail/index",
     "pages/merchant/tearoomdetail/index",

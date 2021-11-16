@@ -24,15 +24,19 @@ page {
 }
 
 .book-card-item{
-  width: 40%;
+  width: 30%;
   height: 80px;
   display: flex;
   align-items: center;
 }
-
+.book-card-item-small{
+  width: 12%;
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
 .flex-column{
   flex-direction: column;
-  justify-content: space-around;
 }
 
 .flex-row{

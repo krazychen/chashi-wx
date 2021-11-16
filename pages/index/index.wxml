@@ -4,8 +4,8 @@
   </view>
   <view class="book-card-container">
     <view class="book-card-item flex-column" bindtap="goToOrderList">
-      <view class="font-14" wx:if="{{orderNum>0}}">
-        您已预定{{orderNum}}个房间  
+      <view class="font-14" style="padding-bottom:5px;text-align:center" wx:if="{{orderNum>0}}">
+        您有{{orderNum}}个订单
       </view>
       <view class="font-14" wx:else>
         您未预订房间  
@@ -13,9 +13,14 @@
       <van-icon name="cart-circle" size="30px"  />
     </view>
     <view class="book-card-divider"></view>
-    <view class="book-card-item flex-row" bindtap="goToMerchantList">
+    <view class="book-card-item flex-column" bindtap="goToMerchantList">
+        <span class="font-14" style="padding-bottom:5px">去预订</span>
         <van-icon name="shop" size="30px"  />
-        <span class="font-14">去预订</span>
+    </view>
+    <view class="book-card-divider"></view>
+    <view class="book-card-item flex-column" bindtap="goToRenewList">
+        <span class="font-14" style="padding-bottom:5px">续单</span>
+        <van-icon name="setting" size="30px"  />
     </view>
   </view>
   
@@ -41,4 +46,6 @@
       <text class="userinfo-nickname">{{userInfo.nickName}}</text>
     </block>
   </view> -->
+
+  <van-toast id="van-toast" />
 </view>
