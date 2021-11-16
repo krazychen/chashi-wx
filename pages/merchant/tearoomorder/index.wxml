@@ -84,7 +84,7 @@
       <block wx:if="{{orderDetail.usageNotice}}">
         <view class="order-item-container">
           <view class="font-dark-green" style=" padding:10px 10px">
-            {{orderDetail.usageNotice}}
+            <rich-text nodes="{{orderDetail.usageNotice}}"></rich-text>
           </view>
         </view>
       </block>

@@ -99,10 +99,14 @@ Page({
   },
   goToOrderList:function(){
     if(this.data.hasUserInfo){
+      const queryObj = {
+        queryType:3,
+        queryFrom:'index'
+      }
       wx.navigateTo({
         url: '/pages/account/orderinfo/index',
         success: function(res) {
-          res.eventChannel.emit('openOrderList', 3)
+          res.eventChannel.emit('openOrderList', queryObj)
         }
       })
     }else{

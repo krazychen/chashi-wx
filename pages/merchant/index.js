@@ -121,10 +121,14 @@ Page({
           const startDate = new Date( nowYear, nowMonth, nowDay, startTimeArr[0], startTimeArr[1], 0);
           const endTimeArr = item.endTime.split(":");
           const endDate = new Date( nowYear, nowMonth, nowDay, endTimeArr[0], endTimeArr[1], 0);
-          if(nowDate>=startDate && nowDate<=endDate){
-            item.businessState = '营业中'
-          }else{
+          if(!item.releaseStatus || item.releaseStatus == '0' ){
             item.businessState = '休息'
+          }else{
+            if(nowDate>=startDate && nowDate<=endDate){
+              item.businessState = '营业中'
+            }else{
+              item.businessState = '休息'
+            }
           }
         })
         totalPage = Math.ceil(total/this.data.searchParam.size)

@@ -38,7 +38,7 @@ Page({
       })
     }).then((res) => {
       if(res.usageNotice){
-        res.usageNotice = util.unescape(res.usageNotice).replace(/<[^>]*>/g, '')
+        res.usageNotice = util.unescape(res.usageNotice)
       }
       if(res.bookingPrice && res.bookingLength){
         res.servicePrice = (res.bookingPrice * res.bookingLength).toFixed(2)
