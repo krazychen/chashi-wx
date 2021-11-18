@@ -8,7 +8,8 @@ Page({
   data: {
     hasPhoneNumber:false,
     canIUseGetUserProfile: false,
-    currentSessionObj:null
+    currentSessionObj:null,
+    recommendId:null
   },
 
   onLoad: function (options) {
@@ -19,11 +20,16 @@ Page({
     }
     // 调用一次 。获取sessionkey
     const _this = this
-    wx.login({
-      success (res) {
-        _this.getSessionKeyObj(res.code)        
-      }
+    this.setData({
+      recommendId: app.globalData.recommendId
+    },()=>{
+      wx.login({
+        success (res) {
+          _this.getSessionKeyObj(res.code)        
+        }
+      })
     })
+    
   },
   getSessionKeyObj:function(jsCode){
     const _this = this
@@ -66,8 +72,7 @@ Page({
         if(!_this.data.currentSessionObj){
           _this.getSessionKeyObjReGet()
         }
-        const recommendId = app.globalData.recommendId
-        console.log(recommendId)
+        const recommendId = _this.data.recommendId || null
         const userData = {iv:e.detail.iv,encryptedData:e.detail.encryptedData,..._this.data.currentSessionObj,recommendId}
         request.post('/wxUser/wxLogin',userData).then(result=>{
           const userInfoRes = {...result.data.data}
@@ -89,7 +94,7 @@ Page({
           success: (res)=> {
             if (res.code) {
               _this.getSessionKeyObj(res.code)
-              const recommendId = app.globalData.recommendId
+              const recommendId = _this.data.recommendId || null
               const userData = {iv:e.detail.iv,encryptedData:e.detail.encryptedData,..._this.data.currentSessionObj,recommendId}
               request.post('/wxUser/wxLogin',userData).then(result=>{
                 const userInfoRes = {...result.data.data}

@@ -35,8 +35,12 @@ Page({
     })
     this.getParamConfig()
     this.getAdvertiseBannerListForWx()
-    const scene = decodeURIComponent(query.scene)
-    app.globalData.recommendId = scene
+    if(query.scene){
+      const scene = decodeURIComponent(query.scene)
+      app.globalData.recommendId = scene
+    }else{
+      app.globalData.recommendId = null
+    }
   },
   onShow: function () {
     const _this = this
@@ -144,7 +148,6 @@ Page({
       if(nowDate >= orderDateStartTime && nowDate <= orderDateEndTime){
         renewOrderList.push(item)
       }
-      renewOrderList.push(item)
     })
     if(renewOrderList.length <= 0 ){
       Toast('没有在使用中的订单，无需续单，请先使用订单')

@@ -80,7 +80,7 @@
           导航
         </view>
         <view class="font-14" style="text-align:center;margin-left:15px;" data-phoneno="{{roomDetail.contactPhonse}}" bindtap="makePhoneCall">
-           预订
+           客服
         </view>
       </view>
     </view>

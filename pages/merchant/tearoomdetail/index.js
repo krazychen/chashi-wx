@@ -27,8 +27,13 @@ Page({
     userInfo:null,
     accountInfo:null,
     bookingLength:null,
+    bookingLengthCompare:null,
     showPickerPop:false,
-    pickerTimeList:[]
+    pickerTimeList:[],
+    bookAtOnceStartTime:null,
+    bookAtOnceFirstObj:null,
+    bookAtOnceEndTime:null,
+    bookAtOnceExtraLength:0 // 立即预定 起始时长 分钟
   },
   onLoad() {
     const _this = this;
@@ -137,29 +142,15 @@ Page({
       this.getUserProfile()
       return
     }
+    const _this = this
     const roomDetail = this.data.roomDetail
     const pickerTimeList = []
     const step = roomDetail.timeRange?Number(roomDetail.timeRange):0.5
     const merchantEndTime = roomDetail.merchantEndTime
-    const bookDate = new Date()
-    const nowYear = bookDate.getFullYear(); 
-    const nowMonth = bookDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
-    const nowDay = bookDate.getDate(); //获取当前日(1-31)
+    // 营业结束时间
     const merchantEndDate = new Date(nowYear,nowMonth,nowDay,Number(merchantEndTime.split(":")[0]),Number(merchantEndTime.split(":")[1]))
-    if(bookDate < merchantEndDate){
-      const diffHour = Math.floor((merchantEndDate.getTime() - bookDate.getTime())/1000/60/60)
-      for(let i=0;i<diffHour;i=i+step){
-        const objTemp ={
-          timelength:i+step,
-          label:i+step+'小时'
-        }
-        pickerTimeList.push(objTemp)
-      }
-      this.setData({
-        showPickerPop:true,
-        pickerTimeList
-      })
-    }else{
+    const nowDate  = new Date(new Date().valueOf() + 60 * 1000 * 5)
+    if(nowDate >= merchantEndDate){
       Toast('当天营业已结束')
       this.setData({
         showPickerPop:false,
@@ -167,6 +158,61 @@ Page({
       })
       return
     }
+    const nowYear = nowDate.getFullYear(); 
+    const nowMonth = nowDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
+    const nowDay = nowDate.getDate(); //获取当前日(1-31)
+    const nowHour = nowDate.getHours(); //获取当前小时数(0-23)
+    const nowMin = nowDate.getMinutes(); //获取当前分钟数(0-59)
+    // 当前时分
+    const beingTimeNum = Number(nowHour+nowMin.toString().padStart(2,'0'))
+    let nextEndTimeStr = null
+    const bookingDate = new Date(nowYear,nowMonth,nowDay)
+    const searchBookingedObj = {
+      tearoomId:roomDetail.id,
+      orderDate: nowYear+'-'+(nowMonth+1).toString().padStart(2,'0')+'-'+nowDay.toString().padStart(2,'0')
+    }
+    this.setData({
+      bookingDate:bookingDate,
+      bookingDateString:nowYear+'-'+(nowMonth+1).toString().padStart(2,'0')+'-'+nowDay.toString().padStart(2,'0')
+    },()=>{
+      request.post('/csMerchantOrder/getTimeRangeForWx',searchBookingedObj).then((res)=>{
+          const orderTimeRange = res.data.data || null
+          const ableTimeList =  util.getBookingAbleTimeList(bookingDate,orderTimeRange,roomDetail)
+          for(let i=0;i<ableTimeList.length;i++){
+            if(ableTimeList[i].bookingStatus == 0 && ableTimeList[i].bookingItemStartTimeNum >= beingTimeNum){
+              nextEndTimeStr = ableTimeList[i].bookingItemStartTime
+              break;
+            }
+          }
+          // 下一个被预定的开始时间 没有的话 取营业结束时间
+          if(!nextEndTimeStr){
+            nextEndTimeStr = merchantEndTime
+          }
+          const nextEndDate = new Date(nowYear,nowMonth,nowDay,Number(nextEndTimeStr.split(":")[0]),Number(nextEndTimeStr.split(":")[1]))
+          const diffHour = Math.floor((nextEndDate.getTime() - nowDate.getTime())/1000/60/60)
+          if(diffHour < roomDetail.startTime){
+            Toast('当天可预定时长不足最小起订时长')
+            return
+          }
+          let hourLength = ((nextEndDate.getTime() - nowDate.getTime())/1000/60/60).toFixed(4)
+          hourLength = util.formatDecimal(hourLength,1,5)
+          for(let i=step;i<=hourLength;i=i+step){
+            if(i>= roomDetail.startTime){
+              const objTemp ={
+                timelength:i,
+                label:i+'小时'
+              }
+              pickerTimeList.push(objTemp)
+            }
+          }
+          _this.setData({
+            showPickerPop:true,
+            pickerTimeList,
+            bookAtOnceStartTime:nowHour+":"+nowMin.toString().padStart(2,'0'),
+            bookAtOnceEndTime:nextEndTimeStr
+          })
+      })
+    })
   },
   onBookAtOncePopClose:function(){
     this.setData({
@@ -175,106 +221,84 @@ Page({
   },
   onBookPickerConfirm:function(e){
     const { picker, value, index } = e.detail;
-    const nowDate  = new Date();
-    const nowYear = nowDate.getFullYear(); 
-    const nowMonth = nowDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
-    const nowDay = nowDate.getDate(); //获取当前日(1-31)
-    const bookingDate = new Date(nowYear,nowMonth,nowDay)
     const _this = this
     const searchBookingedObj = {
       tearoomId:this.data.roomDetail.id,
-      orderDate: nowYear+'-'+(nowMonth+1).toString().padStart(2,'0')+'-'+nowDay.toString().padStart(2,'0')
+      orderDate: this.data.bookingDateString
     }
     this.setData({
-      showPickerPop:false,
-      bookingDate:bookingDate,
-      bookingDateString:nowYear+'-'+(nowMonth+1).toString().padStart(2,'0')+'-'+nowDay.toString().padStart(2,'0')
+      showPickerPop:false
     },()=>{
       request.post('/csMerchantOrder/getTimeRangeForWx',searchBookingedObj).then((res)=>{
           const orderTimeRange = res.data.data || null
-          const ableTimeList =  _this.getBookingAbleTimeList(bookingDate,orderTimeRange)
-          _this.computeCanBookTime(nowDate,ableTimeList,value.timelength)
+          const ableTimeList =  util.getBookingAbleTimeList(_this.data.bookingDate,orderTimeRange,_this.data.roomDetail)
+          _this.computeCanBookTime(_this.data.bookingDate,ableTimeList,value.timelength)
       })
     })
   },
   computeCanBookTime:function(bookDate,ableTimeList,bookTimeLeng){
     const roomDetail = this.data.roomDetail
+    const bookAtOnceStartTime = this.data.bookAtOnceStartTime
     const bookTimeRange = []
-    const currentHour = bookDate.getHours()
-    const currentMin = bookDate.getMinutes()
-    
-    if(ableTimeList && ableTimeList.length >0){
-      let insertIndex = 0
-      for(let i=0;i<ableTimeList.length;i++){
-        if(ableTimeList[i].bookingStatus==1){
-          insertIndex = i
-          break;
-        }
-      }
-      const firstEndTimeObj = ableTimeList[insertIndex]
-      const endHour = Number(firstEndTimeObj.bookingItemStartTime.split(':')[0])
-      const endMin =Number(firstEndTimeObj.bookingItemStartTime.split(':')[1]) 
-      let firstTimeObj = {}
-      let addIndex = 0
-      if(currentHour < endHour || currentHour==endHour&& currentMin<endMin){
-        if(currentHour < endHour){
-          firstTimeObj = firstEndTimeObj
-          addIndex = 1
-        }
-        if(currentHour == endHour){
-          firstTimeObj.bookingItemStartTime = currentHour+':'+currentMin.toString().padStart(2,'0')
-          firstTimeObj.bookingItemStartTimeNum = Number(currentHour+''+currentMin)
-          firstTimeObj.bookingItemEndTime = firstEndTimeObj.bookingItemStartTime
-          firstTimeObj.bookingItemEndTimeNum = firstEndTimeObj.bookingItemStartTimeNum
-          firstTimeObj.bookingStatus = 1
-        }
-        bookTimeRange.push(firstTimeObj)
-      }
-      const step = roomDetail.timeRange?Number(roomDetail.timeRange):0.5
-      let loopLength = bookTimeLeng / step
-      if(loopLength > (ableTimeList.length- insertIndex)){
-        loopLength = ableTimeList.length - insertIndex
-      }
-      if(addIndex > 0){
-        for(let i=0;i<(loopLength - 1);i++){
-          if((insertIndex+i+addIndex) > ableTimeList.length){
-            break;
-          }
-          const currentTimeObj = ableTimeList[insertIndex+i+addIndex]
-            if(currentTimeObj.bookingStatus == 0){
-              Toast(currentTimeObj.bookingItemStartTime+'时段被预定')
-              break;
-            }
-            bookTimeRange.push(currentTimeObj)
-        }
-      }else{
-        for(let i=0;i<(loopLength - 1);i++){
-            const currentTimeObj = ableTimeList[insertIndex+i]
-            if(currentTimeObj.bookingStatus == 0){
-              Toast(currentTimeObj.bookingItemStartTime+'时段被预定')
-              break;
-            }
-            bookTimeRange.push(currentTimeObj)
-        }
-      }
-      
-      const _this = this
-      if(firstTimeObj.bookingStatus){
-        ableTimeList.splice(insertIndex, 0, firstTimeObj)
-      }
-      
-      if(bookTimeRange && bookTimeRange.length>0){
-        this.setData({
-          startBookingTime:bookTimeRange[0].bookingItemStartTime,
-          startBookingTimeNum:bookTimeRange[0].bookingItemStartTimeNum,
-          endBookingTime:bookTimeRange[bookTimeRange.length-1].bookingItemEndTime,
-          endBookingTimeNum:bookTimeRange[bookTimeRange.length-1].bookingItemEndTimeNum,
-          ableBookingTimeList:ableTimeList
-        },()=>{
-          _this.computeBookingLength(true)
-        })
-      }    
+    const step = roomDetail.timeRange?Number(roomDetail.timeRange):0.5
+    let loopLength = bookTimeLeng / step
+    if(loopLength > (ableTimeList.length)){
+      loopLength = ableTimeList.length
     }
+    let firstNextStartTimeObj = null
+    let startIndex = 999999999
+    const bookingAtOnceStartTimeNum =  Number(bookAtOnceStartTime.split(":")[0] + ""+bookAtOnceStartTime.split(":")[1])
+    for(let i=0;i<ableTimeList.length;i++){
+      if(ableTimeList[i].bookingStatus == 1 && ableTimeList[i].bookingItemStartTimeNum >= bookingAtOnceStartTimeNum){
+        firstNextStartTimeObj = ableTimeList[i]
+        startIndex = i
+        break;
+      }
+    }
+
+    if(startIndex == 999999999){
+      Toast(bookAtOnceStartTime+'时段被预定')
+      return
+    }
+    let extraMin = 0
+    let firstTimeObj = {}
+    if(bookAtOnceStartTime != firstNextStartTimeObj.bookingItemStartTime){
+      firstTimeObj.bookingItemStartTime = bookAtOnceStartTime
+      firstTimeObj.bookingItemStartTimeNum = Number(bookAtOnceStartTime.split(':')[0]+''+bookAtOnceStartTime.split(':')[1])
+      firstTimeObj.bookingItemEndTime = firstNextStartTimeObj.bookingItemStartTime
+      firstTimeObj.bookingItemEndTimeNum = firstNextStartTimeObj.bookingItemStartTimeNum
+      firstTimeObj.bookingStatus = 1
+      bookTimeRange.push(firstTimeObj)
+      const nowYear = bookDate.getFullYear(); 
+      const nowMonth = bookDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
+      const nowDay = bookDate.getDate(); //获取当前日(1-31)
+      const extraBeginDateTime =  new Date(nowYear,nowMonth,nowDay,Number(bookAtOnceStartTime.split(":")[0]),Number(bookAtOnceStartTime.split(":")[1]))
+      const extraEndDateTime =  new Date(nowYear,nowMonth,nowDay,Number(firstNextStartTimeObj.bookingItemStartTime.split(":")[0]),Number(firstNextStartTimeObj.bookingItemStartTime.split(":")[1]))
+      extraMin = Math.floor((extraEndDateTime.getTime() - extraBeginDateTime.getTime())/1000/60)
+    }
+    for(let i=0;i<loopLength;i++){
+      const currentTimeObj = ableTimeList[startIndex+i]
+      if(currentTimeObj.bookingStatus == 0){
+        Toast(currentTimeObj.bookingItemStartTime+'时段被预定')
+        break;
+      }
+      bookTimeRange.push(currentTimeObj)
+    }
+
+    const _this = this
+    if(bookTimeRange && bookTimeRange.length>0){
+      this.setData({
+        startBookingTime:bookTimeRange[0].bookingItemStartTime,
+        startBookingTimeNum:bookTimeRange[0].bookingItemStartTimeNum,
+        endBookingTime:bookTimeRange[bookTimeRange.length-1].bookingItemEndTime,
+        endBookingTimeNum:bookTimeRange[bookTimeRange.length-1].bookingItemEndTimeNum,
+        bookAtOnceExtraLength:extraMin,
+        bookAtOnceFirstObj:firstTimeObj,
+        ableBookingTimeList:ableTimeList
+      },()=>{
+        _this.computeBookingLength(true)
+      })
+    }    
   },
   openBookPop:function(e){
     if(!this.data.hasUserInfo){
@@ -289,6 +313,17 @@ Page({
     const _this = this
     this.setData({
       showBookPop:true,
+      bookAtOnceStartTime:null,
+      bookAtOnceFirstObj:null,
+      bookAtOnceEndTime:null,
+      bookAtOnceExtraLength:0, // 立即预定 起始时长 分钟
+      bookingLengthCompare:0,
+      bookingLength: 0,
+      selectBookingTimeString:null,
+          startBookingTime:null,
+          startBookingTimeNum:null,
+          endBookingTime:null,
+          endBookingTimeNum:null,
       bookingDate:bookingDate,
       bookingDateString:nowYear+'-'+(nowMonth+1).toString().padStart(2,'0')+'-'+nowDay.toString().padStart(2,'0')
     },()=>{
@@ -534,7 +569,12 @@ Page({
     const endBookingTimeNum = this.data.endBookingTimeNum
     if(startBookingTimeNum>=0 && endBookingTimeNum >=0){
         const ableBookingTimeList =  this.data.ableBookingTimeList
-        let bookingTimeStr = "";
+        let bookingTimeStr = ""
+        let bookingLengthCompare = 0
+        let bookingLengthNum = 0
+        if(this.data.bookAtOnceExtraLength > 0 && this.data.bookAtOnceFirstObj){
+          bookingTimeStr = this.data.bookAtOnceFirstObj.bookingItemStartTime+"-"+this.data.bookAtOnceFirstObj.bookingItemEndTime+',';
+        }
         ableBookingTimeList.forEach(item=>{
           if(item.bookingStatus == 1 && item.bookingItemStartTimeNum >= startBookingTimeNum 
             && item.bookingItemEndTimeNum <=endBookingTimeNum){
@@ -542,8 +582,19 @@ Page({
           }
         })
         bookingTimeStr = bookingTimeStr.substring(0,bookingTimeStr.length-1)
+        if(this.data.bookAtOnceExtraLength > 0 && this.data.bookAtOnceFirstObj){
+          bookingLengthCompare = bookingTimeStr.split(",").length - 1
+          
+          const totalMin = parseInt((bookingTimeStr.split(",").length - 1) *  this.data.roomDetail.timeRange * 60 +  this.data.bookAtOnceExtraLength)
+          bookingLengthNum = (totalMin/60).toFixed(2)
+        }else{
+          bookingLengthCompare = bookingTimeStr.split(",").length
+          bookingLengthNum = bookingTimeStr.split(",").length *  this.data.roomDetail.timeRange
+        }
+
         this.setData({
-          bookingLength:bookingTimeStr.split(",").length * this.data.roomDetail.timeRange,
+          bookingLengthCompare,
+          bookingLength: bookingLengthNum,
           selectBookingTimeString:bookingTimeStr
         },()=>{
           if(openFlag){
@@ -560,7 +611,9 @@ Page({
     }else{
       this.setData({
         bookingLength:0,
-        selectBookingTimeString:''
+        selectBookingTimeString:'',
+        bookAtOnceExtraLength:0,
+        bookAtOnceFirstObj:null
       })
     }
   },
@@ -568,21 +621,7 @@ Page({
     const startBookingTimeNum = this.data.startBookingTimeNum
     const endBookingTimeNum = this.data.endBookingTimeNum
     if(startBookingTimeNum>=0 && endBookingTimeNum>=0){
-      console.log(this.data.bookingLength,this.data.roomDetail.startTime );
-      if(this.data.bookingLength >= Number(this.data.roomDetail.startTime) ){
-        // const ableBookingTimeList =  this.data.ableBookingTimeList
-        // let bookingTimeStr = "";
-        // ableBookingTimeList.forEach(item=>{
-        //   if(item.bookingStatus == 1 && item.bookingItemStartTimeNum >= startBookingTimeNum 
-        //     && item.bookingItemEndTimeNum <=endBookingTimeNum){
-        //       bookingTimeStr = bookingTimeStr+item.bookingItemStartTime+"-"+item.bookingItemEndTime+',';
-        //   }
-        // })
-        // bookingTimeStr = bookingTimeStr.substring(0,bookingTimeStr.length-1)
-        // this.setData({
-        //   selectBookingTimeString:bookingTimeStr
-        // })
-    
+      if(this.data.bookingLengthCompare >= Number(this.data.roomDetail.startTime) ){
         const dataTrans = {
           bookingTimeStr:this.data.selectBookingTimeString,
           bookingDate:this.data.bookingDate,
@@ -592,6 +631,8 @@ Page({
           endBookingTime:this.data.endBookingTime,
           endBookingTimeNum:this.data.endBookingTimeNum,
           bookingLength:this.data.bookingLength,
+          bookAtOnceExtraLength:this.data.bookAtOnceExtraLength,
+          bookAtOnceFirstObj:this.data.bookAtOnceFirstObj,
           ...this.data.roomDetail
         }
 
@@ -607,7 +648,6 @@ Page({
           }
         })
       }else{
-        console.log(this.data.bookingLength,this.data.roomDetail.startTime );
         Toast('预订时间需大于或等于'+this.data.roomDetail.startTime+'小时');
       }
     }else{

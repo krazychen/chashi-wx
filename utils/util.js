@@ -114,8 +114,28 @@ const getBookingAbleTimeList = function(bookingDate,bookedTime,roomDetail){
   return ableTimeList
 }
 
+const formatDecimal = function(num, decimal,compareNum) {
+  num = num.toString()
+  let index = num.indexOf('.')
+  if (index !== -1) {
+    if(parseInt(num.substring(index+1, decimal + index + 1))>=compareNum){
+      num = num.substring(0, decimal + index + 1)
+    }else{
+      if(decimal>1){
+        num = num.substring(0, decimal + index )
+      }else{
+        num = num.substring(0)
+      }
+    }
+  } else {
+    num = num.substring(0)
+  }
+  return parseFloat(num).toFixed(decimal)
+}
+
 module.exports = {
   formatTime,
   unescape: unescape,
-  getBookingAbleTimeList:getBookingAbleTimeList
+  getBookingAbleTimeList:getBookingAbleTimeList,
+  formatDecimal
 }
