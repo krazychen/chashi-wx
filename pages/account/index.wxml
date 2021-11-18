@@ -85,6 +85,11 @@
         <van-icon name="coupon" size="34px" color="rgb(72,165,132)" />
         <view class="font-14">领券中心</view>
       </view>
+
+      <view class="account-card-item-auto" bindtap="goToRenewList">
+        <van-icon name="setting-o" size="34px"  color="rgb(173,102,45)" />
+        <view class="font-14">续单</view>
+      </view>
       
       <!-- <button class="account-card-item-auto" plain="{{true}}" open-type="share">
         <van-icon name="share" size="34px" color="rgb(72,165,132)" />
@@ -107,5 +112,7 @@
       <image src="{{accountInfo.recommendQr}}" class="qr-code-img" />
     </view>
   </van-dialog>
+
+  <van-toast id="van-toast" />
 
 </view>

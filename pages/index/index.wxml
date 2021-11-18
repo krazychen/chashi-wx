@@ -7,7 +7,7 @@
       <view class="font-14" style="padding-bottom:5px;text-align:center" wx:if="{{orderNum>0}}">
         您有{{orderNum}}个订单
       </view>
-      <view class="font-14" wx:else>
+      <view class="font-14" style="padding-bottom:5px;text-align:center" wx:else>
         您未预订房间  
       </view>
       <van-icon name="cart-circle" size="30px"  />
