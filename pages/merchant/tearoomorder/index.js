@@ -235,10 +235,10 @@ Page({
             }
           })
         }else{
-          Toast('付款失败')
           this.setData({
             showOver:false
           })
+          Toast('付款失败')
         }
       })
     }else{
@@ -246,10 +246,10 @@ Page({
         if(res.data.code ===200){
           _this.doWxPay(res.data); 
         }else{
-          Toast('付款失败')
           this.setData({
             showOver:false
           })
+          Toast('付款失败')
         }
       })
     }
@@ -286,10 +286,10 @@ Page({
             })
           }else{
             request.post('/weixin/failOrderWxPay?id='+id+"&paymentMsg="+error.errMsg,null).then((res)=>{
-              Toast('付款失败')
               this.setData({
                 showOver:false
               })
+              Toast('付款失败')
             })
           }
         },  
