@@ -14,6 +14,10 @@ module.exports = Behavior({
         canIUseGetUserProfile: true
       })
     }
+    wx.showShareMenu({
+      withShareTicket: false,
+      menus: ['shareAppMessage', 'shareTimeline']
+    })
     const userInfo = wx.getStorageSync('userInfo')
     if (userInfo) {
       this.setData({
