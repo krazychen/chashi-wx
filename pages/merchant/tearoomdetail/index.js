@@ -191,7 +191,7 @@ Page({
           const nextEndDate = new Date(nowYear,nowMonth,nowDay,Number(nextEndTimeStr.split(":")[0]),Number(nextEndTimeStr.split(":")[1]))
           const diffHour = Math.floor((nextEndDate.getTime() - nowDate.getTime())/1000/60/60)
           if(diffHour < roomDetail.startTime){
-            Toast('当天可预定时长不足最小起订时长')
+            Toast('当前时段被预定')
             return
           }
           let hourLength = ((nextEndDate.getTime() - nowDate.getTime())/1000/60/60).toFixed(4)
