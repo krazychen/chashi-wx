@@ -373,7 +373,7 @@ Page({
         let hourNo = parseInt((minBookingTime/0.5/2))
         const minuteNo =((minBookingTime/0.5/2) - hourNo) *  60
         let beginHour = (beginLoop+'').substring(0,(beginLoop+'').length-2)
-        const beginMin = (beginLoop+'').substring((beginLoop+'').length-2)
+        const beginMin = (beginLoop+'').substring((beginLoop+'').length-2).padStart(2,'0')
         if(beginLoop==0 || beginHour==''){
           beginHour = '0'
         }
