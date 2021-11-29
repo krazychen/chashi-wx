@@ -16,7 +16,8 @@ App({
     cityList:[],
     mapKey:'FMXBZ-TXULW-2SVRL-RY734-IDFSF-2QFWF',
     paramConfigObj:{},
-    recommendId:null
+    recommendId:null,
+    oneKeyTime:10
   },
   getReleaseCityWx:function(){
     request.get('/sysArea/getReleaseCityWx',null).then((res)=>{
@@ -32,6 +33,11 @@ App({
         paramConfigList.forEach((item)=>{
           if(item.configKey.startsWith("wx_homepage_static")){
             paramConfigObj[item.configKey] = item.configValue
+          }
+          if(item.configKey.startsWith("oneKeyTime")){
+            if(item.configValue && Number(item.configValue)>0){
+              this.globalData.oneKeyTime = item.configValue
+            }
           }
           // if(item.configKey.startsWith("mapKey")){
           //   this.globalData.mapKey = item.configValue

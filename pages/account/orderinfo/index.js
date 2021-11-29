@@ -49,13 +49,15 @@ Page({
       }
     ],
     orderList:[],
-    queryFrom:'accountInfo'
+    queryFrom:'accountInfo',
+    oneKeyTime:10
   },
   onLoad() {
     const _this = this
     this.setData({
       hasUserInfo:app.globalData.hasUserInfo,
-      userInfo:app.globalData.userInfo
+      userInfo:app.globalData.userInfo,
+      oneKeyTime:app.globalData.oneKeyTime||10
     },()=>{
       const eventChannel = _this.getOpenerEventChannel()
       // 真机需要判断 是否拿到数据
@@ -259,9 +261,10 @@ Page({
     const orderRange = orderitem.orderTimerage.split(',')
     const orderDateTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[0]+":00"
     const orderDateTime = new Date(orderDateTimeStr)
-    const nowDate = new Date(new Date().valueOf() + 60 * 1000 * 5)
+    const oneKeyTime = Number(this.data.oneKeyTime)
+    const nowDate = new Date(new Date().valueOf() + 60 * 1000 * oneKeyTime)
     if(nowDate < orderDateTime){
-      Toast('只能在订单使用前5分钟一键开锁')
+      Toast('只能在订单使用前'+oneKeyTime+'分钟一键开锁')
       return
     }
     const lockPostObj={
