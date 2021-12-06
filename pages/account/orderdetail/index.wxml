@@ -55,9 +55,9 @@
     </view>
   </view>
   
-  <view class="order-item-btn-container" wx:if="{{(orderDetail.paymentStatus==2 && orderDetail.usedStatus == 0)|| orderDetail.paymentStatus==0 }}">
+  <view class="order-item-btn-container" wx:if="{{(orderDetail.paymentStatus==2 && (orderDetail.usedStatus == 0||orderDetail.usedStatus == 2))|| orderDetail.paymentStatus==0 }}">
     <view class="order-item-btn"
-      wx:if="{{orderDetail.paymentStatus==2 && orderDetail.usedStatus == 0}}" 
+      wx:if="{{orderDetail.paymentStatus==2 && (orderDetail.usedStatus == 0||orderDetail.usedStatus == 2)}}" 
       bindtap="refundOrder"
       data-orderitem="{{orderDetail}}"
       style="background-color: rgb(251,189,8);">申请退款</view>

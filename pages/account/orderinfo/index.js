@@ -46,6 +46,10 @@ Page({
       {
         queryType:7,
         queryTypeName:'已退款'
+      },
+      {
+        queryType:8,
+        queryTypeName:'已失效'
       }
     ],
     orderList:[],
@@ -258,7 +262,6 @@ Page({
   },
   openDoor:function(e){
     const orderitem = e.currentTarget.dataset.orderitem
-    console.log(orderitem)
     const orderRange = orderitem.orderTimerage.split(',')
     const orderDateTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[0]+":00"
     const orderDateTime = new Date(orderDateTimeStr)
@@ -267,7 +270,6 @@ Page({
     const nowEndDate = new Date()
     const orderDateEndTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[1]+":00"
     const orderDateEndTime = new Date(orderDateEndTimeStr)
-
     if(nowDate < orderDateTime){
       Toast('只能在订单使用前'+oneKeyTime+'分钟一键开锁')
       return
@@ -283,6 +285,39 @@ Page({
       tearoomId:orderitem.tearoomId
     }
     request.post('/csMerchantOrder/openLock',lockPostObj).then((res)=>{
+      if(res.data.code == 200){
+        Toast(res.data.data)
+      }else{
+        Toast('开锁失败')
+      }
+      this.getOrderList()
+    })
+  },
+  openInsideDoor:function(e){
+    const orderitem = e.currentTarget.dataset.orderitem
+    const orderRange = orderitem.orderTimerage.split(',')
+    const orderDateTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[0]+":00"
+    const orderDateTime = new Date(orderDateTimeStr)
+    const oneKeyTime = Number(this.data.oneKeyTime)
+    const nowDate = new Date(new Date().valueOf() + 60 * 1000 * oneKeyTime)
+    const nowEndDate = new Date()
+    const orderDateEndTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[1]+":00"
+    const orderDateEndTime = new Date(orderDateEndTimeStr)
+    if(nowDate < orderDateTime){
+      Toast('只能在订单使用前'+oneKeyTime+'分钟一键开锁')
+      return
+    }
+    if(nowEndDate > orderDateEndTime){
+      Toast('订单已完成')
+      return
+    }
+
+    const lockPostObj={
+      id:orderitem.id,
+      merchantId:orderitem.merchantId,
+      tearoomId:orderitem.tearoomId
+    }
+    request.post('/csMerchantOrder/openRoomLock',lockPostObj).then((res)=>{
       if(res.data.code == 200){
         Toast(res.data.data)
       }else{

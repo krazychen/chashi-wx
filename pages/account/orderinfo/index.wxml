@@ -49,7 +49,12 @@
             <view wx:if="{{item.paymentStatus==2 && item.usedStatus == 0}}" class="order-list-item-btn"
             catchtap="openDoor"
             data-orderitem="{{item}}">
-              一键开锁
+              开大门
+            </view>
+            <view wx:if="{{item.paymentStatus==2 && item.usedStatus == 0}}" class="order-list-item-btn"
+            catchtap="openInsideDoor"
+            data-orderitem="{{item}}">
+              开房门
             </view>
             <!-- <view wx:if="{{item.paymentStatus==2 && item.usedStatus == 0}}" class="order-list-item-btn"
             catchtap="showDoorPwd"
@@ -57,7 +62,7 @@
               查看开锁密码
             </view> -->
             
-            <view wx:if="{{item.paymentStatus==2 && item.usedStatus == 0}}" class="order-list-item-btn"
+            <view wx:if="{{item.paymentStatus==2 && (item.usedStatus == 0 || item.usedStatus == 2)}}" class="order-list-item-btn"
             catchtap="refundOrder"
             data-orderitem="{{item}}">
               申请退款
