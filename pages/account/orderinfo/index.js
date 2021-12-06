@@ -5,6 +5,7 @@ import request from '../../../utils/request'
 import userBehavior from '../../behavior/user-behavior'
 import Toast from '../../../miniprogram_npm/@vant/weapp/toast/toast';
 import Dialog from '../../../miniprogram_npm/@vant/weapp/dialog/dialog';
+import util from '../../../utils/util'
 
 Page({
   behaviors: [userBehavior],
@@ -124,6 +125,8 @@ Page({
             item.orderStatusName = '已完成' 
           }else if(item.paymentStatus == 3 || item.paymentStatus == 4){
             item.orderStatusName = '已取消' 
+          }else if(item.paymentStatus == 2 && item.usedStatus == 2){
+            item.orderStatusName = '已失效' 
           }else{
             item.orderStatusName = '已退款' 
           }
@@ -241,7 +244,7 @@ Page({
     const orderitem = e.currentTarget.dataset.orderitem
     const orderRange = orderitem.orderTimerage.split(',')
     const orderDateTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[0]+":00"
-    const orderDateTime = new Date(orderDateTimeStr)
+    const orderDateTime = util.fixDate(orderDateTimeStr)
     const nowDate = new Date(new Date().valueOf() + 60 * 1000 * 5)
     if(nowDate < orderDateTime){
       Toast('只能在订单使用前5分钟查看密码')
@@ -264,12 +267,12 @@ Page({
     const orderitem = e.currentTarget.dataset.orderitem
     const orderRange = orderitem.orderTimerage.split(',')
     const orderDateTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[0]+":00"
-    const orderDateTime = new Date(orderDateTimeStr)
+    const orderDateTime = util.fixDate(orderDateTimeStr)
     const oneKeyTime = Number(this.data.oneKeyTime)
     const nowDate = new Date(new Date().valueOf() + 60 * 1000 * oneKeyTime)
     const nowEndDate = new Date()
     const orderDateEndTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[1]+":00"
-    const orderDateEndTime = new Date(orderDateEndTimeStr)
+    const orderDateEndTime = util.fixDate(orderDateEndTimeStr)
     if(nowDate < orderDateTime){
       Toast('只能在订单使用前'+oneKeyTime+'分钟一键开锁')
       return
@@ -297,12 +300,12 @@ Page({
     const orderitem = e.currentTarget.dataset.orderitem
     const orderRange = orderitem.orderTimerage.split(',')
     const orderDateTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[0]+":00"
-    const orderDateTime = new Date(orderDateTimeStr)
+    const orderDateTime = util.fixDate(orderDateTimeStr)
     const oneKeyTime = Number(this.data.oneKeyTime)
     const nowDate = new Date(new Date().valueOf() + 60 * 1000 * oneKeyTime)
     const nowEndDate = new Date()
     const orderDateEndTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[1]+":00"
-    const orderDateEndTime = new Date(orderDateEndTimeStr)
+    const orderDateEndTime = util.fixDate(orderDateEndTimeStr)
     if(nowDate < orderDateTime){
       Toast('只能在订单使用前'+oneKeyTime+'分钟一键开锁')
       return

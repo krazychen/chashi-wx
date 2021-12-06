@@ -133,9 +133,24 @@ const formatDecimal = function(num, decimal,compareNum) {
   return parseFloat(num).toFixed(decimal)
 }
 
+const fixDate =  function(strTime) {
+  if (!strTime) {
+      return '';
+  }
+  let tempDate = new Date(strTime);
+  if(tempDate=='Invalid Date'){
+     strTime = strTime.replace(/T/g,' ');
+     strTime = strTime.replace(/-/g,'/');
+     tempDate = new Date(strTime);
+  }
+  tempDate.toLocaleDateString();
+  return tempDate;
+}
+
 module.exports = {
   formatTime,
   unescape: unescape,
   getBookingAbleTimeList:getBookingAbleTimeList,
-  formatDecimal
+  formatDecimal,
+  fixDate
 }

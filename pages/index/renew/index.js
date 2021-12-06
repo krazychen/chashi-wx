@@ -126,10 +126,10 @@ Page({
             const pickerTimeList = []
             const step = roomDetail.timeRange?Number(roomDetail.timeRange):0.5
             const merchantEndTime = roomDetail.merchantEndTime
-            const orderEndTime = new Date(orderitem.orderDate.trim() +" " +orderitem.orderTimerage.split("-")[1])
+            const orderEndTime = util.fixDate(orderitem.orderDate.trim() +" " +orderitem.orderTimerage.split("-")[1])
             // 续单最少1小时，需要预留0.5小时的保洁，也就是如果续单1个小时，需要后面1.5个小时
             const continueAtLeastDateTime = new Date(orderEndTime.valueOf() + 60 * 1000 * 90)
-            const merchantEndDate = new Date(orderitem.orderDate + " "+ merchantEndTime)
+            const merchantEndDate = util.fixDate(orderitem.orderDate + " "+ merchantEndTime)
             if(continueAtLeastDateTime >= merchantEndDate){
               Toast('最小续单时长超过营业时间，无法续单')
               this.setData({
@@ -143,7 +143,7 @@ Page({
             // 续单开始时间
             const beingTimeNum = Number(orderEndTimeStr.split(":")[0]+orderEndTimeStr.split(":")[1])
             let nextEndTimeStr = null
-            const bookingDate = new Date(orderitem.orderDate.trim())
+            const bookingDate = util.fixDate(orderitem.orderDate.trim())
             const searchBookingedObj = {
               tearoomId:roomDetail.id,
               orderDate: orderitem.orderDate.trim()
@@ -166,7 +166,7 @@ Page({
                   if(!nextEndTimeStr){
                     nextEndTimeStr = merchantEndTime
                   }
-                  const nextEndDate = new Date(orderitem.orderDate.trim() +" " +nextEndTimeStr)
+                  const nextEndDate = util.fixDate(orderitem.orderDate.trim() +" " +nextEndTimeStr)
                   let hourLength = ((nextEndDate.getTime() - orderEndTime.getTime())/1000/60/60).toFixed(4)
                   hourLength = util.formatDecimal(hourLength,1,5)
                   if(hourLength < 1.5){
@@ -237,9 +237,9 @@ Page({
       loopLength = ableTimeList.length
     }
 
-    const continueEndTime =  new Date(new Date(this.data.bookingDateString+" "+ bookAtOnceStartTime).valueOf() + 60 * 1000 * 60 * (bookTimeLeng) )
-    const canBookAtLeastBegin =  new Date(new Date(this.data.bookingDateString+" "+ bookAtOnceStartTime).valueOf() + 60 * 1000 * 60 * (bookTimeLeng+0.5) )
-    const merchantEndDate = new Date(this.data.bookingDateString + " "+ roomDetail.merchantEndTime)
+    const continueEndTime =  new Date(util.fixDate(this.data.bookingDateString+" "+ bookAtOnceStartTime).valueOf() + 60 * 1000 * 60 * (bookTimeLeng) )
+    const canBookAtLeastBegin =  new Date(util.fixDate(this.data.bookingDateString+" "+ bookAtOnceStartTime).valueOf() + 60 * 1000 * 60 * (bookTimeLeng+0.5) )
+    const merchantEndDate = util.fixDate(this.data.bookingDateString + " "+ roomDetail.merchantEndTime)
     if(canBookAtLeastBegin > merchantEndDate){
       Toast('续单时长超过营业时间，无法续单！')
     }

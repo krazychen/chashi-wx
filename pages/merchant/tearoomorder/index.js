@@ -169,7 +169,7 @@ Page({
         }
       }
     }else{
-      orderPayObj.orderUnitPrice = 0
+      orderPayObj.orderUnitPrice = orderDetail.hoursAmount
       orderPayObj.orderTimenum = 0
       orderPayObj.orderPrice = orderPayObj.orderOriginPrice
     }

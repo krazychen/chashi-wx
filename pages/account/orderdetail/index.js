@@ -63,6 +63,8 @@ Page({
         orderDetail.orderStatusName = '已完成' 
       }else if(orderDetail.paymentStatus == 3){
         orderDetail.orderStatusName = '已取消' 
+      }else if(orderDetail.paymentStatus == 2 && orderDetail.usedStatus == 2){
+        orderDetail.orderStatusName = '已失效' 
       }else{
         orderDetail.orderStatusName = '已退款' 
       }

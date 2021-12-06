@@ -4,6 +4,7 @@ const app = getApp()
 import request from '../../utils/request'
 import userBehavior from '../behavior/user-behavior'
 import Toast from '../../miniprogram_npm/@vant/weapp/toast/toast'
+import util from '../../utils/util'
 
 Page({
   behaviors: [userBehavior],
@@ -142,8 +143,8 @@ Page({
       const orderRange = item.orderTimerage.split(',')
       const orderDateStartTimeStr = item.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[0]+":00"
       const orderDateEndTimeStr = item.orderDate.substring(0,10) + " "+ orderRange[orderRange.length-1].split('-')[1]+":00"
-      const orderDateStartTime = new Date(orderDateStartTimeStr)
-      const orderDateEndTime = new Date(orderDateEndTimeStr)
+      const orderDateStartTime = util.fixDate(orderDateStartTimeStr)
+      const orderDateEndTime = util.fixDate(orderDateEndTimeStr)
       const nowDate = new Date()
       if(nowDate >= orderDateStartTime && nowDate <= orderDateEndTime){
         renewOrderList.push(item)
