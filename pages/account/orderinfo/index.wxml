@@ -46,12 +46,12 @@
             <span>{{item.orderPrice}}</span>
           </view>
           <view class="order-list-item-btn-container">
-            <view wx:if="{{item.paymentStatus==2 && item.usedStatus == 0}}" class="order-list-item-btn"
+            <view wx:if="{{item.paymentStatus==2 && (item.usedStatus == 0 || item.usedStatus == 1)}}" class="order-list-item-btn"
             catchtap="openDoor"
             data-orderitem="{{item}}">
               开大门
             </view>
-            <view wx:if="{{item.paymentStatus==2 && item.usedStatus == 0}}" class="order-list-item-btn"
+            <view wx:if="{{item.paymentStatus==2 && (item.usedStatus == 0 || item.usedStatus == 1)}}" class="order-list-item-btn"
             catchtap="openInsideDoor"
             data-orderitem="{{item}}">
               开房门
