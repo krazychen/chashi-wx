@@ -133,32 +133,46 @@ Page({
     })
   },
   goToRenewList:function(e){
-    const orderList = this.data.orderList
-    if(!orderList || orderList.length <=0){
-      Toast('没有订单，无需续单，请先预订')
-      return
-    }
-    const renewOrderList = []
-    orderList.forEach(item=>{
-      const orderRange = item.orderTimerage.split(',')
-      const orderDateStartTimeStr = item.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[0]+":00"
-      const orderDateEndTimeStr = item.orderDate.substring(0,10) + " "+ orderRange[orderRange.length-1].split('-')[1]+":00"
-      const orderDateStartTime = util.fixDate(orderDateStartTimeStr)
-      const orderDateEndTime = util.fixDate(orderDateEndTimeStr)
-      const nowDate = new Date()
-      if(nowDate >= orderDateStartTime && nowDate <= orderDateEndTime){
-        renewOrderList.push(item)
+    if(this.data.hasUserInfo){
+      const searchObj = {
+        queryType:4,
+        nameAphone:null,
+        current:1,
+        size:9999
       }
-    })
-    if(renewOrderList.length <= 0 ){
-      Toast('没有在使用中的订单，无需续单，请先使用订单')
-      return
+      searchObj.nameAphone = this.data.userInfo.phoneNumber
+      request.post('/csMerchantOrder/getCsMerchantOrderListForWx',searchObj).then((res)=>{
+        const orderList = res.data.data.records || []
+        if(!orderList || orderList.length <=0){
+          Toast('没有订单，无需续单，请先预订')
+          return
+        }
+        const renewOrderList = []
+        orderList.forEach(item=>{
+          
+          const orderRange = item.orderTimerage.split(',')
+          const orderDateStartTimeStr = item.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[0]+":00"
+          const orderDateEndTimeStr = item.orderDate.substring(0,10) + " "+ orderRange[orderRange.length-1].split('-')[1]+":00"
+          const orderDateStartTime = util.fixDate(orderDateStartTimeStr)
+          const orderDateEndTime = util.fixDate(orderDateEndTimeStr)
+          const nowDate = new Date()
+          if(nowDate <= orderDateEndTime){
+            renewOrderList.push(item)
+          }
+        })
+        if(renewOrderList.length <= 0 ){
+          Toast('没有在使用中的订单，无需续单，请先使用订单')
+          return
+        }
+        wx.navigateTo({
+          url: '/pages/index/renew/index',
+          success: function(res) {
+            res.eventChannel.emit('openRenewList', renewOrderList)
+          }
+        })
+      })
+    }else{
+      this.getUserProfile()
     }
-    wx.navigateTo({
-      url: '/pages/index/renew/index',
-      success: function(res) {
-        res.eventChannel.emit('openRenewList', renewOrderList)
-      }
-    })
   }
 })

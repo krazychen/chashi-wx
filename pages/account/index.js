@@ -124,7 +124,7 @@ Page({
   goToRenewList:function(){
     if(this.data.hasUserInfo){
       const searchObj = {
-        queryType:3,
+        queryType:4,
         nameAphone:null,
         current:1,
         size:9999
@@ -144,10 +144,11 @@ Page({
           const orderDateStartTime = util.fixDate(orderDateStartTimeStr)
           const orderDateEndTime = util.fixDate(orderDateEndTimeStr)
           const nowDate = new Date()
-          if(nowDate >= orderDateStartTime && nowDate <= orderDateEndTime){
+          if(nowDate <= orderDateEndTime){
             renewOrderList.push(item)
           }
         })
+        console.log(renewOrderList)
         if(renewOrderList.length <= 0 ){
           Toast('没有在使用中的订单，无需续单，请先使用订单')
           return

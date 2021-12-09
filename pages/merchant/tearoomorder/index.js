@@ -131,12 +131,12 @@ Page({
      orderPayObj.orderTimerage = orderDetail.bookingTimeStr
      orderPayObj.orderOriginTimenum = orderDetail.bookingLength
      orderPayObj.orderUnitOriginPrice = orderDetail.hoursAmount
-     orderPayObj.orderOriginPrice = (orderDetail.hoursAmount * orderDetail.bookingLength).toFixed(2)
+     orderPayObj.orderOriginPrice = Number(orderDetail.hoursAmount * orderDetail.bookingLength).toFixed(2)
     if(accountInfo.csMembercardOrderQueryVo){
       orderPayObj.membercardOrderId = accountInfo.csMembercardOrderQueryVo.membercardId
       orderPayObj.orderUnitPrice = orderDetail.menberAmount
       orderPayObj.orderTimenum = 0
-      orderPayObj.orderPrice = (orderPayObj.orderUnitPrice * orderDetail.bookingLength).toFixed(2)
+      orderPayObj.orderPrice =orderPayObj.orderUnitPrice * orderDetail.bookingLength
       // 如果有会员卡，并且使用优惠时长， 则增加 orderMbTimenum, orderTimenum
       if (false) {
         if (accountInfo.csMembercardOrderQueryVo.restDiscountTime && accountInfo.csMembercardOrderQueryVo.restDiscountTime > orderPayObj.orderOriginTimenum) {
@@ -174,7 +174,7 @@ Page({
       orderPayObj.orderPrice = orderPayObj.orderOriginPrice
     }
 
-    orderPayObj.orderPrice = orderPayObj.orderPrice.toFixed(2)
+    orderPayObj.orderPrice = Number(orderPayObj.orderPrice).toFixed(2)
     this.setData({
       orderPayObj
     })
