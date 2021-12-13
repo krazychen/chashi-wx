@@ -105,15 +105,30 @@ Page({
     if(couponItem.fullAmount > orderPayObj.orderPrice){
       Toast("该优惠券满"+couponItem.fullAmount+"可用")
     }else{
+      orderPayObj.couponReleasedId = couponItem.id
+      orderPayObj.orderCpAmount = couponItem.reductionAmount
+      orderPayObj.orderPrice = (orderPayObj.orderPrice - orderPayObj.orderCpAmount).toFixed(2)
+      if(orderPayObj.orderPrice < 0){
+        orderPayObj.orderPrice = 0
+      }
       this.setData({
         checkCouponItem:couponItem,
+        orderPayObj,
         showPop:false
       })
     }
   },
   unCheckCoupon:function(){
+    const checkCouponItem = this.data.checkCouponItem
+    const orderPayObj = this.data.orderPayObj
+    if (checkCouponItem) {
+      orderPayObj.couponReleasedId = null
+      orderPayObj.orderCpAmount = 0
+      orderPayObj.orderPrice = Number(orderPayObj.orderPrice + Number(checkCouponItem.reductionAmount)).toFixed(2)
+    } 
     this.setData({
       checkCouponItem:null,
+      orderPayObj,
       showPop:false
     })
   },
@@ -201,15 +216,15 @@ Page({
       showOver:true
     })
     const orderPayObj = this.data.orderPayObj
-    const checkCouponItem = this.data.checkCouponItem
+    // const checkCouponItem = this.data.checkCouponItem
     // 如果使用优惠卷，需要增加couponReleasedId, orderCpAmount, 需要控制满X才能使用优惠卷
-    if (checkCouponItem) {
-      orderPayObj.couponReleasedId = checkCouponItem.id
-      orderPayObj.orderCpAmount = checkCouponItem.reductionAmount
-      orderPayObj.orderPrice = orderPayObj.orderPrice - orderPayObj.orderCpAmount
-    } else {
-      orderPayObj.orderCpAmount = 0
-    }
+    // if (checkCouponItem) {
+    //   orderPayObj.couponReleasedId = checkCouponItem.id
+    //   orderPayObj.orderCpAmount = checkCouponItem.reductionAmount
+    //   orderPayObj.orderPrice = (orderPayObj.orderPrice - orderPayObj.orderCpAmount).toFixed(2)
+    // } else {
+    //   orderPayObj.orderCpAmount = 0
+    // }
     orderPayObj.paymentType = this.data.paymentType
     const _this = this
     // 余额支付

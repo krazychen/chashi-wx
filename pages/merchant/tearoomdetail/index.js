@@ -588,7 +588,7 @@ Page({
           const totalMin = parseInt((bookingTimeStr.split(",").length - 1) *  this.data.roomDetail.timeRange * 60 +  this.data.bookAtOnceExtraLength)
           bookingLengthNum = (totalMin/60).toFixed(2)
         }else{
-          bookingLengthCompare = bookingTimeStr.split(",").length
+          bookingLengthCompare = bookingTimeStr.split(",").length *  this.data.roomDetail.timeRange
           bookingLengthNum = bookingTimeStr.split(",").length *  this.data.roomDetail.timeRange
         }
 

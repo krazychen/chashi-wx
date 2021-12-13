@@ -93,7 +93,7 @@
   </scroll-view>
   <view class="order-btn-container">
     <view style="line-height:14px">
-      实付<span class="font-red" style="font-weight: bolder;">￥{{checkCouponItem?(orderPayObj.orderPrice -checkCouponItem.reductionAmount):orderPayObj.orderPrice}}</span>
+      实付<span class="font-red" style="font-weight: bolder;">￥{{orderPayObj.orderPrice}}</span>
     </view>
     <view class="order-btn" bindtap="openPayType">去支付</view>
   </view>
