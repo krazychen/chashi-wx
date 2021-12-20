@@ -50,7 +50,7 @@
             </view>
           </view>
         </view>
-        <view class="membercard-item-equity">
+        <view class="membercard-item-equity" wx:if="{{memberCardDetail.discountPrice && memberCardDetail.discountPrice>0}}">
           <van-icon name="balance-o" size="40px" color="rgb(72,165,132)" style="padding:0px 14px"/>
           <view>
             <view class="font-16">

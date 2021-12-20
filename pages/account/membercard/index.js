@@ -44,8 +44,6 @@ Page({
       request.get('/wxUser/infoForWx/'+this.data.userInfo.openid,null).then((res)=>{
         this.setData({
           accountInfo:res.data.data
-        },()=>{
-          _this.computeOrderPrice()
         })
       })
     }
