@@ -62,7 +62,8 @@ Page({
     this.setData({
       hasUserInfo:app.globalData.hasUserInfo,
       userInfo:app.globalData.userInfo,
-      oneKeyTime:app.globalData.oneKeyTime||10
+      oneKeyTime:app.globalData.oneKeyTime||10,
+      refundTimeLength:app.globalData.refundTimeLength||1
     },()=>{
       const eventChannel = _this.getOpenerEventChannel()
       // 真机需要判断 是否拿到数据
@@ -157,12 +158,25 @@ Page({
       const orderRange = orderitem.orderTimerage.split('-')
       const orderHour = orderRange[0].split(':')[0]
       const orderMin = orderRange[0].split(':')[1]
-      if(currentHour > orderHour){
-        Toast('已超过预定时间，无法退款')
-        return
-      }else if((currentHour==orderHour && parseInt(orderMin) - parseInt(currentMin)<=10 )){
-        Toast('离预定时间不足10分钟，无法退款')
-        return
+      // 已失效
+      if(orderitem.usedStatus == 2){
+          const orderDateEndTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[1]+":00"
+          const orderDateEndTime = util.fixDate(orderDateEndTimeStr)
+          const refundTimeLength = Number(this.data.refundTimeLength)
+          const nextDate = new Date(orderDateEndTime.valueOf() + 60 * 60 * 1000 * refundTimeLength)
+          console.log(nextDate)
+          if(nowDate > nextDate){
+            Toast('已超过退款时间，无法退款')
+            return
+          }
+      }else{
+        if(currentHour > orderHour){
+          Toast('已超过预定时间，无法退款')
+          return
+        }else if((currentHour==orderHour && parseInt(orderMin) - parseInt(currentMin)<=10 )){
+          Toast('离预定时间不足10分钟，无法退款')
+          return
+        }
       }
     }
     

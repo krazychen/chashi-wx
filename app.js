@@ -17,7 +17,8 @@ App({
     mapKey:'FMXBZ-TXULW-2SVRL-RY734-IDFSF-2QFWF',
     paramConfigObj:{},
     recommendId:null,
-    oneKeyTime:10
+    oneKeyTime:10,
+    refundTimeLength:1
   },
   getReleaseCityWx:function(){
     request.get('/sysArea/getReleaseCityWx',null).then((res)=>{
@@ -37,6 +38,12 @@ App({
           if(item.configKey.startsWith("oneKeyTime")){
             if(item.configValue && Number(item.configValue)>0){
               this.globalData.oneKeyTime = item.configValue
+            }
+          }
+
+          if(item.configKey.startsWith("wx_refund_time")){
+            if(item.configValue && Number(item.configValue)>0){
+              this.globalData.refundTimeLength = Number(item.configValue)
             }
           }
           // if(item.configKey.startsWith("mapKey")){
