@@ -32,8 +32,8 @@ Page({
   getAccountInfoByOpenId:function(){
     if(this.data.hasUserInfo){
       request.get('/wxUser/infoForWx/'+this.data.userInfo.openid,null).then((res)=>{
-        if(res.data.data.balance && res.data.data.balance>0){
-          res.data.data.balance = Number(res.data.data.balance).toFixed(2)
+        if(res.data.data && res.data.data.balance && res.data.data.balance>0){
+          res.data.data.balance = Number(Number(res.data.data.balance).toFixed(2))
         }
         this.setData({
           accountInfo:res.data.data

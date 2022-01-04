@@ -106,8 +106,8 @@ Page({
       Toast("该优惠券满"+couponItem.fullAmount+"可用")
     }else{
       orderPayObj.couponReleasedId = couponItem.id
-      orderPayObj.orderCpAmount = couponItem.reductionAmount
-      orderPayObj.orderPrice = (orderPayObj.orderPrice - orderPayObj.orderCpAmount).toFixed(2)
+      orderPayObj.orderCpAmount = Number(couponItem.reductionAmount)
+      orderPayObj.orderPrice = Number((Number(orderPayObj.orderPrice) - Number(orderPayObj.orderCpAmount)).toFixed(2))
       if(orderPayObj.orderPrice < 0){
         orderPayObj.orderPrice = 0
       }
@@ -124,7 +124,7 @@ Page({
     if (checkCouponItem) {
       orderPayObj.couponReleasedId = null
       orderPayObj.orderCpAmount = 0
-      orderPayObj.orderPrice = Number(orderPayObj.orderPrice + Number(checkCouponItem.reductionAmount)).toFixed(2)
+      orderPayObj.orderPrice = Number(Number(Number(orderPayObj.orderPrice) + Number(checkCouponItem.reductionAmount)).toFixed(2))
     } 
     this.setData({
       checkCouponItem:null,
@@ -146,7 +146,7 @@ Page({
      orderPayObj.orderTimerage = orderDetail.bookingTimeStr
      orderPayObj.orderOriginTimenum = orderDetail.bookingLength
      orderPayObj.orderUnitOriginPrice = orderDetail.hoursAmount
-     orderPayObj.orderOriginPrice = Number(orderDetail.hoursAmount * orderDetail.bookingLength).toFixed(2)
+     orderPayObj.orderOriginPrice = Number(Number(orderDetail.hoursAmount * orderDetail.bookingLength).toFixed(2))
     if(accountInfo.csMembercardOrderQueryVo){
       orderPayObj.membercardOrderId = accountInfo.csMembercardOrderQueryVo.membercardId
       orderPayObj.orderUnitPrice = orderDetail.menberAmount
@@ -189,7 +189,7 @@ Page({
       orderPayObj.orderPrice = orderPayObj.orderOriginPrice
     }
 
-    orderPayObj.orderPrice = Number(orderPayObj.orderPrice).toFixed(2)
+    orderPayObj.orderPrice = Number(Number(orderPayObj.orderPrice).toFixed(2))
     this.setData({
       orderPayObj
     })
@@ -226,6 +226,8 @@ Page({
     //   orderPayObj.orderCpAmount = 0
     // }
     orderPayObj.paymentType = this.data.paymentType
+    orderPayObj.orderPrice = Number(orderPayObj.orderPrice)
+    orderPayObj.orderOriginPrice = Number(orderPayObj.orderOriginPrice)
     const _this = this
     // 余额支付
     if(orderPayObj.paymentType==1){
