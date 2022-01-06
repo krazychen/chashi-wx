@@ -269,7 +269,8 @@ Page({
       merchantStartTime:merchant.startTime,
       merchantEndTime:merchant.endTime,
       merchantLongitude:merchant.longitude,
-      merchantLatitude:merchant.latitude
+      merchantLatitude:merchant.latitude,
+      contactPhonse:merchant.contactPhonse
     }
     wx.navigateTo({
       url: '/pages/merchant/tearoomdetail/index',

@@ -110,6 +110,7 @@ Page({
         roomDetail.merchantDistance = this.data.dataTrans.merchantDistance
         roomDetail.merchantLongitude = this.data.dataTrans.merchantLongitude
         roomDetail.merchantLatitude = this.data.dataTrans.merchantLatitude
+        roomDetail.contactPhonse = this.data.dataTrans.contactPhonse
       }
       this.setData({
         roomDetail:roomDetail
