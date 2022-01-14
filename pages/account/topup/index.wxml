@@ -21,7 +21,7 @@
       class="topup-item"
       data-rechargeitem="{{item}}"
       bindtap="setRechargeValue">
-      <view class="font-dark-green" style="font-size:20px;height:60px;line-height:60px;font-weight: bolder;">
+      <view class="font-dark-green" style="font-size:16px;height:60px;line-height:60px;font-weight: bolder;">
         {{item.rechargeAmount}}元
       </view>
       <view class="font-12 font-gray" style="height:30px;margin-top:-10px">

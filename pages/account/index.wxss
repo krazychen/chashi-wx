@@ -1,7 +1,18 @@
 /**index.wxss**/
-page {
-  background-color: rgb(241, 241, 241);
+
+@media screen and (max-height: 600px) {
+  page {
+    background-color: rgb(241, 241, 241);
+    height: calc(100% + 100px);
+  }
 }
+@media screen and (min-height: 600px) {
+  page {
+    background-color: rgb(241, 241, 241);
+  }
+}
+
+
 
 .account-container {
   width: 100%;
@@ -9,7 +20,6 @@ page {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
   box-sizing: border-box;
   padding: 10px 10px;
 } 

@@ -90,6 +90,11 @@
         <van-icon name="setting-o" size="34px"  color="rgb(173,102,45)" />
         <view class="font-14">续单</view>
       </view>
+
+      <view class="account-card-item-auto" bindtap="openTopup"> 
+        <van-icon name="gold-coin-o" size="34px"  color="rgb(25,137,250)" />
+        <view class="font-14">充值</view>
+      </view>
       
       <!-- <button class="account-card-item-auto" plain="{{true}}" open-type="share">
         <van-icon name="share" size="34px" color="rgb(72,165,132)" />
