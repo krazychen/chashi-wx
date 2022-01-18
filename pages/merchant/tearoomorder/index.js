@@ -102,6 +102,7 @@ Page({
   checkCoupon:function(e){
     const couponItem = e.currentTarget.dataset.item
     const orderPayObj = this.data.orderPayObj
+    orderPayObj.orderPriceBeforeCp = orderPayObj.orderPrice
     if(couponItem.fullAmount > orderPayObj.orderPrice){
       Toast("该优惠券满"+couponItem.fullAmount+"可用")
     }else{
@@ -124,7 +125,7 @@ Page({
     if (checkCouponItem) {
       orderPayObj.couponReleasedId = null
       orderPayObj.orderCpAmount = 0
-      orderPayObj.orderPrice = Number(Number(Number(orderPayObj.orderPrice) + Number(checkCouponItem.reductionAmount)).toFixed(2))
+      orderPayObj.orderPrice = Number(orderPayObj.orderPriceBeforeCp)
     } 
     this.setData({
       checkCouponItem:null,
