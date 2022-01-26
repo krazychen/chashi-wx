@@ -115,6 +115,8 @@ Page({
       usageNotice:merchant.usageNotice,
       merchantStartTime:merchant.startTime,
       merchantEndTime:merchant.endTime,
+      merchantExStartTime:merchant.exStartTime,
+      merchantExEndTime:merchant.exEndTime,
       merchantLongitude:merchant.longitude,
       merchantLatitude:merchant.latitude,
       contactPhonse:merchant.contactPhonse

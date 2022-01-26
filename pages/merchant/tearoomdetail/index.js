@@ -102,11 +102,22 @@ Page({
         }else{
           roomDetail.merchantStartTime = '00:00'
         }
+
+
         if(this.data.dataTrans.merchantEndTime){
           roomDetail.merchantEndTime = this.data.dataTrans.merchantEndTime
         }else{
           roomDetail.merchantEndTime = '23:59'
         }
+
+        if(this.data.dataTrans.merchantExStartTime){
+          roomDetail.merchantExStartTime = this.data.dataTrans.merchantExStartTime
+        }
+
+        if(this.data.dataTrans.merchantExEndTime){
+          roomDetail.merchantExEndTime = this.data.dataTrans.merchantExEndTime
+        }
+
         roomDetail.merchantDistance = this.data.dataTrans.merchantDistance
         roomDetail.merchantLongitude = this.data.dataTrans.merchantLongitude
         roomDetail.merchantLatitude = this.data.dataTrans.merchantLatitude

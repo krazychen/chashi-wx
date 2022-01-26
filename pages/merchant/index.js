@@ -121,11 +121,21 @@ Page({
           const startDate = new Date( nowYear, nowMonth, nowDay, startTimeArr[0], startTimeArr[1], 0);
           const endTimeArr = item.endTime.split(":");
           const endDate = new Date( nowYear, nowMonth, nowDay, endTimeArr[0], endTimeArr[1], 0);
+
+          const exStartTimeArr = item.exStartTime.split(":");
+          const exStartDate = new Date( nowYear, nowMonth, nowDay, exStartTimeArr[0], exStartTimeArr[1], 0);
+          const exEndTimeArr = item.exEndTime.split(":");
+          const exEndDate = new Date( nowYear, nowMonth, nowDay, exEndTimeArr[0], exEndTimeArr[1], 0);
+
           if(!item.releaseStatus || item.releaseStatus == '0' ){
             item.businessState = '休息'
           }else{
             if(nowDate>=startDate && nowDate<=endDate){
-              item.businessState = '营业中'
+              if(nowDate>exStartDate && nowDate< exEndDate){
+                item.businessState = '休息'
+              }else{
+                item.businessState = '营业中'
+              }
             }else{
               item.businessState = '休息'
             }
@@ -268,6 +278,8 @@ Page({
       usageNotice:merchant.usageNotice,
       merchantStartTime:merchant.startTime,
       merchantEndTime:merchant.endTime,
+      merchantExStartTime:merchant.exStartTime,
+      merchantExEndTime:merchant.exEndTime,
       merchantLongitude:merchant.longitude,
       merchantLatitude:merchant.latitude,
       contactPhonse:merchant.contactPhonse

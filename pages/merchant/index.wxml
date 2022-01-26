@@ -55,10 +55,7 @@
                   </view>
                   <view>
                     <span class="font-12">
-                      营业时间：
-                      <span wx:if="{{item.startTime}}">{{item.startTime}}</span>
-                      <span wx:if="{{item.endTime}}">-{{item.endTime}}</span>
-                      <span wx:if="{{!item.startTime && !item.endTime}}">00:00-23:59</span>
+                      营业时间：{{item.opDescription}}
                     </span>
                     <span class="font-12 font-green" style="padding-left: 5px;">{{item.businessState}}</span>
                   </view>     
