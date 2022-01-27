@@ -121,19 +121,28 @@ Page({
           const startDate = new Date( nowYear, nowMonth, nowDay, startTimeArr[0], startTimeArr[1], 0);
           const endTimeArr = item.endTime.split(":");
           const endDate = new Date( nowYear, nowMonth, nowDay, endTimeArr[0], endTimeArr[1], 0);
-
-          const exStartTimeArr = item.exStartTime.split(":");
-          const exStartDate = new Date( nowYear, nowMonth, nowDay, exStartTimeArr[0], exStartTimeArr[1], 0);
-          const exEndTimeArr = item.exEndTime.split(":");
-          const exEndDate = new Date( nowYear, nowMonth, nowDay, exEndTimeArr[0], exEndTimeArr[1], 0);
+          let exStartDate = null
+          let exEndDate = null
+          if(item.exStartTime && item.exStartTime!='' && item.exStartTime!=null){
+            const exStartTimeArr = item.exStartTime.split(":");
+            exStartDate = new Date( nowYear, nowMonth, nowDay, exStartTimeArr[0], exStartTimeArr[1], 0);
+          }
+          if(item.exEndTime && item.exEndTime!='' && item.exEndTime!=null){
+            const exEndTimeArr = item.exEndTime.split(":");
+            exEndDate = new Date( nowYear, nowMonth, nowDay, exEndTimeArr[0], exEndTimeArr[1], 0);
+          }
 
           if(!item.releaseStatus || item.releaseStatus == '0' ){
             item.businessState = '休息'
           }else{
             if(nowDate>=startDate && nowDate<=endDate){
-              if(nowDate>exStartDate && nowDate< exEndDate){
-                item.businessState = '休息'
-              }else{
+              if(exStartDate && exEndDate){
+                if(nowDate>exStartDate && nowDate< exEndDate){
+                  item.businessState = '休息'
+                }else{
+                  item.businessState = '营业中'
+                }
+              }{
                 item.businessState = '营业中'
               }
             }else{

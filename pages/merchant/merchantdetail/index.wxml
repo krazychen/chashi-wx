@@ -48,7 +48,7 @@
     <view class="merchant-detail-label-container">
       <view class="font-12 font-dark-gray">
         <van-icon name="clock-o" color="rgb(72,165,132)"/>
-        营业时间{{merchantDetail.startTime}}-{{merchantDetail.endTime}}
+        营业时间{{merchantDetail.opDescription}}
       </view>
       <view class="merchant-detail-call-btn font-12 font-dark-gray" data-phoneno="{{merchantDetail.contactPhonse}}" bindtap="makePhoneCall">
         <van-icon name="phone-o" color="rgb(72,165,132)" size="16px" /><span style="margin-left:4px">联系商家</span>
