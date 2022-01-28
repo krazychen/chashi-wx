@@ -144,6 +144,10 @@ Page({
      orderPayObj.openid = accountInfo.openid
      orderPayObj.orderDate = orderDetail.bookingDateString
      orderPayObj.orderTimerage = orderDetail.bookingTimeStr
+     if(orderDetail.nextBookingDateString != orderDetail.bookingDateString && orderDetail.nextSelectBookingTimeString && orderDetail.nextSelectBookingTimeString!=''){
+      orderPayObj.nextOrderDate = orderDetail.nextBookingDateString
+      orderPayObj.nextOrderTimerage = orderDetail.nextSelectBookingTimeString
+     }
      orderPayObj.orderOriginTimenum = orderDetail.bookingLength
      orderPayObj.orderUnitOriginPrice = orderDetail.hoursAmount
      orderPayObj.orderOriginPrice = Number(Number(orderDetail.hoursAmount * orderDetail.bookingLength).toFixed(2))

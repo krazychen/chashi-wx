@@ -153,13 +153,31 @@
       </view> 
       <view class="van-hairline--top-bottom"></view>
       <view class="room-able-booktime-container">
+        <view class="room-able-bookdate-label">
+          {{bookingDateString}}
+        </view>
         <view
           wx:for="{{ableBookingTimeList}}"  
           wx:for-item="bookingItem" 
-          wx:key="*this"
+          wx:key="bookingItem"
           data-bookingtime="{{bookingItem}}"
           bindtap="selectBookingTime"
           class="{{bookingItem.bookingStatus==0?'room-able-booktime-item-disable':(startBookingTimeNum>=0 && endBookingTimeNum>=0 && bookingItem.bookingItemStartTimeNum >= startBookingTimeNum &&bookingItem.bookingItemEndTimeNum<=endBookingTimeNum ?'room-able-booktime-item-select':'room-able-booktime-item')}}"
+          wx:if="{{bookingItem.bookingDateString == bookingDateString}}"
+        >
+          {{bookingItem.bookingItemStartTime}}-{{bookingItem.bookingItemEndTime}}
+        </view>
+        <view class="room-able-bookdate-label">
+          {{nextBookingDateString}}
+        </view>
+        <view
+          wx:for="{{ableBookingTimeList}}"  
+          wx:for-item="bookingItem" 
+          wx:key="bookingItem"
+          data-bookingtime="{{bookingItem}}"
+          bindtap="selectBookingTime"
+          class="{{bookingItem.bookingStatus==0?'room-able-booktime-item-disable':(startBookingTimeNum>=0 && endBookingTimeNum>=0 && bookingItem.bookingItemStartTimeNum >= startBookingTimeNum &&bookingItem.bookingItemEndTimeNum<=endBookingTimeNum ?'room-able-booktime-item-select':'room-able-booktime-item')}}"
+          wx:if="{{bookingItem.bookingDateString == nextBookingDateString}}"
         >
           {{bookingItem.bookingItemStartTime}}-{{bookingItem.bookingItemEndTime}}
         </view>

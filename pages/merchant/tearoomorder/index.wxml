@@ -31,7 +31,7 @@
             服务时间
           </view>
           <view class="font-14">
-            {{orderDetail.bookingDateString}} {{orderDetail.startBookingTime}} 至 {{orderDetail.bookingDateString}} {{orderDetail.endBookingTime}}
+            {{orderDetail.bookingDateString}} {{orderDetail.startBookingTime}} 至 {{orderDetail.nextBookingDateString}} {{orderDetail.endBookingTime}}
           </view>
         </view>
         <view class="order-item-label-container">
