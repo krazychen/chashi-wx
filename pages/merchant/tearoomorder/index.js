@@ -234,6 +234,7 @@ Page({
     orderPayObj.orderPrice = Number(orderPayObj.orderPrice)
     orderPayObj.orderOriginPrice = Number(orderPayObj.orderOriginPrice)
     const _this = this
+    console.log(orderPayObj)
     // 余额支付
     if(orderPayObj.paymentType==1){
       if(orderPayObj.orderPrice > this.data.accountInfo.balance){

@@ -41,6 +41,25 @@ const getBookingAbleTimeList = function(bookingDate,bookedTime,roomDetail){
   const merchantEndTimeArr = roomDetail.merchantEndTime.split(":")
   const merchantEndHour = Number(merchantEndTimeArr[0])
   const merchantEndMin = Number(merchantEndTimeArr[1])
+
+  // 非营业时间
+  const merchantExStartTime = roomDetail.merchantExStartTime
+  const merchantExEndTime = roomDetail.merchantExEndTime
+
+  const bookingYear = bookingDate.getFullYear(); 
+  const bookingMonth = bookingDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
+  const bookingDay = bookingDate.getDate(); //获取当前日(1-31)
+  let exStartDate = null
+  let exEndDate = null
+  if(merchantExStartTime && merchantExStartTime!='' && merchantExStartTime!=null){
+    const exStartTimeArr = merchantExStartTime.split(":");
+    exStartDate = new Date(bookingYear, bookingMonth, bookingDay, exStartTimeArr[0], exStartTimeArr[1], 0);
+  }
+  if(merchantExEndTime && merchantExEndTime!='' && merchantExEndTime!=null){
+    const exEndTimeArr = merchantExEndTime.split(":");
+    exEndDate = new Date(bookingYear, bookingMonth, bookingDay, exEndTimeArr[0], exEndTimeArr[1], 0);
+  }
+
   const ableTimeList = []
 
   // TODO 获取已预订日期，比对。
@@ -60,7 +79,7 @@ const getBookingAbleTimeList = function(bookingDate,bookedTime,roomDetail){
       let hourNo = parseInt((minBookingTime/0.5/2))
       const minuteNo =((minBookingTime/0.5/2) - hourNo) *  60
       let beginHour = (beginLoop+'').substring(0,(beginLoop+'').length-2)
-      const beginMin = (beginLoop+'').substring((beginLoop+'').length-2)
+      const beginMin = (beginLoop+'').substring((beginLoop+'').length-2).padStart(2,'0')
       if(beginLoop==0 || beginHour==''){
         beginHour = '0'
       }
@@ -79,10 +98,13 @@ const getBookingAbleTimeList = function(bookingDate,bookedTime,roomDetail){
         }
       }
       const bookingTimeObj = {}
+      bookingTimeObj.bookingDate = bookingDate
+      bookingTimeObj.bookingDateString = bookingDate.getFullYear()+'-'+(bookingDate.getMonth()+1).toString().padStart(2,'0')+'-'+bookingDate.getDate().toString().padStart(2,'0')
       bookingTimeObj.bookingItemStartTime = beginHour+':'+beginMin
-      bookingTimeObj.bookingItemStartTimeNum = Number(beginHour+''+beginMin)
+      bookingTimeObj.bookingItemStartTimeDate = new Date(bookingDate.getFullYear(), bookingDate.getMonth(), bookingDate.getDate(), Number(beginHour), Number(beginMin), 0);
+      bookingTimeObj.bookingItemStartTimeNum = Number(bookingDate.getFullYear()+''+(bookingDate.getMonth()+1).toString().padStart(2,'0')+''+bookingDate.getDate().toString().padStart(2,'0')+ '' +beginHour.toString().padStart(2,'0')+''+beginMin.toString().padStart(2,'0'))
       bookingTimeObj.bookingItemEndTime = (Number(beginHour)+hourNo)+':'+endMin
-      bookingTimeObj.bookingItemEndTimeNum = Number(Number(beginHour)+hourNo+''+endMin) 
+      bookingTimeObj.bookingItemEndTimeNum = Number(bookingDate.getFullYear()+''+(bookingDate.getMonth()+1).toString().padStart(2,'0')+''+bookingDate.getDate().toString().padStart(2,'0')+ ''+(Number(beginHour)+hourNo).toString().padStart(2,'0')+''+endMin.toString().padStart(2,'0')) 
       beginLoop = Number(Number(beginHour)+hourNo+''+endMin) 
       if(beginLoop>merchantEnd){
         break
@@ -99,12 +121,21 @@ const getBookingAbleTimeList = function(bookingDate,bookedTime,roomDetail){
       }else{
         bookingTimeObj.bookingStatus = 1
       }
+
+      if(exStartDate && exEndDate){
+        if(bookingTimeObj.bookingItemStartTimeDate >= exStartDate &&  bookingTimeObj.bookingItemStartTimeDate < exEndDate){
+          bookingTimeObj.bookingStatus = 0
+        }
+      }
+      
+
       bookedTimeArr.forEach(bookedItem=>{
         const bookedItemArr = bookedItem.split("-")
-        const bookedStartTime = Number(bookedItemArr[0].replace(":",''))
-        const bookedEndTime = Number(bookedItemArr[1].replace(":",''))
+        const bookedStartTime = Number(bookedItemArr[0].replace(":",'').toString().padStart(2,'0'))
+        const bookedEndTime = Number(bookedItemArr[1].replace(":",'').toString().padStart(2,'0'))
         const bookingTimeStr = bookingTimeObj.bookingItemStartTime+'-'+bookingTimeObj.bookingItemEndTime
-        if(bookingTimeStr == bookedItem || (bookingTimeObj.bookingItemStartTimeNum<=bookedStartTime && bookingTimeObj.bookingItemEndTimeNum == bookedEndTime)){
+        if(bookingTimeStr == bookedItem || (bookingTimeObj.bookingItemStartTimeNum<=bookedStartTime 
+          && bookingTimeObj.bookingItemEndTimeNum == bookedEndTime)){
           bookingTimeObj.bookingStatus = 0
         }
       })

@@ -33,6 +33,8 @@ Page({
     bookingLengthCompare:null,
     showPickerPop:false,
     pickerTimeList:[],
+    bookAtOnceStartDate:null,
+    bookAtOnceStartDateString:null,
     bookAtOnceStartTime:null,
     bookAtOnceFirstObj:null,
     bookAtOnceEndTime:null,
@@ -161,26 +163,84 @@ Page({
     const roomDetail = this.data.roomDetail
     const pickerTimeList = []
     const step = roomDetail.timeRange?Number(roomDetail.timeRange):0.5
-    const merchantEndTime = roomDetail.merchantEndTime
-    // 营业结束时间
-    const merchantEndDate = new Date(nowYear,nowMonth,nowDay,Number(merchantEndTime.split(":")[0]),Number(merchantEndTime.split(":")[1]))
+
     const nowDate  = new Date(new Date().valueOf() + 60 * 1000 * 5)
-    if(nowDate >= merchantEndDate){
-      Toast('当天营业已结束')
+    const nowYear = nowDate.getFullYear(); 
+    const nowMonth = nowDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
+    const nowDay = nowDate.getDate(); //获取当前日(1-31)
+    const nowHour = nowDate.getHours(); //获取当前小时数(0-23)
+    const nowMin = nowDate.getMinutes(); //获取当前分钟数(0-59)
+
+    let nextDate  = new Date(new Date().valueOf() + 60 * 1000 * 5)
+    nextDate.setDate(nextDate.getDate()+1);
+    const nextYear = nextDate.getFullYear(); 
+    const nextMonth = nextDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
+    const nextDay = nextDate.getDate(); //获取当前日(1-31)
+
+    // 营业开始时间
+    const merchantStartTime = roomDetail.merchantStartTime
+    // 营业结束时间
+    const merchantEndTime = roomDetail.merchantEndTime
+
+    // 营业开始时间
+    let merchantStartDate = new Date(nowYear,nowMonth,nowDay,Number(merchantStartTime.split(":")[0]),Number(merchantStartTime.split(":")[1]))
+    // 营业结束时间
+    let merchantEndDate = new Date(nowYear,nowMonth,nowDay,Number(merchantEndTime.split(":")[0]),Number(merchantEndTime.split(":")[1]))
+    
+    let merchantActEndDate = new Date(nowYear,nowMonth,nowDay,Number(merchantEndTime.split(":")[0]),Number(merchantEndTime.split(":")[1]))
+    let crossNextDateFlag = false
+    // 非营业时间
+    const merchantExStartTime = roomDetail.merchantExStartTime
+    const merchantExEndTime = roomDetail.merchantExEndTime
+
+    let exStartDate = null
+    let exEndDate = null
+    if(merchantExStartTime && merchantExStartTime!='' && merchantExStartTime!=null){
+      const exStartTimeArr = merchantExStartTime.split(":");
+      exStartDate = new Date(nowYear, nowMonth, nowDay, exStartTimeArr[0], exStartTimeArr[1], 0);
+    }
+    if(merchantExEndTime && merchantExEndTime!='' && merchantExEndTime!=null){
+      const exEndTimeArr = merchantExEndTime.split(":");
+      exEndDate = new Date(nowYear, nowMonth, nowDay, exEndTimeArr[0], exEndTimeArr[1], 0);
+    }
+    
+    if(nowDate < merchantStartDate || nowDate >= merchantEndDate){
+      Toast('当前时段未营业')
       this.setData({
         showPickerPop:false,
         pickerTimeList:[]
       })
       return
     }
-    const nowYear = nowDate.getFullYear(); 
-    const nowMonth = nowDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
-    const nowDay = nowDate.getDate(); //获取当前日(1-31)
-    const nowHour = nowDate.getHours(); //获取当前小时数(0-23)
-    const nowMin = nowDate.getMinutes(); //获取当前分钟数(0-59)
+
+    // 有非营业时间
+    if(exStartDate && exEndDate){
+      if(nowDate >= exStartDate &&  nowDate < exEndDate){
+        Toast('当前时段未营业')
+        this.setData({
+          showPickerPop:false,
+          pickerTimeList:[]
+        })
+        return
+      }
+      // 小于非营业时间的开始
+      if(nowDate < exStartDate){
+        merchantActEndDate = exStartDate
+      }else if(nowDate>=exEndDate){
+        // 大于非营业时间结束。 如果 营业开始时间为 00:00 营业结束时间字符串等于 24：00  表示全天营业
+        if(merchantStartTime == '00:00' && merchantEndTime == '24:00'){
+          // 营业结束时间到下一个 非营业时间的开始
+          const exStartTimeArr = merchantExStartTime.split(":");
+          merchantActEndDate = new Date(nextYear, nextMonth, nextDay, exStartTimeArr[0], exStartTimeArr[1], 0);
+          crossNextDateFlag = true
+        }
+      }
+    }  
+    
     // 当前时分
-    const beingTimeNum = Number(nowHour+nowMin.toString().padStart(2,'0'))
+    const beingTimeNum = Number(nowDate.getFullYear()+''+(nowDate.getMonth()+1).toString().padStart(2,'0')+''+nowDate.getDate().toString().padStart(2,'0')+ '' +nowHour.toString().padStart(2,'0')+''+nowMin.toString().padStart(2,'0'))
     let nextEndTimeStr = null
+    let nextEndDate = null
     const bookingDate = new Date(nowYear,nowMonth,nowDay)
     const searchBookingedObj = {
       tearoomId:roomDetail.id,
@@ -188,43 +248,63 @@ Page({
     }
     this.setData({
       bookingDate:bookingDate,
-      bookingDateString:nowYear+'-'+(nowMonth+1).toString().padStart(2,'0')+'-'+nowDay.toString().padStart(2,'0')
+      bookingDateString:nowYear+'-'+(nowMonth+1).toString().padStart(2,'0')+'-'+nowDay.toString().padStart(2,'0'),
+      nextBookingDate:nextDate,
+      nextBookingDateString:nextYear+'-'+(nextMonth+1).toString().padStart(2,'0')+'-'+nextDay.toString().padStart(2,'0'),
     },()=>{
       request.post('/csMerchantOrder/getTimeRangeForWx',searchBookingedObj).then((res)=>{
           const orderTimeRange = res.data.data || null
-          const ableTimeList =  util.getBookingAbleTimeList(bookingDate,orderTimeRange,roomDetail)
-          for(let i=0;i<ableTimeList.length;i++){
-            if(ableTimeList[i].bookingStatus == 0 && ableTimeList[i].bookingItemStartTimeNum >= beingTimeNum){
-              nextEndTimeStr = ableTimeList[i].bookingItemStartTime
-              break;
+          let ableTimeList =  util.getBookingAbleTimeList(bookingDate,orderTimeRange,roomDetail)
+          const nextSearchBookingedObj = {
+            tearoomId:roomDetail.id,
+            orderDate: nextYear+'-'+(nextMonth+1).toString().padStart(2,'0')+'-'+nextDay.toString().padStart(2,'0')
+          }
+          request.post('/csMerchantOrder/getTimeRangeForWx',nextSearchBookingedObj).then((nextRes)=>{
+            const nextOrderTimeRange = nextRes.data.data || null
+            let nextAbleTimeList =  util.getBookingAbleTimeList(nextDate,nextOrderTimeRange,roomDetail)
+            if(nextAbleTimeList && nextAbleTimeList.length>0){
+              ableTimeList = ableTimeList.concat(nextAbleTimeList)
             }
-          }
-          // 下一个被预定的开始时间 没有的话 取营业结束时间
-          if(!nextEndTimeStr){
-            nextEndTimeStr = merchantEndTime
-          }
-          const nextEndDate = new Date(nowYear,nowMonth,nowDay,Number(nextEndTimeStr.split(":")[0]),Number(nextEndTimeStr.split(":")[1]))
-          const diffHour = Math.floor((nextEndDate.getTime() - nowDate.getTime())/1000/60/60)
-          if(diffHour < roomDetail.startTime){
-            Toast('当前时段被预定')
-            return
-          }
-          let hourLength = ((nextEndDate.getTime() - nowDate.getTime())/1000/60/60).toFixed(4)
-          hourLength = util.formatDecimal(hourLength,1,5)
-          for(let i=step;i<=hourLength;i=i+step){
-            if(i>= roomDetail.startTime){
-              const objTemp ={
-                timelength:i,
-                label:i+'小时'
+            for(let i=0;i<ableTimeList.length;i++){
+              if(ableTimeList[i].bookingStatus == 0 && ableTimeList[i].bookingItemStartTimeNum >= beingTimeNum){
+                nextEndTimeStr = ableTimeList[i].bookingItemStartTime
+                nextEndDate = ableTimeList[i].bookingItemStartTimeDate
+                break;
               }
-              pickerTimeList.push(objTemp)
             }
-          }
-          _this.setData({
-            showPickerPop:true,
-            pickerTimeList,
-            bookAtOnceStartTime:nowHour+":"+nowMin.toString().padStart(2,'0'),
-            bookAtOnceEndTime:nextEndTimeStr
+            // 下一个被预定的开始时间 没有的话 取营业结束时间
+            if(!nextEndTimeStr){
+              const nextEndHour = merchantActEndDate.getHours(); //获取当前小时数(0-23)
+              const nextEndMin = merchantActEndDate.getMinutes(); //获取当前分钟数(0-59)
+              nextEndTimeStr = nextEndHour.toString.padStart(2,'0')+":"+nextEndMin.toString.padStart(2,'0')
+              nextEndDate = merchantActEndDate
+            }
+            // const nextEndDate = new Date(nowYear,nowMonth,nowDay,Number(nextEndTimeStr.split(":")[0]),Number(nextEndTimeStr.split(":")[1]))
+          
+            const diffHour = Math.floor((nextEndDate.getTime() - nowDate.getTime())/1000/60/60)
+            if(diffHour < roomDetail.startTime){
+              Toast('当前时段被预定')
+              return
+            }
+            let hourLength = ((nextEndDate.getTime() - nowDate.getTime())/1000/60/60).toFixed(4)
+            hourLength = util.formatDecimal(hourLength,1,5)
+            for(let i=step;i<=hourLength;i=i+step){
+              if(i>= roomDetail.startTime){
+                const objTemp ={
+                  timelength:i,
+                  label:i+'小时'
+                }
+                pickerTimeList.push(objTemp)
+              }
+            }
+            _this.setData({
+              showPickerPop:true,
+              pickerTimeList,
+              bookAtOnceStartDate:bookingDate,
+              bookAtOnceStartDateString:bookingDate.getFullYear()+'-'+(bookingDate.getMonth()+1).toString().padStart(2,'0')+'-'+bookingDate.getDate().toString().padStart(2,'0'),
+              bookAtOnceStartTime:nowHour+":"+nowMin.toString().padStart(2,'0'),
+              bookAtOnceEndTime:nextEndTimeStr
+            })
           })
       })
     })
@@ -237,22 +317,42 @@ Page({
   onBookPickerConfirm:function(e){
     const { picker, value, index } = e.detail;
     const _this = this
-    const searchBookingedObj = {
-      tearoomId:this.data.roomDetail.id,
-      orderDate: this.data.bookingDateString
-    }
     this.setData({
       showPickerPop:false
     },()=>{
+      const searchBookingedObj = {
+        tearoomId:_this.data.roomDetail.id,
+        orderDate:_this.data.bookingDateString
+      }
+      let orderTimeRange = null
       request.post('/csMerchantOrder/getTimeRangeForWx',searchBookingedObj).then((res)=>{
-          const orderTimeRange = res.data.data || null
-          const ableTimeList =  util.getBookingAbleTimeList(_this.data.bookingDate,orderTimeRange,_this.data.roomDetail)
+        orderTimeRange = res.data.data || null
+        let ableTimeList = util.getBookingAbleTimeList(_this.data.bookingDate,orderTimeRange,_this.data.roomDetail)
+        const nextBookingedObj = {
+          tearoomId:_this.data.roomDetail.id,
+          orderDate:_this.data.nextBookingDateString
+        }
+        const nextBookingDate = _this.data.nextBookingDate
+        let nextOrderTimeRange = null
+        request.post('/csMerchantOrder/getTimeRangeForWx',nextBookingedObj).then((nextRes)=>{
+          nextOrderTimeRange  = nextRes.data.data || null
+          let nextAbleTimeList = util.getBookingAbleTimeList(nextBookingDate,nextOrderTimeRange,_this.data.roomDetail);
+          if(nextAbleTimeList && nextAbleTimeList.length>0){
+            ableTimeList = ableTimeList.concat(nextAbleTimeList)
+          }
           _this.computeCanBookTime(_this.data.bookingDate,ableTimeList,value.timelength)
+        })
       })
+      // request.post('/csMerchantOrder/getTimeRangeForWx',searchBookingedObj).then((res)=>{
+      //     const orderTimeRange = res.data.data || null
+      //     const ableTimeList =  util.getBookingAbleTimeList(_this.data.bookingDate,orderTimeRange,_this.data.roomDetail)
+      //     _this.computeCanBookTime(_this.data.bookingDate,ableTimeList,value.timelength)
+      // })
     })
   },
   computeCanBookTime:function(bookDate,ableTimeList,bookTimeLeng){
     const roomDetail = this.data.roomDetail
+    const bookAtOnceStartDateString = this.data.bookAtOnceStartDateString
     const bookAtOnceStartTime = this.data.bookAtOnceStartTime
     const bookTimeRange = []
     const step = roomDetail.timeRange?Number(roomDetail.timeRange):0.5
@@ -277,12 +377,23 @@ Page({
     }
     let extraMin = 0
     let firstTimeObj = {}
-    if(bookAtOnceStartTime != firstNextStartTimeObj.bookingItemStartTime){
+    
+    if(bookAtOnceStartDateString!=firstNextStartTimeObj.bookingDateString ||
+      bookAtOnceStartTime != firstNextStartTimeObj.bookingItemStartTime){
+      firstTimeObj.bookingDate = bookDate
+      firstTimeObj.bookingDateString = bookDate.getFullYear()+'-'+(bookDate.getMonth()+1).toString().padStart(2,'0')+'-'+bookDate.getDate().toString().padStart(2,'0')
       firstTimeObj.bookingItemStartTime = bookAtOnceStartTime
-      firstTimeObj.bookingItemStartTimeNum = Number(bookAtOnceStartTime.split(':')[0]+''+bookAtOnceStartTime.split(':')[1])
+      firstTimeObj.bookingItemStartTimeDate = new Date(bookDate.getFullYear(), bookDate.getMonth(), bookDate.getDate(), Number(bookAtOnceStartTime.split(':')[0]), Number(bookAtOnceStartTime.split(':')[1]), 0);
+      firstTimeObj.bookingItemStartTimeNum = Number(bookDate.getFullYear()+''+(bookDate.getMonth()+1).toString().padStart(2,'0')+''+bookDate.getDate().toString().padStart(2,'0')+ '' +bookAtOnceStartTime.split(':')[0].toString().padStart(2,'0')+''+bookAtOnceStartTime.split(':')[1].toString().padStart(2,'0'))
       firstTimeObj.bookingItemEndTime = firstNextStartTimeObj.bookingItemStartTime
       firstTimeObj.bookingItemEndTimeNum = firstNextStartTimeObj.bookingItemStartTimeNum
       firstTimeObj.bookingStatus = 1
+
+      // firstTimeObj.bookingItemStartTime = bookAtOnceStartTime
+      // firstTimeObj.bookingItemStartTimeNum = Number(bookAtOnceStartTime.split(':')[0]+''+bookAtOnceStartTime.split(':')[1])
+      // firstTimeObj.bookingItemEndTime = firstNextStartTimeObj.bookingItemStartTime
+      // firstTimeObj.bookingItemEndTimeNum = firstNextStartTimeObj.bookingItemStartTimeNum
+      // firstTimeObj.bookingStatus = 1
       bookTimeRange.push(firstTimeObj)
       const nowYear = bookDate.getFullYear(); 
       const nowMonth = bookDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
@@ -476,9 +587,12 @@ Page({
           bookingTimeObj.bookingStatus = 1
         }
 
-        if(bookingTimeObj.bookingItemStartTimeDate >= exStartDate &&  bookingTimeObj.bookingItemStartTimeDate < exEndDate){
-          bookingTimeObj.bookingStatus = 0
+        if(exStartDate && exEndDate){
+          if(bookingTimeObj.bookingItemStartTimeDate >= exStartDate &&  bookingTimeObj.bookingItemStartTimeDate < exEndDate){
+            bookingTimeObj.bookingStatus = 0
+          }
         }
+        
 
         bookedTimeArr.forEach(bookedItem=>{
           const bookedItemArr = bookedItem.split("-")
@@ -653,6 +767,7 @@ Page({
         let nextSelectBookingTimeString = ""
         if(this.data.bookAtOnceExtraLength > 0 && this.data.bookAtOnceFirstObj){
           bookingTimeStr = this.data.bookAtOnceFirstObj.bookingItemStartTime+"-"+this.data.bookAtOnceFirstObj.bookingItemEndTime+',';
+          selectBookingTimeString = this.data.bookAtOnceFirstObj.bookingItemStartTime+"-"+this.data.bookAtOnceFirstObj.bookingItemEndTime+',';
         }
         ableBookingTimeList.forEach(item=>{
           if(item.bookingStatus == 1 && item.bookingItemStartTimeNum >= startBookingTimeNum 
@@ -664,9 +779,14 @@ Page({
                 nextSelectBookingTimeString = nextSelectBookingTimeString+item.bookingItemStartTime+"-"+item.bookingItemEndTime+',';
               }
               bookingTimeStr = bookingTimeStr+item.bookingItemStartTime+"-"+item.bookingItemEndTime+',';
-
           }
         })
+        if(selectBookingTimeString && selectBookingTimeString!='' && bookingTimeStr.length >0){
+          selectBookingTimeString = selectBookingTimeString.substring(0,selectBookingTimeString.length-1)
+        }
+        if(nextSelectBookingTimeString && nextSelectBookingTimeString!='' && nextSelectBookingTimeString.length >0){
+          nextSelectBookingTimeString = nextSelectBookingTimeString.substring(0,nextSelectBookingTimeString.length-1)
+        }
         bookingTimeStr = bookingTimeStr.substring(0,bookingTimeStr.length-1)
         if(this.data.bookAtOnceExtraLength > 0 && this.data.bookAtOnceFirstObj){
           bookingLengthCompare = bookingTimeStr.split(",").length - 1
@@ -677,11 +797,8 @@ Page({
           bookingLengthCompare = bookingTimeStr.split(",").length *  this.data.roomDetail.timeRange
           bookingLengthNum = bookingTimeStr.split(",").length *  this.data.roomDetail.timeRange
         }
-        console.log(selectBookingTimeString)
-        console.log(nextSelectBookingTimeString)
-        console.log(bookingTimeStr)
-        
-
+    
+      
         this.setData({
           bookingLengthCompare,
           bookingLength: bookingLengthNum,
@@ -718,6 +835,8 @@ Page({
         let bookingDateString = null
         let nextBookingDate = null
         let nextBookingDateString = null
+        let selectBookingTimeString = ""
+        let nextSelectBookingTimeString = ""
         
         // 当天选择了
         if(this.data.selectBookingTimeString && this.data.selectBookingTimeString!=''){
@@ -725,6 +844,7 @@ Page({
           bookingDateString = this.data.bookingDateString
           nextBookingDate = this.data.bookingDate
           nextBookingDateString = this.data.bookingDateString
+          selectBookingTimeString = this.data.selectBookingTimeString
         }
         // 当天没选择
         if((!this.data.selectBookingTimeString || this.data.selectBookingTimeString ==null || 
@@ -734,16 +854,18 @@ Page({
           bookingDateString = this.data.nextBookingDateString
           nextBookingDate = this.data.nextBookingDate
           nextBookingDateString = this.data.nextBookingDateString
+          selectBookingTimeString = this.data.nextSelectBookingTimeString
         }
 
         if(this.data.nextSelectBookingTimeString && this.data.nextSelectBookingTimeString!=''){
           nextBookingDate = this.data.nextBookingDate
           nextBookingDateString = this.data.nextBookingDateString
+          nextSelectBookingTimeString = this.data.nextSelectBookingTimeString
         }
 
         const dataTrans = {
-          bookingTimeStr:this.data.selectBookingTimeString,
-          nextSelectBookingTimeString:this.data.nextSelectBookingTimeString,
+          bookingTimeStr:selectBookingTimeString,
+          nextSelectBookingTimeString:nextSelectBookingTimeString,
           bookingDate:bookingDate,
           bookingDateString:bookingDateString,
           nextBookingDate:nextBookingDate,
