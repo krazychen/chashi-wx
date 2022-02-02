@@ -35,7 +35,7 @@
           </view>
           <view class="order-list-item-label font-gray">
             <span>使用时间：</span>
-            <span> {{item.orderDate}}{{item.orderTimerage}}</span>
+            <span> {{item.useTimeRange}}</span>
           </view>
           <view class="order-list-item-label font-gray">
             <span>使用时长：</span>

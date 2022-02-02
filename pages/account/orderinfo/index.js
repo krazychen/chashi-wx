@@ -104,17 +104,61 @@ Page({
       const orderList = res.data.data.records || []
       if(orderList && orderList.length>0){
         orderList.forEach(item=>{
-          if(item.orderDate){
-            item.orderDate = item.orderDate.substring(0,10)+" "
-          }
+
+          let hasNextDate = false
+          let actStartDate = item.orderDate
+          let actStartDateTime = null
+          let actEndDate = item.orderDate
+          let actEndDateTime = null
           if(item.orderTimerage){
-             const orderRange = item.orderTimerage.split(',')
-             if(orderRange.length>1){
-               const startRange = orderRange[0].split('-')[0]
-               const endRange = orderRange[orderRange.length-1].split('-')[1]
-               item.orderTimerage = startRange +'-'+endRange
-             }
+              const orderRange = item.orderTimerage.split(',')
+              if(orderRange.length > 0){
+                const startRange = orderRange[0].split('-')[0]
+                const endRange = orderRange[orderRange.length-1].split('-')[1]
+                actStartDateTime = startRange
+                actEndDateTime = endRange
+              }
           }
+          
+          if(item.nextOrderDate && item.nextOrderDate !=''){
+            hasNextDate = true
+            actEndDate = item.nextOrderDate
+            const nextOrderRange = item.nextOrderTimerage.split(',')
+            if(nextOrderRange.length > 0){
+              const endRange = nextOrderRange[nextOrderRange.length-1].split('-')[1]
+              actEndDateTime = endRange
+            }
+          }
+          
+
+          let useTimeRange = actStartDate.substring(0,10)+" " + actStartDateTime
+          // 跨天
+          if(hasNextDate){
+            useTimeRange = useTimeRange + '-' + actEndDate.substring(0,10)+" " + actEndDateTime
+          }else{
+            useTimeRange =useTimeRange + '-' + actEndDateTime
+          }
+          item.useTimeRange = useTimeRange
+
+          item.hasNextDate = hasNextDate
+          item.actStartDateString = actStartDate.substring(0,10)
+          item.actStartDate = new Date(Number(actStartDate.substring(0,4)),Number(actStartDate.substring(5,7))-1,Number(actStartDate.substring(8,10)),0,0,0)
+          item.actStartDateTime = actStartDateTime
+          item.actEndDateString = actEndDate.substring(0,10)
+          item.actEndDate = new Date(Number(actEndDate.substring(0,4)),Number(actEndDate.substring(5,7))-1,Number(actEndDate.substring(8,10)),0,0,0)
+          item.actEndDateTime = actEndDateTime
+
+          // if(item.orderDate){
+          //   item.orderDate = item.orderDate.substring(0,10)+" "
+          // }
+          // if(item.orderTimerage){
+          //    const orderRange = item.orderTimerage.split(',')
+          //    if(orderRange.length>1){
+          //      const startRange = orderRange[0].split('-')[0]
+          //      const endRange = orderRange[orderRange.length-1].split('-')[1]
+          //      item.orderTimerage = startRange +'-'+endRange
+          //    }
+          // }
 
           if(item.paymentStatus == 0){
              item.orderStatusName = '待付款' 
@@ -155,16 +199,15 @@ Page({
     const currentHour = nowDate.getHours();  
     const currentMin = nowDate.getMinutes()
     if(orderitem.orderTimerage){
-      const orderRange = orderitem.orderTimerage.split('-')
+      const orderRange = orderitem.orderTimerage.split(',')
       const orderHour = orderRange[0].split(':')[0]
       const orderMin = orderRange[0].split(':')[1]
       // 已失效
       if(orderitem.usedStatus == 2){
-          const orderDateEndTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[1]+":00"
+          const orderDateEndTimeStr = orderitem.actEndDateString.substring(0,10) + " "+ orderitem.actEndDateTime+":00"
           const orderDateEndTime = util.fixDate(orderDateEndTimeStr)
           const refundTimeLength = Number(this.data.refundTimeLength)
           const nextDate = new Date(orderDateEndTime.valueOf() + 60 * 60 * 1000 * refundTimeLength)
-          console.log(nextDate)
           if(nowDate > nextDate){
             Toast('已超过退款时间，无法退款')
             return

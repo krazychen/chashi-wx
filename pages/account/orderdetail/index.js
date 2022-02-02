@@ -4,6 +4,7 @@ const app = getApp()
 import request from '../../../utils/request'
 import userBehavior from '../../behavior/user-behavior'
 import Toast from '../../../miniprogram_npm/@vant/weapp/toast/toast';
+import util from '../../../utils/util'
 
 Page({
   behaviors: [userBehavior],
@@ -17,7 +18,8 @@ Page({
     const _this = this
     this.setData({
       hasUserInfo:app.globalData.hasUserInfo,
-      userInfo:app.globalData.userInfo
+      userInfo:app.globalData.userInfo,
+      refundTimeLength:app.globalData.refundTimeLength||1
     },()=>{
       const eventChannel = _this.getOpenerEventChannel()
       // 真机需要判断 是否拿到数据
@@ -37,6 +39,50 @@ Page({
   getOrderDetail:function(){
     request.get('/csMerchantOrder/infoForWx/'+this.data.orderId,null).then((res)=>{
       const orderDetail = res.data.data
+
+      let hasNextDate = false
+      let actStartDate = orderDetail.orderDate
+      let actStartDateTime = null
+      let actEndDate = orderDetail.orderDate
+      let actEndDateTime = null
+      if(orderDetail.orderTimerage){
+          const orderRange = orderDetail.orderTimerage.split(',')
+          if(orderRange.length > 0){
+            const startRange = orderRange[0].split('-')[0]
+            const endRange = orderRange[orderRange.length-1].split('-')[1]
+            actStartDateTime = startRange
+            actEndDateTime = endRange
+          }
+      }
+      
+      if(orderDetail.nextOrderDate && orderDetail.nextOrderDate !=''){
+        hasNextDate = true
+        actEndDate = orderDetail.nextOrderDate
+        const nextOrderRange = orderDetail.nextOrderTimerage.split(',')
+        if(nextOrderRange.length > 0){
+          const endRange = nextOrderRange[nextOrderRange.length-1].split('-')[1]
+          actEndDateTime = endRange
+        }
+      }
+      
+
+      let useTimeRange = actStartDate.substring(0,10)+" " + actStartDateTime
+      // 跨天
+      if(hasNextDate){
+        useTimeRange = useTimeRange + '-' + actEndDate.substring(0,10)+" " + actEndDateTime
+      }else{
+        useTimeRange =useTimeRange + '-' + actEndDateTime
+      }
+      orderDetail.useTimeRange = useTimeRange
+
+      orderDetail.hasNextDate = hasNextDate
+      orderDetail.actStartDateString = actStartDate.substring(0,10)
+      orderDetail.actStartDate = new Date(Number(actStartDate.substring(0,4)),Number(actStartDate.substring(5,7))-1,Number(actStartDate.substring(8,10)),0,0,0)
+      orderDetail.actStartDateTime = actStartDateTime
+      orderDetail.actEndDateString = actEndDate.substring(0,10)
+      orderDetail.actEndDate = new Date(Number(actEndDate.substring(0,4)),Number(actEndDate.substring(5,7))-1,Number(actEndDate.substring(8,10)),0,0,0)
+      orderDetail.actEndDateTime = actEndDateTime
+
       if(orderDetail.orderDate){
         orderDetail.orderDate = orderDetail.orderDate.substring(0,10)+" "
       }
@@ -45,14 +91,14 @@ Page({
       }else{
           orderDetail.paymentTypeName='微信支付'
       }
-      if(orderDetail.orderTimerage){
-         const orderRange = orderDetail.orderTimerage.split(',')
-         if(orderRange.length>1){
-           const startRange = orderRange[0].split('-')[0]
-           const endRange = orderRange[orderRange.length-1].split('-')[1]
-           orderDetail.orderTimerage = startRange +'-'+endRange
-         }
-      }
+      // if(orderDetail.orderTimerage){
+      //    const orderRange = orderDetail.orderTimerage.split(',')
+      //    if(orderRange.length>1){
+      //      const startRange = orderRange[0].split('-')[0]
+      //      const endRange = orderRange[orderRange.length-1].split('-')[1]
+      //      orderDetail.orderTimerage = startRange +'-'+endRange
+      //    }
+      // }
       if(orderDetail.paymentStatus == 0){
         orderDetail.orderStatusName = '待付款' 
       }else if(orderDetail.paymentStatus == 2 && orderDetail.usedStatus == 0){
@@ -87,10 +133,18 @@ Page({
     const nowDate  = new Date()
     const currentHour = nowDate.getHours();  
     const currentMin = nowDate.getMinutes()
-    if(orderitem.orderTimerage){
-      const orderRange = orderitem.orderTimerage.split('-')
-      const orderHour = orderRange[0].split(':')[0]
-      const orderMin = orderRange[0].split(':')[1]
+
+    // 已失效
+    if(orderitem.usedStatus == 2){
+        const orderDateEndTimeStr = orderitem.actEndDateString.substring(0,10) + " "+ orderitem.actEndDateTime+":00"
+        const orderDateEndTime = util.fixDate(orderDateEndTimeStr)
+        const refundTimeLength = Number(this.data.refundTimeLength)
+        const nextDate = new Date(orderDateEndTime.valueOf() + 60 * 60 * 1000 * refundTimeLength)
+        if(nowDate > nextDate){
+          Toast('已超过退款时间，无法退款')
+          return
+        }
+    }else{
       if(currentHour > orderHour){
         Toast('已超过预定时间，无法退款')
         return
@@ -99,6 +153,7 @@ Page({
         return
       }
     }
+    
     const orderRefundObj = {
       id:orderitem.id,
       orderPrice: orderitem.orderPrice,

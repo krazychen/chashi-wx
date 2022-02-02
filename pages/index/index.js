@@ -150,9 +150,15 @@ Page({
         const renewOrderList = []
         orderList.forEach(item=>{
           
-          const orderRange = item.orderTimerage.split(',')
-          const orderDateStartTimeStr = item.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[0]+":00"
-          const orderDateEndTimeStr = item.orderDate.substring(0,10) + " "+ orderRange[orderRange.length-1].split('-')[1]+":00"
+          let orderEndDateString = item.orderDate
+          let orderEndTimeRage = item.orderTimerage
+          if(item.nextOrderDate && item.nextOrderDate !=''){
+            orderEndDateString = item.nextOrderDate
+            orderEndTimeRage = item.nextOrderTimerage
+          }
+          const orderRange = orderEndTimeRage.split(',')
+          const orderDateStartTimeStr = orderEndDateString.substring(0,10) + " "+ orderRange[0].split('-')[0]+":00"
+          const orderDateEndTimeStr = orderEndDateString.substring(0,10) + " "+ orderRange[orderRange.length-1].split('-')[1]+":00"
           const orderDateStartTime = util.fixDate(orderDateStartTimeStr)
           const orderDateEndTime = util.fixDate(orderDateEndTimeStr)
           const nowDate = new Date()

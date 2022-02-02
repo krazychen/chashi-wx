@@ -8,7 +8,7 @@
  */
 const system = {
   netError: '服务器开小差啦',
-  severUrl: 'http://localhost:1111/'
+  severUrl: 'https://www.rongjingtea.com/prod-api/'
 }
 
 module.exports = {

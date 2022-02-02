@@ -362,7 +362,7 @@ Page({
     }
     let firstNextStartTimeObj = null
     let startIndex = 999999999
-    const bookingAtOnceStartTimeNum =  Number(bookAtOnceStartTime.split(":")[0] + ""+bookAtOnceStartTime.split(":")[1])
+    const bookingAtOnceStartTimeNum =  Number(bookDate.getFullYear()+''+(bookDate.getMonth()+1).toString().padStart(2,'0')+''+bookDate.getDate().toString().padStart(2,'0')+ '' +bookAtOnceStartTime.split(":")[0].padStart(2,'0') + ""+bookAtOnceStartTime.split(":")[1].padStart(2,'0'))
     for(let i=0;i<ableTimeList.length;i++){
       if(ableTimeList[i].bookingStatus == 1 && ableTimeList[i].bookingItemStartTimeNum >= bookingAtOnceStartTimeNum){
         firstNextStartTimeObj = ableTimeList[i]

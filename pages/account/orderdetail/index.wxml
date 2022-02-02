@@ -16,8 +16,8 @@
           <view class="font-14 font-dark-gray" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
             {{orderDetail.address}}
           </view>
-          <view class="font-14 font-dark-gray" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-            {{orderDetail.orderDate}}{{orderDetail.orderTimerage}}
+          <view class="font-12 font-dark-gray" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            {{orderDetail.useTimeRange}}
           </view>
           <view class="font-12">
             <span class="font-red font-14" style="font-weight: bolder;">￥{{orderDetail.orderUnitPrice}}</span>
@@ -66,4 +66,5 @@
     style="background-color: rgb(247,83,81);"
     wx:if="{{orderDetail.paymentStatus==0}}" >继续支付</view>
   </view>
+  <van-toast id="van-toast" />
 </view>
