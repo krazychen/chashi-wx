@@ -322,14 +322,14 @@ Page({
   },
   openDoor:function(e){
     const orderitem = e.currentTarget.dataset.orderitem
-    const orderRange = orderitem.orderTimerage.split(',')
-    const orderDateTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[0]+":00"
+    const orderDateTimeStr = orderitem.actStartDateString + " "+ orderitem.actStartDateTime+":00"
     const orderDateTime = util.fixDate(orderDateTimeStr)
     const oneKeyTime = Number(this.data.oneKeyTime)
     const nowDate = new Date(new Date().valueOf() + 60 * 1000 * oneKeyTime)
     const nowEndDate = new Date()
-    const orderDateEndTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[1]+":00"
+    const orderDateEndTimeStr = orderitem.actEndDateString + " "+ orderitem.actEndDateTime+":00"
     const orderDateEndTime = util.fixDate(orderDateEndTimeStr)
+    
     if(nowDate < orderDateTime){
       Toast('只能在订单使用前'+oneKeyTime+'分钟一键开锁')
       return
@@ -355,14 +355,14 @@ Page({
   },
   openInsideDoor:function(e){
     const orderitem = e.currentTarget.dataset.orderitem
-    const orderRange = orderitem.orderTimerage.split(',')
-    const orderDateTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[0]+":00"
+    const orderDateTimeStr = orderitem.actStartDateString + " "+ orderitem.actStartDateTime+":00"
     const orderDateTime = util.fixDate(orderDateTimeStr)
     const oneKeyTime = Number(this.data.oneKeyTime)
     const nowDate = new Date(new Date().valueOf() + 60 * 1000 * oneKeyTime)
     const nowEndDate = new Date()
-    const orderDateEndTimeStr = orderitem.orderDate.substring(0,10) + " "+ orderRange[0].split('-')[1]+":00"
+    const orderDateEndTimeStr = orderitem.actEndDateString + " "+ orderitem.actEndDateTime+":00"
     const orderDateEndTime = util.fixDate(orderDateEndTimeStr)
+
     if(nowDate < orderDateTime){
       Toast('只能在订单使用前'+oneKeyTime+'分钟一键开锁')
       return
