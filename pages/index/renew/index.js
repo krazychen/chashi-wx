@@ -36,7 +36,8 @@ Page({
     bookAtOnceEndTime:null,
     bookingLengthCompare:null,
     bookAtOnceExtraLength:0,
-    bookAtOnceFirstObj:null
+    bookAtOnceFirstObj:null,
+    originOrderId:null
   },
   onLoad() {
     const _this = this
@@ -306,7 +307,8 @@ Page({
                       bookAtOnceStartDate:orderitem.actEndDate,
                       bookAtOnceStartDateString:orderitem.actEndDateString,
                       bookAtOnceStartTime:orderitem.actEndDateTime,
-                      bookAtOnceEndTime:nextEndTimeStr
+                      bookAtOnceEndTime:nextEndTimeStr,
+                      originOrderId:orderitem.id
                     })
                   })
               })
@@ -601,6 +603,7 @@ Page({
           bookingLength:this.data.bookingLength,
           bookAtOnceExtraLength:this.data.bookAtOnceExtraLength,
           bookAtOnceFirstObj:this.data.bookAtOnceFirstObj,
+          originOrderId:this.data.originOrderId,
           ...this.data.roomDetail
         }
 

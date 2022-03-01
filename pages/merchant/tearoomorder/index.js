@@ -195,6 +195,10 @@ Page({
 
     orderPayObj.orderPrice = Number(Number(orderPayObj.orderPrice).toFixed(2))
     orderPayObj.orderPriceBeforeCp = Number(Number(orderPayObj.orderPrice).toFixed(2))
+    if(orderDetail.originOrderId){
+      orderPayObj.originOrderId = orderDetail.originOrderId
+    }
+    
     this.setData({
       orderPayObj
     })
