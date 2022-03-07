@@ -177,6 +177,10 @@ Page({
             const orderEndTime = util.fixDate(orderitem.actEndDateString.trim() +" " +orderitem.actEndDateTime)
             // 续单最少1小时，需要预留0.5小时的保洁，也就是如果续单1个小时，需要后面1.5个小时
             const continueAtLeastDateTime = new Date(orderEndTime.valueOf() + 60 * 1000 * 90)
+
+            const continueAtLeastYear = continueAtLeastDateTime.getFullYear(); 
+            const continueAtLeastMonth = continueAtLeastDateTime.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
+            const continueAtLeastDay = continueAtLeastDateTime.getDate(); //获取当前日(1-31)
             
 
             // 营业开始时间
@@ -186,7 +190,8 @@ Page({
 
             const merchantStartDate = util.fixDate(orderitem.actEndDateString + " "+ merchantStartTime)
             const merchantEndDate = util.fixDate(orderitem.actEndDateString + " "+ merchantEndTime)
-            let merchantActEndDate = util.fixDate(orderitem.actEndDateString + " "+ merchantEndTime)
+            let merchantActEndDate = new Date(continueAtLeastYear, continueAtLeastMonth, continueAtLeastDay, merchantEndTime.split(":")[0], merchantEndTime.split(":")[1], 0)
+            
             
             // 非营业时间
             const merchantExStartTime = roomDetail.merchantExStartTime
@@ -195,10 +200,10 @@ Page({
             let exStartDate = null
             let exEndDate = null
             if(merchantExStartTime && merchantExStartTime!='' && merchantExStartTime!=null){
-              exStartDate = util.fixDate(orderitem.actEndDateString + " "+ merchantExStartTime);
+              exStartDate = new Date(continueAtLeastYear, continueAtLeastMonth, continueAtLeastDay, merchantExStartTime.split(":")[0], merchantExStartTime.split(":")[1], 0)
             }
             if(merchantExEndTime && merchantExEndTime!='' && merchantExEndTime!=null){
-              exEndDate = util.fixDate(orderitem.actEndDateString + " "+ merchantExEndTime);
+              exEndDate =  new Date(continueAtLeastYear, continueAtLeastMonth, continueAtLeastDay, merchantExEndTime.split(":")[0], merchantExEndTime.split(":")[1], 0)
             }
 
             let nextDate  = new Date(orderitem.actEndDate.valueOf())
@@ -207,7 +212,7 @@ Page({
             const nextMonth = nextDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
             const nextDay = nextDate.getDate(); //获取当前日(1-31)
 
-            if(continueAtLeastDateTime > merchantEndDate){
+            if(continueAtLeastDateTime > merchantActEndDate){
               Toast('最小续单时长超过营业时间，无法续单')
               this.setData({
                 showPickerPop:false,
@@ -375,9 +380,11 @@ Page({
       loopLength = ableTimeList.length
     }
 
+
     const continueEndTime =  new Date(util.fixDate(this.data.bookingDateString+" "+ bookAtOnceStartTime).valueOf() + 60 * 1000 * 60 * (bookTimeLeng) )
     const canBookAtLeastBegin =  new Date(util.fixDate(this.data.bookingDateString+" "+ bookAtOnceStartTime).valueOf() + 60 * 1000 * 60 * (bookTimeLeng+0.5) )
     const merchantEndDate = new Date(canBookAtLeastBegin.getFullYear(),canBookAtLeastBegin.getMonth(),canBookAtLeastBegin.getDate(),Number(roomDetail.merchantEndTime.split(":")[0]),Number(roomDetail.merchantEndTime.split(":")[1]))//util.fixDate(.getFullYear+ " "+ roomDetail.merchantEndTime)
+    
     if(canBookAtLeastBegin > merchantEndDate){
       Toast('续单时长超过营业时间，无法续单！')
       return
@@ -412,7 +419,8 @@ Page({
     const canBookAtLeastBeginMin = canBookAtLeastBegin.getMinutes()
     const canBookAtLeastBeginTimeNum = Number(canBookAtLeastBegin.getFullYear()+''+(canBookAtLeastBegin.getMonth()+1).toString().padStart(2,'0')+''+canBookAtLeastBegin.getDate().toString().padStart(2,'0')+ '' +canBookAtLeastBeginHour.toString().padStart(2,'0')+''+canBookAtLeastBeginMin.toString().padStart(2,'0'))
     const continueEndTimeNum = Number(continueEndTime.getFullYear()+''+(continueEndTime.getMonth()+1).toString().padStart(2,'0')+''+continueEndTime.getDate().toString().padStart(2,'0')+ '' +continueEndTime.getHours()+continueEndTime.getMinutes().toString().padStart(2,'0'))
-    const bookingAtOnceStartTimeNum =  Number(bookAtOnceDateTime.getFullYear()+''+(bookAtOnceDateTime.getMonth()+1).toString().padStart(2,'0')+''+bookAtOnceDateTime.getDate().toString().padStart(2,'0')+ '' + bookAtOnceStartTime.split(":")[0].padStart(2,'0') + ""+bookAtOnceStartTime.split(":")[1].padStart(2,'0'))
+    const bookingAtOnceStartTimeNum =  Number(bookAtOnceDateTime.getFullYear()+''+(bookAtOnceDateTime.getMonth()+1).toString().padStart(2,'0')+''+bookAtOnceDateTime.getDate().toString().padStart(2,'0')+ '' + bookAtOnceDateTime.getHours().toString().padStart(2,'0') + ""+bookAtOnceDateTime.getMinutes().toString().padStart(2,'0'))
+    
     for(let i=0;i<ableTimeList.length;i++){
       if(ableTimeList[i].bookingItemStartTimeNum >= bookingAtOnceStartTimeNum 
         && ableTimeList[i].bookingItemEndTimeNum <= canBookAtLeastBeginTimeNum){
@@ -437,15 +445,16 @@ Page({
       Toast(bookAtOnceStartTime+'时段被预定')
       return
     }
+    const bookActAtOnceStartTime = bookAtOnceDateTime.getHours().toString() + ":"+bookAtOnceDateTime.getMinutes().toString().padStart(2,'0');
     let extraMin = 0
     let firstTimeObj = {}
     if(bookAtOnceStartDateString!=firstNextStartTimeObj.bookingDateString ||
-      bookAtOnceStartTime != firstNextStartTimeObj.bookingItemStartTime){
+      bookActAtOnceStartTime != firstNextStartTimeObj.bookingItemStartTime){
       firstTimeObj.bookingDate = bookDate
       firstTimeObj.bookingDateString = bookDate.getFullYear()+'-'+(bookDate.getMonth()+1).toString().padStart(2,'0')+'-'+bookDate.getDate().toString().padStart(2,'0')
-      firstTimeObj.bookingItemStartTime = bookAtOnceStartTime
-      firstTimeObj.bookingItemStartTimeDate = new Date(bookDate.getFullYear(), bookDate.getMonth(), bookDate.getDate(), Number(bookAtOnceStartTime.split(':')[0]), Number(bookAtOnceStartTime.split(':')[1]), 0);
-      firstTimeObj.bookingItemStartTimeNum = Number(bookDate.getFullYear()+''+(bookDate.getMonth()+1).toString().padStart(2,'0')+''+bookDate.getDate().toString().padStart(2,'0')+ '' +bookAtOnceStartTime.split(':')[0].toString().padStart(2,'0')+''+bookAtOnceStartTime.split(':')[1].toString().padStart(2,'0'))
+      firstTimeObj.bookingItemStartTime = bookActAtOnceStartTime
+      firstTimeObj.bookingItemStartTimeDate = new Date(bookDate.getFullYear(), bookDate.getMonth(), bookDate.getDate(), Number(bookActAtOnceStartTime.split(':')[0]), Number(bookActAtOnceStartTime.split(':')[1]), 0);
+      firstTimeObj.bookingItemStartTimeNum = Number(bookDate.getFullYear()+''+(bookDate.getMonth()+1).toString().padStart(2,'0')+''+bookDate.getDate().toString().padStart(2,'0')+ '' +bookActAtOnceStartTime.split(':')[0].toString().padStart(2,'0')+''+bookActAtOnceStartTime.split(':')[1].toString().padStart(2,'0'))
       firstTimeObj.bookingItemEndTime = firstNextStartTimeObj.bookingItemStartTime
       firstTimeObj.bookingItemEndTimeNum = firstNextStartTimeObj.bookingItemStartTimeNum
       firstTimeObj.bookingStatus = 1
@@ -459,7 +468,7 @@ Page({
       const nowYear = bookDate.getFullYear(); 
       const nowMonth = bookDate.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
       const nowDay = bookDate.getDate(); //获取当前日(1-31)
-      const extraBeginDateTime =  new Date(nowYear,nowMonth,nowDay,Number(bookAtOnceStartTime.split(":")[0]),Number(bookAtOnceStartTime.split(":")[1]))
+      const extraBeginDateTime =  new Date(nowYear,nowMonth,nowDay,Number(bookActAtOnceStartTime.split(":")[0]),Number(bookActAtOnceStartTime.split(":")[1]))
       const extraEndDateTime =  new Date(nowYear,nowMonth,nowDay,Number(firstNextStartTimeObj.bookingItemStartTime.split(":")[0]),Number(firstNextStartTimeObj.bookingItemStartTime.split(":")[1]))
       extraMin = Math.floor((extraEndDateTime.getTime() - extraBeginDateTime.getTime())/1000/60)
     }
