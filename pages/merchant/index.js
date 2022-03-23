@@ -268,7 +268,7 @@ Page({
   openMerchantDetail:function(e){
     const merchant = e.currentTarget.dataset.merchant
     if(!merchant.releaseStatus || merchant.releaseStatus == '0' ){
-      Toast('茶室休息中')
+      Toast('商家休息中')
       return
     }
     const merchantTrans = {
@@ -286,7 +286,7 @@ Page({
     const roomId = e.currentTarget.dataset.id
     const merchant = e.currentTarget.dataset.merchant
     if(!merchant.releaseStatus || merchant.releaseStatus == '0' ){
-      Toast('茶室休息中')
+      Toast('商家休息中')
       return
     }
     const dataTrans = {
