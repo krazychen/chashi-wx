@@ -3,6 +3,7 @@
 const app = getApp()
 import request from '../../utils/request'
 import userBehavior from '../behavior/user-behavior'
+import Toast from '../../miniprogram_npm/@vant/weapp/toast/toast'
 
 Page({
   behaviors: [userBehavior],
@@ -266,6 +267,10 @@ Page({
   },
   openMerchantDetail:function(e){
     const merchant = e.currentTarget.dataset.merchant
+    if(!merchant.releaseStatus || merchant.releaseStatus == '0' ){
+      Toast('茶室休息中')
+      return
+    }
     const merchantTrans = {
       id:merchant.id,
       merchantDistance:merchant.merchantDistance
@@ -280,6 +285,10 @@ Page({
   openRoomDetail:function(e){
     const roomId = e.currentTarget.dataset.id
     const merchant = e.currentTarget.dataset.merchant
+    if(!merchant.releaseStatus || merchant.releaseStatus == '0' ){
+      Toast('茶室休息中')
+      return
+    }
     const dataTrans = {
       id:roomId,
       merchantDistance:merchant.merchantDistance,

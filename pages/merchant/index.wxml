@@ -135,4 +135,6 @@
         </block>
     </scroll-view>
 
+    <van-toast id="van-toast" />
+
 </view>
