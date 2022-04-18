@@ -1,3 +1,5 @@
+const app = getApp()
+
 Component({
   data: {
   active: 0,
@@ -32,8 +34,10 @@ Component({
   methods: {
    onChange(e) {
      if(e.detail==2){
+       const appId = app.globalData.shopWxId||''
+       console.log(appId)
       wx.navigateToMiniProgram({
-        appId: 'wx93c826738d8ae8b9'
+        appId
       })
      }else{
       this.setData({ active: e.detail });

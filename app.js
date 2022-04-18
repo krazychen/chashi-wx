@@ -19,7 +19,8 @@ App({
     paramConfigObj:{},
     recommendId:null,
     oneKeyTime:10,
-    refundTimeLength:1
+    refundTimeLength:1,
+    shopWxId:''
   },
   getReleaseCityWx:function(){
     request.get('/sysArea/getReleaseCityWx',null).then((res)=>{
@@ -45,6 +46,12 @@ App({
           if(item.configKey.startsWith("wx_refund_time")){
             if(item.configValue && Number(item.configValue)>0){
               this.globalData.refundTimeLength = Number(item.configValue)
+            }
+          }
+
+          if(item.configKey.startsWith("shop_wx_id")){
+            if(item.configValue){
+              this.globalData.shopWxId = item.configValue
             }
           }
           // if(item.configKey.startsWith("mapKey")){
