@@ -70,11 +70,13 @@ Page({
       success: (res => {
         if (res.data.status === 0) {
           const adInfo = res.data.result.ad_info;
-          let currentCityCode = null;
+          let currentCityCode = '350500';
+          let cityName = '泉州市'
           if(adInfo && app.globalData.cityList && app.globalData.cityList.length > 0){
             app.globalData.cityList.forEach(item=>{
               if(item.areaName == adInfo.city){
                 currentCityCode = item.areaCode;
+                cityName = adInfo.city
               }
             })
           }
@@ -86,7 +88,7 @@ Page({
               current:1,
               size:10,
               cityCode:currentCityCode,
-              searchCityName:adInfo.city,
+              searchCityName:cityName,
               cityCode:null
             },
             merchantList:[],

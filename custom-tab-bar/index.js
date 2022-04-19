@@ -35,7 +35,6 @@ Component({
    onChange(e) {
      if(e.detail==2){
        const appId = app.globalData.shopWxId||''
-       console.log(appId)
       wx.navigateToMiniProgram({
         appId
       })
