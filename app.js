@@ -20,7 +20,8 @@ App({
     recommendId:null,
     oneKeyTime:10,
     refundTimeLength:1,
-    shopWxId:''
+    shopWxId:'',
+    cleanOderTime:30
   },
   getReleaseCityWx:function(){
     request.get('/sysArea/getReleaseCityWx',null).then((res)=>{
@@ -52,6 +53,12 @@ App({
           if(item.configKey.startsWith("shop_wx_id")){
             if(item.configValue){
               this.globalData.shopWxId = item.configValue
+            }
+          }
+
+          if(item.configKey.startsWith("cleanOderTime")){
+            if(item.configValue){
+              this.globalData.cleanOderTime = item.configValue
             }
           }
           // if(item.configKey.startsWith("mapKey")){

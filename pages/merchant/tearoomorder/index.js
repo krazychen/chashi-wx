@@ -151,6 +151,14 @@ Page({
      orderPayObj.orderOriginTimenum = orderDetail.bookingLength
      orderPayObj.orderUnitOriginPrice = orderDetail.hoursAmount
      orderPayObj.orderOriginPrice = Number(Number(orderDetail.hoursAmount * orderDetail.bookingLength).toFixed(2))
+
+     orderPayObj.orderStartTime = orderDetail.orderStartTime
+     orderPayObj.orderEndTime = orderDetail.orderEndTime
+     orderPayObj.orderTimerageClean = orderDetail.orderTimerageClean
+     orderPayObj.nextOrderStartTime = orderDetail.nextOrderStartTime
+     orderPayObj.nextOrderEndTime = orderDetail.nextOrderEndTime
+     orderPayObj.nextOrderTimerageClean = orderDetail.nextOrderTimerageClean
+
     if(accountInfo.csMembercardOrderQueryVo){
       orderPayObj.membercardOrderId = accountInfo.csMembercardOrderQueryVo.membercardId
       orderPayObj.orderUnitPrice = orderDetail.menberAmount

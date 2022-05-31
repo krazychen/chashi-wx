@@ -37,7 +37,14 @@ Page({
     bookingLengthCompare:null,
     bookAtOnceExtraLength:0,
     bookAtOnceFirstObj:null,
-    originOrderId:null
+    originOrderId:null,
+     // 包含保洁时长的
+     orderStartTime:null,// 订单开始时间 
+     orderEndTime:null,// 订单结束时间 
+     orderTimerageClean:null,// 订单时间段 包含保洁时长
+     nextOrderStartTime:null,// 订单下一天开始时间 
+     nextOrderEndTime:null,// 订单下一天结束时间 
+     nextOrderTimerageClean:null // 订单下一天时间段 包含保洁时长
   },
   onLoad() {
     const _this = this
@@ -121,7 +128,7 @@ Page({
       })
     }
   },
-  renewOrder:function(e){
+  renewOrder: async function(e){
     const orderitem = e.currentTarget.dataset.orderitem
     orderitem.actStartDate = new Date(Number(orderitem.actStartDateString.substring(0,4)),Number(orderitem.actStartDateString.substring(5,7))-1,Number(orderitem.actStartDateString.substring(8,10)),0,0,0)
     
@@ -143,7 +150,7 @@ Page({
         if(this.data.hasUserInfo){
           searchRoomParam.openid = this.data.userInfo.openid
         }
-        request.post('/csTearoom/infoForWx',searchRoomParam).then((res)=>{
+        request.post('/csTearoom/infoForWx',searchRoomParam).then(async (res)=>{
           const roomDetail = res.data.data || null
           if(roomDetail){
             if(merchantDetail.address){
@@ -175,6 +182,24 @@ Page({
             const step = roomDetail.timeRange?Number(roomDetail.timeRange):0.5
 
             const orderEndTime = util.fixDate(orderitem.actEndDateString.trim() +" " +orderitem.actEndDateTime)
+
+            // 判断当前时间是否有订单
+            const searchCurrentOrder = {
+              tearoomId:roomDetail.id,
+              currentTime:util.formatTimeJoin(orderEndTime,"-")
+            }
+            
+            const currentOrderExist = await request.post('/csMerchantOrder/getOrderByCurrent',searchCurrentOrder)
+            if(currentOrderExist && currentOrderExist.data && currentOrderExist.data.data){
+              Toast('续单时段被预定')
+              this.setData({
+                showPickerPop:false,
+                pickerTimeList:[]
+              })
+              return
+            }
+
+
             // 续单最少1小时，需要预留0.5小时的保洁，也就是如果续单1个小时，需要后面1.5个小时
             const continueAtLeastDateTime = new Date(orderEndTime.valueOf() + 60 * 1000 * 90)
 
@@ -291,6 +316,12 @@ Page({
                       nextEndTimeStr = nextEndHour.toString.padStart(2,'0')+":"+nextEndMin.toString.padStart(2,'0')
                       nextEndDate = merchantActEndDate
                     }
+
+                    if(nextEndDate.getTime() !=merchantActEndDate.getTime()){
+                      const tmpDate = new Date(nextEndDate.valueOf() - 60 * 1000 * app.globalData.cleanOderTime)
+                      nextEndDate = tmpDate
+                     }
+
                     let hourLength = ((nextEndDate.getTime() - orderEndTime.getTime())/1000/60/60).toFixed(4)
                     hourLength = util.formatDecimal(hourLength,1,5)
                     if(hourLength < 1.5){
@@ -497,7 +528,7 @@ Page({
     } 
   },
 
-  computeBookingLength:function(openFlag){
+  computeBookingLength:async function(openFlag){
     const _this = this
     const startBookingTimeNum = this.data.startBookingTimeNum
     const endBookingTimeNum = this.data.endBookingTimeNum
@@ -530,6 +561,133 @@ Page({
         if(nextSelectBookingTimeString && nextSelectBookingTimeString!='' && nextSelectBookingTimeString.length >0){
           nextSelectBookingTimeString = nextSelectBookingTimeString.substring(0,nextSelectBookingTimeString.length-1)
         }
+
+
+        // 判断订单结束时间 是否为 营业结束时间 以及 加上保洁时间后的 是否有订单。有就不允许预定
+        //订单占用的开始时间 订单占用的结束时间 date
+        let orderStartTime = null
+        let orderEndTime = null
+        let orderTimerageClean = null
+        let nextOrderStartTime = null
+        let nextOrderEndTime = null
+        let nextOrderTimerageClean = null
+        let judgeEndDate = null
+        // 营业结束时间
+        // 非营业时间
+        let actEndTime = roomDetail.merchantEndTime
+        // 判断预约结束时间点是否是营业结束时间点 或者是非营业时间点的开始。
+        if(roomDetail.merchantExStartTime!=null && roomDetail.merchantExStartTime!=''){
+          actEndTime = roomDetail.merchantExStartTime
+        }
+
+        // 当天选择了 下一天也选了 
+        if(selectBookingTimeString && selectBookingTimeString!='' && nextSelectBookingTimeString && nextSelectBookingTimeString!=''){
+          orderStartTime = util.fixDate(this.data.bookingDateString + " " +this.data.startBookingTime)
+          orderEndTime = util.fixDate(this.data.bookingDateString + " " +"23:59")
+          orderTimerageClean = selectBookingTimeString
+          nextOrderStartTime = util.fixDate(this.data.nextBookingDateString + " " +"00:00")
+          // 判断结束时间是否为营业结束时间。
+          if(this.data.endBookingTime.padStart(5,'0') != actEndTime){
+            const tmpEndDate = util.fixDate(this.data.nextBookingDateString + " " + this.data.endBookingTime)
+            // 结束时间加上保洁时长
+            nextOrderEndTime = new Date(tmpEndDate.valueOf() + 60 * 1000 * app.globalData.cleanOderTime)
+            let cleanTmpHour = nextOrderEndTime.getHours();  
+            const cleanTmpMin = nextOrderEndTime.getMinutes()
+            nextOrderTimerageClean = nextSelectBookingTimeString+","+this.data.endBookingTime + "-"+cleanTmpHour+":"+cleanTmpMin.toString().padStart(2,'0')
+          }else{
+            nextOrderTimerageClean = nextSelectBookingTimeString
+            nextOrderEndTime = util.fixDate(this.data.nextBookingDateString + " " + this.data.endBookingTime)
+          }
+          judgeEndDate = nextOrderEndTime
+        }else if(selectBookingTimeString && selectBookingTimeString!='' && (!nextSelectBookingTimeString || nextSelectBookingTimeString=='')){
+          // 当天选择了 下一天没有选择
+          orderStartTime = util.fixDate(this.data.bookingDateString + " " +this.data.startBookingTime)
+          // 判断结束时间是否为营业结束时间。
+          if(this.data.endBookingTime.padStart(5,'0') != actEndTime){
+            if(this.data.endBookingTime == '24:00'){
+              nextOrderStartTime = util.fixDate(this.data.nextBookingDateString + " " +"00:00")
+              nextOrderEndTime = new Date(nextOrderStartTime.valueOf() + 60 * 1000 * app.globalData.cleanOderTime)
+              orderEndTime = util.fixDate(this.data.bookingDateString + " " +"23:59")
+              orderTimerageClean = selectBookingTimeString
+              let cleanTmpHour = nextOrderEndTime.getHours();  
+              const cleanTmpMin = nextOrderEndTime.getMinutes()
+              nextOrderTimerageClean = "0:00" + "-"+cleanTmpHour+":"+cleanTmpMin.toString().padStart(2,'0')
+              judgeEndDate = nextOrderEndTime
+            }else{
+              const tmpEndDate = util.fixDate(this.data.bookingDateString + " " + this.data.endBookingTime)
+              // 结束时间加上保洁时长
+              orderEndTime = new Date(tmpEndDate.valueOf() + 60 * 1000 * app.globalData.cleanOderTime)
+              let cleanTmpHour = orderEndTime.getHours();  
+              const cleanTmpMin = orderEndTime.getMinutes()
+              if(cleanTmpHour==0 && cleanTmpMin == 0){
+                cleanTmpHour = 24
+                orderEndTime = util.fixDate(this.data.bookingDateString + " " +"23:59")
+              }
+              
+              orderTimerageClean = selectBookingTimeString+","+this.data.endBookingTime + "-"+cleanTmpHour+":"+cleanTmpMin.toString().padStart(2,'0')
+              judgeEndDate = orderEndTime
+            }           
+          }else{
+            if(this.data.endBookingTime == '24:00'){
+              orderEndTime = util.fixDate(this.data.bookingDateString + " " +"23:59")
+            }else{
+              orderEndTime = util.fixDate(this.data.bookingDateString + " " +this.data.endBookingTime)
+            }
+            judgeEndDate = orderEndTime
+            orderTimerageClean = selectBookingTimeString
+          }
+        }else if(nextSelectBookingTimeString && nextSelectBookingTimeString!='' && (!selectBookingTimeString || selectBookingTimeString=='')){
+          // 当天没有选择了 下一天选择了
+          orderStartTime = util.fixDate(this.data.nextBookingDateString + " " +this.data.startBookingTime)
+          // 判断结束时间是否为营业结束时间。 
+          // 不是营业结束时间 
+          if(this.data.endBookingTime.padStart(5,'0') != actEndTime){
+            if(this.data.endBookingTime == '24:00'){
+              let nextNextDate = util.fixDate(this.data.nextBookingDateString + " " +"00:00")
+              nextNextDate.setDate(nextNextDate.getDate()+1)
+              nextOrderStartTime = nextNextDate
+              nextOrderEndTime = new Date(nextOrderStartTime.valueOf() + 60 * 1000 * app.globalData.cleanOderTime)
+              orderEndTime = util.fixDate(this.data.nextBookingDateString + " " +"23:59")
+              orderTimerageClean = nextSelectBookingTimeString
+              let cleanTmpHour = nextOrderEndTime.getHours();  
+              const cleanTmpMin = nextOrderEndTime.getMinutes()
+              nextOrderTimerageClean = "0:00" + "-"+cleanTmpHour+":"+cleanTmpMin.toString().padStart(2,'0')
+              judgeEndDate = nextOrderEndTime
+            }else{
+              const tmpEndDate = util.fixDate(this.data.nextBookingDateString + " " + this.data.endBookingTime)
+              // 结束时间加上保洁时长
+              orderEndTime = new Date(tmpEndDate.valueOf() + 60 * 1000 * app.globalData.cleanOderTime)
+              let cleanTmpHour = orderEndTime.getHours();  
+              if(cleanTmpHour==0 && cleanTmpMin == 0){
+                cleanTmpHour = 24
+                orderEndTime = util.fixDate(this.data.nextBookingDateString + " " +"23:59")
+              }
+              const cleanTmpMin = orderEndTime.getMinutes()
+              orderTimerageClean = nextSelectBookingTimeString+","+this.data.endBookingTime + "-"+cleanTmpHour+":"+cleanTmpMin.toString().padStart(2,'0')
+              judgeEndDate = orderEndTime
+            }
+          }else{
+            orderEndTime = util.fixDate(this.data.nextBookingDateString + " " + this.data.endBookingTime)
+            orderTimerageClean = nextSelectBookingTimeString
+            judgeEndDate = orderEndTime
+          }
+        }
+
+        // 判断当前时间是否有订单 
+        if(this.data.endBookingTime.padStart(5,'0') != actEndTime){
+          const searchCurrentOrder = {
+            tearoomId:roomDetail.id,
+            currentTime:util.formatTimeJoin(judgeEndDate,"-")
+          }
+          const currentOrderExist = await request.post('/csMerchantOrder/getOrderByCurrent',searchCurrentOrder)
+          if(currentOrderExist && currentOrderExist.data && currentOrderExist.data.data){
+            const cleanTime = app.globalData.cleanOderTime
+            Toast('需要预留'+cleanTime+'分钟保洁时间，请重新选择')
+            return
+          }
+        }
+
+
         bookingTimeStr = bookingTimeStr.substring(0,bookingTimeStr.length-1)
         if(this.data.bookAtOnceExtraLength > 0 && this.data.bookAtOnceFirstObj){
           bookingLengthCompare = bookingTimeStr.split(",").length - 1
@@ -545,7 +703,13 @@ Page({
           bookingLengthCompare,
           bookingLength: bookingLengthNum,
           selectBookingTimeString:selectBookingTimeString,
-          nextSelectBookingTimeString:nextSelectBookingTimeString
+          nextSelectBookingTimeString:nextSelectBookingTimeString,
+          orderStartTime:util.formatTimeJoin(orderStartTime,"-"),// 订单开始时间 
+          orderEndTime:util.formatTimeJoin(orderEndTime,"-"),// 订单结束时间 
+          orderTimerageClean:orderTimerageClean,// 订单时间段 包含保洁时长
+          nextOrderStartTime:util.formatTimeJoin(nextOrderStartTime,"-"),// 订单下一天开始时间 
+          nextOrderEndTime:util.formatTimeJoin(nextOrderEndTime,"-"),// 订单下一天结束时间 
+          nextOrderTimerageClean:nextOrderTimerageClean // 订单下一天时间段 包含保洁时长
         },()=>{
           if(openFlag){
               _this.confirmBooking()
@@ -613,6 +777,12 @@ Page({
           bookAtOnceExtraLength:this.data.bookAtOnceExtraLength,
           bookAtOnceFirstObj:this.data.bookAtOnceFirstObj,
           originOrderId:this.data.originOrderId,
+          orderStartTime:this.data.orderStartTime,// 订单开始时间 
+          orderEndTime:this.data.orderEndTime,// 订单结束时间 
+          orderTimerageClean:this.data.orderTimerageClean,// 订单时间段 包含保洁时长
+          nextOrderStartTime:this.data.nextOrderStartTime,// 订单下一天开始时间 
+          nextOrderEndTime:this.data.nextOrderEndTime,// 订单下一天结束时间 
+          nextOrderTimerageClean:this.data.nextOrderTimerageClean, // 订单下一天时间段 包含保洁时长
           ...this.data.roomDetail
         }
 
