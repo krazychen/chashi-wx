@@ -533,6 +533,7 @@ Page({
     const _this = this
     const startBookingTimeNum = this.data.startBookingTimeNum
     const endBookingTimeNum = this.data.endBookingTimeNum
+    const roomDetail = this.data.roomDetail
     if(startBookingTimeNum>=0 && endBookingTimeNum >=0){
         const ableBookingTimeList =  this.data.ableBookingTimeList
         let bookingTimeStr = ""
