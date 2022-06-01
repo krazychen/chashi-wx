@@ -182,7 +182,7 @@ Page({
             const step = roomDetail.timeRange?Number(roomDetail.timeRange):0.5
 
             const orderEndTime = util.fixDate(orderitem.actEndDateString.trim() +" " +orderitem.actEndDateTime)
-
+            console.log(orderitem)
             // 判断当前时间是否有订单
             const searchCurrentOrder = {
               tearoomId:roomDetail.id,
@@ -190,7 +190,8 @@ Page({
             }
             
             const currentOrderExist = await request.post('/csMerchantOrder/getOrderByCurrent',searchCurrentOrder)
-            if(currentOrderExist && currentOrderExist.data && currentOrderExist.data.data){
+            if(currentOrderExist && currentOrderExist.data && currentOrderExist.data.data
+              && currentOrderExist.data.data!=orderitem.id){
               Toast('续单时段被预定')
               this.setData({
                 showPickerPop:false,
@@ -201,7 +202,7 @@ Page({
 
 
             // 续单最少1小时，需要预留0.5小时的保洁，也就是如果续单1个小时，需要后面1.5个小时
-            const continueAtLeastDateTime = new Date(orderEndTime.valueOf() + 60 * 1000 * 90)
+            const continueAtLeastDateTime = new Date(orderEndTime.valueOf() + 60 * 1000 * 60)
 
             const continueAtLeastYear = continueAtLeastDateTime.getFullYear(); 
             const continueAtLeastMonth = continueAtLeastDateTime.getMonth(); //获取当前月份(0-11,0代表1月)         // 所以获取当前月份是myDate.getMonth()+1; 
@@ -413,7 +414,7 @@ Page({
 
 
     const continueEndTime =  new Date(util.fixDate(this.data.bookingDateString+" "+ bookAtOnceStartTime).valueOf() + 60 * 1000 * 60 * (bookTimeLeng) )
-    const canBookAtLeastBegin =  new Date(util.fixDate(this.data.bookingDateString+" "+ bookAtOnceStartTime).valueOf() + 60 * 1000 * 60 * (bookTimeLeng+0.5) )
+    const canBookAtLeastBegin =  new Date(util.fixDate(this.data.bookingDateString+" "+ bookAtOnceStartTime).valueOf() + 60 * 1000 * 60 * (bookTimeLeng) )
     const merchantEndDate = new Date(canBookAtLeastBegin.getFullYear(),canBookAtLeastBegin.getMonth(),canBookAtLeastBegin.getDate(),Number(roomDetail.merchantEndTime.split(":")[0]),Number(roomDetail.merchantEndTime.split(":")[1]))//util.fixDate(.getFullYear+ " "+ roomDetail.merchantEndTime)
     
     if(canBookAtLeastBegin > merchantEndDate){

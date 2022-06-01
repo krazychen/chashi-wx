@@ -275,14 +275,14 @@ Page({
       nextBookingDate:nextDate,
       nextBookingDateString:nextYear+'-'+(nextMonth+1).toString().padStart(2,'0')+'-'+nextDay.toString().padStart(2,'0'),
     },()=>{
-      request.post('/csMerchantOrder/getTimeRangeForWx',searchBookingedObj).then((res)=>{
+      request.post('/csMerchantOrder/getTimeRangeCleanForWx',searchBookingedObj).then((res)=>{
           const orderTimeRange = res.data.data || null
           let ableTimeList =  util.getBookingAbleTimeList(bookingDate,orderTimeRange,roomDetail)
           const nextSearchBookingedObj = {
             tearoomId:roomDetail.id,
             orderDate: nextYear+'-'+(nextMonth+1).toString().padStart(2,'0')+'-'+nextDay.toString().padStart(2,'0')
           }
-          request.post('/csMerchantOrder/getTimeRangeForWx',nextSearchBookingedObj).then((nextRes)=>{
+          request.post('/csMerchantOrder/getTimeRangeCleanForWx',nextSearchBookingedObj).then((nextRes)=>{
             const nextOrderTimeRange = nextRes.data.data || null
             let nextAbleTimeList =  util.getBookingAbleTimeList(nextDate,nextOrderTimeRange,roomDetail)
             if(nextAbleTimeList && nextAbleTimeList.length>0){
@@ -352,7 +352,7 @@ Page({
         orderDate:_this.data.bookingDateString
       }
       let orderTimeRange = null
-      request.post('/csMerchantOrder/getTimeRangeForWx',searchBookingedObj).then((res)=>{
+      request.post('/csMerchantOrder/getTimeRangeCleanForWx',searchBookingedObj).then((res)=>{
         orderTimeRange = res.data.data || null
         let ableTimeList = util.getBookingAbleTimeList(_this.data.bookingDate,orderTimeRange,_this.data.roomDetail)
         const nextBookingedObj = {
@@ -361,7 +361,7 @@ Page({
         }
         const nextBookingDate = _this.data.nextBookingDate
         let nextOrderTimeRange = null
-        request.post('/csMerchantOrder/getTimeRangeForWx',nextBookingedObj).then((nextRes)=>{
+        request.post('/csMerchantOrder/getTimeRangeCleanForWx',nextBookingedObj).then((nextRes)=>{
           nextOrderTimeRange  = nextRes.data.data || null
           let nextAbleTimeList = util.getBookingAbleTimeList(nextBookingDate,nextOrderTimeRange,_this.data.roomDetail);
           if(nextAbleTimeList && nextAbleTimeList.length>0){
@@ -370,7 +370,7 @@ Page({
           _this.computeCanBookTime(_this.data.bookingDate,ableTimeList,value.timelength)
         })
       })
-      // request.post('/csMerchantOrder/getTimeRangeForWx',searchBookingedObj).then((res)=>{
+      // request.post('/csMerchantOrder/getTimeRangeCleanForWx',searchBookingedObj).then((res)=>{
       //     const orderTimeRange = res.data.data || null
       //     const ableTimeList =  util.getBookingAbleTimeList(_this.data.bookingDate,orderTimeRange,_this.data.roomDetail)
       //     _this.computeCanBookTime(_this.data.bookingDate,ableTimeList,value.timelength)
@@ -501,7 +501,7 @@ Page({
     }
     const bookingDate = this.data.bookingDate
     let orderTimeRange = null
-    request.post('/csMerchantOrder/getTimeRangeForWx',searchBookingedObj).then((res)=>{
+    request.post('/csMerchantOrder/getTimeRangeCleanForWx',searchBookingedObj).then((res)=>{
       orderTimeRange = res.data.data || null
       let ableTimeList = util.getBookingAbleTimeList(bookingDate,orderTimeRange,_this.data.roomDetail);
       const nextBookingedObj = {
@@ -510,7 +510,7 @@ Page({
       }
       const nextBookingDate = this.data.nextBookingDate
       let nextOrderTimeRange = null
-      request.post('/csMerchantOrder/getTimeRangeForWx',nextBookingedObj).then((nextRes)=>{
+      request.post('/csMerchantOrder/getTimeRangeCleanForWx',nextBookingedObj).then((nextRes)=>{
         nextOrderTimeRange  = nextRes.data.data || null
         let nextAbleTimeList = util.getBookingAbleTimeList(nextBookingDate,nextOrderTimeRange,_this.data.roomDetail);
         //this.getBookingAbleTimeList(nextBookingDate,nextOrderTimeRange);
