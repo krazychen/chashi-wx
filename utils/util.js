@@ -144,7 +144,8 @@ const getBookingAbleTimeList = function(bookingDate,bookedTime,roomDetail){
       
 
       bookedTimeArr.forEach(bookedItem=>{
-        const bookedItemArr = bookedItem.split("-")
+        if(bookedItem && bookedItem !='null' && bookedItem!=''){
+          const bookedItemArr = bookedItem.split("-")
         const bookedStartTime = Number(bookedItemArr[0].replace(":",'').toString().padStart(2,'0'))
         const bookedEndTime = Number(bookedItemArr[1].replace(":",'').toString().padStart(2,'0'))
         const bookingTimeStr = bookingTimeObj.bookingItemStartTime+'-'+bookingTimeObj.bookingItemEndTime
@@ -152,6 +153,9 @@ const getBookingAbleTimeList = function(bookingDate,bookedTime,roomDetail){
           && bookingTimeObj.bookingItemEndTimeNum == bookedEndTime)){
           bookingTimeObj.bookingStatus = 0
         }
+
+        }
+        
       })
       ableTimeList.push(bookingTimeObj)
     }
