@@ -687,8 +687,6 @@ Page({
     bookingDate.setDate(bookingDate.getDate()+addDays); 
     let nextDate = new Date(bookingDate.getTime() + 24*60*60*1000)
     // nextDate.setDate(bookingDate.getDate()+1); 
-    console.log(bookingDate)
-    console.log(nextDate)
     const _this = this
     this.setData({
       bookingDate:bookingDate,
@@ -821,7 +819,7 @@ Page({
         if(nextSelectBookingTimeString && nextSelectBookingTimeString!='' && nextSelectBookingTimeString.length >0){
           nextSelectBookingTimeString = nextSelectBookingTimeString.substring(0,nextSelectBookingTimeString.length-1)
         }
-
+        
 
         // 判断订单结束时间 是否为 营业结束时间 以及 加上保洁时间后的 是否有订单。有就不允许预定
         //订单占用的开始时间 订单占用的结束时间 date
@@ -958,6 +956,7 @@ Page({
           bookingLengthNum = bookingTimeStr.split(",").length *  this.data.roomDetail.timeRange
         }
     
+       
         this.setData({
           bookingLengthCompare,
           bookingLength: bookingLengthNum,

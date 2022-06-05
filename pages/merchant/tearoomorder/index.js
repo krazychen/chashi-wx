@@ -151,26 +151,31 @@ Page({
      orderPayObj.orderOriginTimenum = orderDetail.bookingLength
      orderPayObj.orderUnitOriginPrice = orderDetail.hoursAmount
      orderPayObj.orderOriginPrice = Number(Number(orderDetail.hoursAmount * orderDetail.bookingLength).toFixed(2))
-
-     if(!orderDetail.orderStartTime && orderDetail.orderStartTime!=null  && orderDetail.orderStartTime!='null' && orderDetail.orderStartTime!=''){
+   
+     
+     
+     if(orderDetail.orderStartTime && orderDetail.orderStartTime!=null  && orderDetail.orderStartTime!='null' && orderDetail.orderStartTime!=''){
+      
       orderPayObj.orderStartTime = orderDetail.orderStartTime
      }
-     if(!orderDetail.orderEndTime && orderDetail.orderEndTime!=null && orderDetail.orderEndTime!='null' && orderDetail.orderEndTime!=''){
+     if(orderDetail.orderEndTime && orderDetail.orderEndTime!=null && orderDetail.orderEndTime!='null' && orderDetail.orderEndTime!=''){
+      
       orderPayObj.orderEndTime = orderDetail.orderEndTime
      }
 
-     if(!orderDetail.orderTimerageClean && orderDetail.orderTimerageClean!=null  && orderDetail.orderTimerageClean!='null' && orderDetail.orderTimerageClean!=''){
+     if(orderDetail.orderTimerageClean && orderDetail.orderTimerageClean!=null  && orderDetail.orderTimerageClean!='null' && orderDetail.orderTimerageClean!=''){
+      
       orderPayObj.orderTimerageClean = orderDetail.orderTimerageClean
      }
      
-     if(!orderDetail.nextOrderStartTime && orderDetail.nextOrderStartTime!=null && orderDetail.nextOrderStartTime!='null' && orderDetail.nextOrderStartTime!=''){
+     if(orderDetail.nextOrderStartTime && orderDetail.nextOrderStartTime!=null && orderDetail.nextOrderStartTime!='null' && orderDetail.nextOrderStartTime!=''){
       orderPayObj.nextOrderStartTime = orderDetail.nextOrderStartTime
      }
-     if(!orderDetail.nextOrderEndTime&& orderDetail.nextOrderEndTime!=null && orderDetail.nextOrderEndTime!='null' && orderDetail.nextOrderEndTime!=''){
+     if(orderDetail.nextOrderEndTime&& orderDetail.nextOrderEndTime!=null && orderDetail.nextOrderEndTime!='null' && orderDetail.nextOrderEndTime!=''){
       orderPayObj.nextOrderEndTime = orderDetail.nextOrderEndTime
      }
 
-     if(!orderDetail.nextOrderTimerageClean && orderDetail.nextOrderTimerageClean!=null && orderDetail.nextOrderTimerageClean!='null' && orderDetail.nextOrderTimerageClean!=''){
+     if(orderDetail.nextOrderTimerageClean && orderDetail.nextOrderTimerageClean!=null && orderDetail.nextOrderTimerageClean!='null' && orderDetail.nextOrderTimerageClean!=''){
       orderPayObj.nextOrderTimerageClean = orderDetail.nextOrderTimerageClean
      }
 
