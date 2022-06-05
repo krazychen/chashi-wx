@@ -152,12 +152,28 @@ Page({
      orderPayObj.orderUnitOriginPrice = orderDetail.hoursAmount
      orderPayObj.orderOriginPrice = Number(Number(orderDetail.hoursAmount * orderDetail.bookingLength).toFixed(2))
 
-     orderPayObj.orderStartTime = orderDetail.orderStartTime
-     orderPayObj.orderEndTime = orderDetail.orderEndTime
-     orderPayObj.orderTimerageClean = orderDetail.orderTimerageClean
-     orderPayObj.nextOrderStartTime = orderDetail.nextOrderStartTime
-     orderPayObj.nextOrderEndTime = orderDetail.nextOrderEndTime
-     orderPayObj.nextOrderTimerageClean = orderDetail.nextOrderTimerageClean
+     if(!orderDetail.orderStartTime && orderDetail.orderStartTime!=null  && orderDetail.orderStartTime!='null' && orderDetail.orderStartTime!=''){
+      orderPayObj.orderStartTime = orderDetail.orderStartTime
+     }
+     if(!orderDetail.orderEndTime && orderDetail.orderEndTime!=null && orderDetail.orderEndTime!='null' && orderDetail.orderEndTime!=''){
+      orderPayObj.orderEndTime = orderDetail.orderEndTime
+     }
+
+     if(!orderDetail.orderTimerageClean && orderDetail.orderTimerageClean!=null  && orderDetail.orderTimerageClean!='null' && orderDetail.orderTimerageClean!=''){
+      orderPayObj.orderTimerageClean = orderDetail.orderTimerageClean
+     }
+     
+     if(!orderDetail.nextOrderStartTime && orderDetail.nextOrderStartTime!=null && orderDetail.nextOrderStartTime!='null' && orderDetail.nextOrderStartTime!=''){
+      orderPayObj.nextOrderStartTime = orderDetail.nextOrderStartTime
+     }
+     if(!orderDetail.nextOrderEndTime&& orderDetail.nextOrderEndTime!=null && orderDetail.nextOrderEndTime!='null' && orderDetail.nextOrderEndTime!=''){
+      orderPayObj.nextOrderEndTime = orderDetail.nextOrderEndTime
+     }
+
+     if(!orderDetail.nextOrderTimerageClean && orderDetail.nextOrderTimerageClean!=null && orderDetail.nextOrderTimerageClean!='null' && orderDetail.nextOrderTimerageClean!=''){
+      orderPayObj.nextOrderTimerageClean = orderDetail.nextOrderTimerageClean
+     }
+
 
     if(accountInfo.csMembercardOrderQueryVo){
       orderPayObj.membercardOrderId = accountInfo.csMembercardOrderQueryVo.membercardId
