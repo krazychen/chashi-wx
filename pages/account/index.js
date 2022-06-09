@@ -122,7 +122,7 @@ Page({
     
   },
   goToRenewList:function(){
-    if(this.data.hasUserInfo){
+    if(this.data.hasUserInfo && this.data.userInfo.phoneNumber && this.data.userInfo.phoneNumber!=''){
       const searchObj = {
         queryType:4,
         nameAphone:null,
@@ -155,7 +155,6 @@ Page({
             renewOrderList.push(item)
           }
         })
-        console.log(renewOrderList)
         if(renewOrderList.length <= 0 ){
           Toast('没有在使用中的订单，无需续单，请先使用订单')
           return

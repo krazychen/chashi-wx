@@ -91,7 +91,7 @@ Page({
     }
   },
   getOrderList(){
-    if(this.data.hasUserInfo){
+    if(this.data.hasUserInfo && this.data.userInfo.phoneNumber && this.data.userInfo.phoneNumber!=''){
       const searchObj = this.data.searchObj
       searchObj.nameAphone = this.data.userInfo.phoneNumber
       request.post('/csMerchantOrder/getCsMerchantOrderListForWx',searchObj).then((res)=>{
@@ -133,7 +133,7 @@ Page({
     })
   },
   goToRenewList:function(e){
-    if(this.data.hasUserInfo){
+    if(this.data.hasUserInfo && this.data.userInfo.phoneNumber && this.data.userInfo.phoneNumber!=''){
       const searchObj = {
         queryType:4,
         nameAphone:null,

@@ -100,87 +100,89 @@ Page({
   getOrderList(){
     const searchObj = this.data.searchObj
     searchObj.nameAphone = this.data.userInfo.phoneNumber
-    request.post('/csMerchantOrder/getCsMerchantOrderListForWx',searchObj).then((res)=>{
-      const orderList = res.data.data.records || []
-      if(orderList && orderList.length>0){
-        orderList.forEach(item=>{
-
-          let hasNextDate = false
-          let actStartDate = item.orderDate
-          let actStartDateTime = null
-          let actEndDate = item.orderDate
-          let actEndDateTime = null
-          if(item.orderTimerage){
-              const orderRange = item.orderTimerage.split(',')
-              if(orderRange.length > 0){
-                const startRange = orderRange[0].split('-')[0]
-                const endRange = orderRange[orderRange.length-1].split('-')[1]
-                actStartDateTime = startRange
+    if(this.data.userInfo.phoneNumber && this.data.userInfo.phoneNumber!=''){
+      request.post('/csMerchantOrder/getCsMerchantOrderListForWx',searchObj).then((res)=>{
+        const orderList = res.data.data.records || []
+        if(orderList && orderList.length>0){
+          orderList.forEach(item=>{
+  
+            let hasNextDate = false
+            let actStartDate = item.orderDate
+            let actStartDateTime = null
+            let actEndDate = item.orderDate
+            let actEndDateTime = null
+            if(item.orderTimerage){
+                const orderRange = item.orderTimerage.split(',')
+                if(orderRange.length > 0){
+                  const startRange = orderRange[0].split('-')[0]
+                  const endRange = orderRange[orderRange.length-1].split('-')[1]
+                  actStartDateTime = startRange
+                  actEndDateTime = endRange
+                }
+            }
+            
+            if(item.nextOrderDate && item.nextOrderDate !=''){
+              hasNextDate = true
+              actEndDate = item.nextOrderDate
+              const nextOrderRange = item.nextOrderTimerage.split(',')
+              if(nextOrderRange.length > 0){
+                const endRange = nextOrderRange[nextOrderRange.length-1].split('-')[1]
                 actEndDateTime = endRange
               }
-          }
-          
-          if(item.nextOrderDate && item.nextOrderDate !=''){
-            hasNextDate = true
-            actEndDate = item.nextOrderDate
-            const nextOrderRange = item.nextOrderTimerage.split(',')
-            if(nextOrderRange.length > 0){
-              const endRange = nextOrderRange[nextOrderRange.length-1].split('-')[1]
-              actEndDateTime = endRange
             }
-          }
-          
-
-          let useTimeRange = actStartDate.substring(0,10)+" " + actStartDateTime
-          // 跨天
-          if(hasNextDate){
-            useTimeRange = useTimeRange + '-' + actEndDate.substring(0,10)+" " + actEndDateTime
-          }else{
-            useTimeRange =useTimeRange + '-' + actEndDateTime
-          }
-          item.useTimeRange = useTimeRange
-
-          item.hasNextDate = hasNextDate
-          item.actStartDateString = actStartDate.substring(0,10)
-          item.actStartDate = new Date(Number(actStartDate.substring(0,4)),Number(actStartDate.substring(5,7))-1,Number(actStartDate.substring(8,10)),0,0,0)
-          item.actStartDateTime = actStartDateTime
-          item.actEndDateString = actEndDate.substring(0,10)
-          item.actEndDate = new Date(Number(actEndDate.substring(0,4)),Number(actEndDate.substring(5,7))-1,Number(actEndDate.substring(8,10)),0,0,0)
-          item.actEndDateTime = actEndDateTime
-
-          // if(item.orderDate){
-          //   item.orderDate = item.orderDate.substring(0,10)+" "
-          // }
-          // if(item.orderTimerage){
-          //    const orderRange = item.orderTimerage.split(',')
-          //    if(orderRange.length>1){
-          //      const startRange = orderRange[0].split('-')[0]
-          //      const endRange = orderRange[orderRange.length-1].split('-')[1]
-          //      item.orderTimerage = startRange +'-'+endRange
-          //    }
-          // }
-
-          if(item.paymentStatus == 0){
-             item.orderStatusName = '待付款' 
-          }else if(item.paymentStatus == 2 && item.usedStatus == 0){
-            item.orderStatusName = '待使用' 
-          }else if(item.paymentStatus == 2 && item.usedStatus == 1){
-            item.orderStatusName = '已使用' 
-          }else if(item.paymentStatus == 2 && item.usedStatus == 3){
-            item.orderStatusName = '已完成' 
-          }else if(item.paymentStatus == 3 || item.paymentStatus == 4){
-            item.orderStatusName = '已取消' 
-          }else if(item.paymentStatus == 2 && item.usedStatus == 2){
-            item.orderStatusName = '已失效' 
-          }else{
-            item.orderStatusName = '已退款' 
-          }
+            
+  
+            let useTimeRange = actStartDate.substring(0,10)+" " + actStartDateTime
+            // 跨天
+            if(hasNextDate){
+              useTimeRange = useTimeRange + '-' + actEndDate.substring(0,10)+" " + actEndDateTime
+            }else{
+              useTimeRange =useTimeRange + '-' + actEndDateTime
+            }
+            item.useTimeRange = useTimeRange
+  
+            item.hasNextDate = hasNextDate
+            item.actStartDateString = actStartDate.substring(0,10)
+            item.actStartDate = new Date(Number(actStartDate.substring(0,4)),Number(actStartDate.substring(5,7))-1,Number(actStartDate.substring(8,10)),0,0,0)
+            item.actStartDateTime = actStartDateTime
+            item.actEndDateString = actEndDate.substring(0,10)
+            item.actEndDate = new Date(Number(actEndDate.substring(0,4)),Number(actEndDate.substring(5,7))-1,Number(actEndDate.substring(8,10)),0,0,0)
+            item.actEndDateTime = actEndDateTime
+  
+            // if(item.orderDate){
+            //   item.orderDate = item.orderDate.substring(0,10)+" "
+            // }
+            // if(item.orderTimerage){
+            //    const orderRange = item.orderTimerage.split(',')
+            //    if(orderRange.length>1){
+            //      const startRange = orderRange[0].split('-')[0]
+            //      const endRange = orderRange[orderRange.length-1].split('-')[1]
+            //      item.orderTimerage = startRange +'-'+endRange
+            //    }
+            // }
+  
+            if(item.paymentStatus == 0){
+               item.orderStatusName = '待付款' 
+            }else if(item.paymentStatus == 2 && item.usedStatus == 0){
+              item.orderStatusName = '待使用' 
+            }else if(item.paymentStatus == 2 && item.usedStatus == 1){
+              item.orderStatusName = '已使用' 
+            }else if(item.paymentStatus == 2 && item.usedStatus == 3){
+              item.orderStatusName = '已完成' 
+            }else if(item.paymentStatus == 3 || item.paymentStatus == 4){
+              item.orderStatusName = '已取消' 
+            }else if(item.paymentStatus == 2 && item.usedStatus == 2){
+              item.orderStatusName = '已失效' 
+            }else{
+              item.orderStatusName = '已退款' 
+            }
+          })
+        }
+        this.setData({
+          orderList
         })
-      }
-      this.setData({
-        orderList
       })
-    })
+    }
   },
   searchByQueryType:function(e){
     const queryTypeItem = e.currentTarget.dataset.querytype
