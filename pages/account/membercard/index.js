@@ -148,51 +148,55 @@ Page({
     })
   },
   payForOrder:function(){
-    this.setData({
-      showOver:true
-    })
-    const paymentType = this.data.paymentType
-    const _this = this
-    const cardObj = {
-      wxuserId: _this.data.userInfo.id,
-      wxuserPhone:_this.data.userInfo.phoneNumber,
-      openid:_this.data.userInfo.openid,
-      membercardId:_this.data.memberCardDetail.id,
-      membercardName:_this.data.memberCardDetail.cardname,
-      orderPrice:_this.data.memberCardDetail.price,
-      validPeriod:_this.data.memberCardDetail.validPeriod,
-    };
-    // 余额支付
-    if(paymentType==1){
-      if(_this.data.memberCardDetail.price > this.data.accountInfo.balance){
-        Toast('余额不足')
-        this.setData({
-          showOver:false
-        })
-        return
-      }
-      request.post('/csMembercardOrder/saveMembercardOrder',cardObj).then((res)=>{
-        if(res.data.code ===200){
-          Toast({
-            message: '付款成功',
-            onClose: () => {
-              this.setData({
-                showOver:false
-              })
-              wx.navigateBack({
-                delta: 0,
-              })
-            },
-          })
-        }else{
-          Toast('付款失败')
+    if(this.data.hasUserInfo){
+      this.setData({
+        showOver:true
+      })
+      const paymentType = this.data.paymentType
+      const _this = this
+      const cardObj = {
+        wxuserId: _this.data.userInfo.id,
+        wxuserPhone:_this.data.userInfo.phoneNumber,
+        openid:_this.data.userInfo.openid,
+        membercardId:_this.data.memberCardDetail.id,
+        membercardName:_this.data.memberCardDetail.cardname,
+        orderPrice:_this.data.memberCardDetail.price,
+        validPeriod:_this.data.memberCardDetail.validPeriod,
+      };
+      // 余额支付
+      if(paymentType==1){
+        if(_this.data.memberCardDetail.price > this.data.accountInfo.balance){
+          Toast('余额不足')
           this.setData({
             showOver:false
           })
+          return
         }
-      })
+        request.post('/csMembercardOrder/saveMembercardOrder',cardObj).then((res)=>{
+          if(res.data.code ===200){
+            Toast({
+              message: '付款成功',
+              onClose: () => {
+                this.setData({
+                  showOver:false
+                })
+                wx.navigateBack({
+                  delta: 0,
+                })
+              },
+            })
+          }else{
+            Toast('付款失败')
+            this.setData({
+              showOver:false
+            })
+          }
+        })
+      }else{
+        _this.buyMemberCard(cardObj)
+      }
     }else{
-      _this.buyMemberCard(cardObj)
+      this.getUserProfile()
     }
   },
 

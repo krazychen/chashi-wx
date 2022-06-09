@@ -19,7 +19,7 @@ module.exports = Behavior({
       menus: ['shareAppMessage', 'shareTimeline']
     })
     const userInfo = wx.getStorageSync('userInfo')
-    if (userInfo) {
+    if (userInfo && userInfo.phoneNumber && userInfo.phoneNumber!='') {
       this.setData({
         userInfo: userInfo,
         hasUserInfo: true
@@ -48,7 +48,11 @@ module.exports = Behavior({
       wx.removeStorageSync('userInfo')
       app.globalData.userInfo = {...app.globalData.userInfo,...userInfo}
       wx.setStorageSync('userInfo', app.globalData.userInfo)
-      app.globalData.hasUserInfo = true
+      if(app.globalData.userInfo.phoneNumber && app.globalData.userInfo.phoneNumber!=''){
+        app.globalData.hasUserInfo = true
+      }else{
+        app.globalData.hasUserInfo = false
+      }
     }
   }
 })

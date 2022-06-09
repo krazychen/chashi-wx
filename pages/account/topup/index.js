@@ -72,25 +72,29 @@ Page({
     })
   },
   rechargeTopup:function(e){
-    const _this = this;  
-    if(_this.data.rechargeObj.rechargeAmount<=0){
-      Toast('请输入充值金额')
-      return
-    }
-    const csRechargeRecord = {
-      wxuserId: _this.data.userInfo.id,
-      wxuserPhone:_this.data.userInfo.phoneNumber,
-      openid:_this.data.userInfo.openid,
-      rechargeAmount:_this.data.rechargeObj.rechargeAmount,
-      rechargeGived:_this.data.rechargeObj.rechargeGived
-    };
-    request.get('/weixin/rechargeWxPay',csRechargeRecord).then((res)=>{
-      if(res.data.code ===200){
-        _this.doWxPay(res.data); 
-      }else{
-        Toast('付款失败')
+    if(this.data.hasUserInfo){
+      const _this = this;  
+      if(_this.data.rechargeObj.rechargeAmount<=0){
+        Toast('请输入充值金额')
+        return
       }
-    })
+      const csRechargeRecord = {
+        wxuserId: _this.data.userInfo.id,
+        wxuserPhone:_this.data.userInfo.phoneNumber,
+        openid:_this.data.userInfo.openid,
+        rechargeAmount:_this.data.rechargeObj.rechargeAmount,
+        rechargeGived:_this.data.rechargeObj.rechargeGived
+      };
+      request.get('/weixin/rechargeWxPay',csRechargeRecord).then((res)=>{
+        if(res.data.code ===200){
+          _this.doWxPay(res.data); 
+        }else{
+          Toast('付款失败')
+        }
+      })
+    }else{
+      this.getUserProfile()
+    }
   },
   doWxPay:function(param){  
       //小程序发起微信支付  
